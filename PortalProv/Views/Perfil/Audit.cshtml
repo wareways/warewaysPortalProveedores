@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Wareways.PortalProv.Infraestructura.Audit>
+
+@{
+    Layout = "../Shared/_LayoutModal.cshtml";
+}
+
+
+    <table class="table">
+        <tr>
+            <th>
+                Tipo
+            </th>                        
+            <th>
+                Campo
+            </th>
+            <th>
+                Anterior
+            </th>
+            <th>
+                Nuevo
+            </th>
+            <th>
+                Fecha
+            </th>
+            <th>
+                Usuario
+            </th>
+            
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.FieldName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OldValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NewValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                
+            </tr>
+        }
+
+    </table>

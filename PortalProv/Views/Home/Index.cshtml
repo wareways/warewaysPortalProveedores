@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+
+@section PageHeader {
+    <section class="content-header">
+        <h1>
+            Inicio
+            <small>Bienvenidos al Portal</small>
+        </h1>
+
+
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-1 col-sm-1">
+
+                    </div>
+                    <div class="col-md-10 col-sm-10" style="text-align:center">
+                        
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        
+
+        @*<ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+            <li class="active">Here</li>
+        </ol>*@
+    </section>
+}
+
+@*<div id="result">
+    
+</div>
+<button type="button" onclick="initGeolocation();">Show Position</button>*@
+
+@*<div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+
+
+                        <div class="jumbotron">
+                            <h1>ASP.NET</h1>
+                            <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+                            <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+                        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+@*<div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid box-primary">
+                <div class="box-header">
+                    Como Comenzar a Utilizar el portal
+                </div>
+                <div class="box-body">
+                    <p>
+                        Para poder utiizar el portal se debe de registrar en el sistema su cuenta, despues informar via correo a ventas@wareways.com, para poder darle de alta y habilitar a las compañias que tendra acceso.
+                    </p>
+                    <p>El Tiempo de Respuesta es de 24 horas maximo.</p>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*<div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <h2>Get more libraries</h2>
+                            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+                            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h2>Web Hosting</h2>
+                            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+                            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+@*<div class="mapouter">
+    <div class="gmap_canvas">
+        <iframe width="100%" 
+             height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=14.530291%2C-90.5842807&t=&z=17&ie=UTF8&iwloc=&output=embed" 
+            frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+         </iframe>
+         
+    <style>
+        .mapouter {
+            position: relative;
+            text-align: right;
+            height: 400px;
+            width: 100%;
+        }
+
+        .gmap_canvas {
+            overflow: hidden;
+            background: none !important;
+            height: 400px;
+            width: 100%;
+        }
+        .place-card .place-card-medium{
+            display:none !important;
+        }
+    </style>
+</div>
+
+@section scripts
+{
+    <script>
+
+        var options = {
+            enableHighAccuracy: false,
+            timeout: 5000,
+            maximumAge: 5000
+        };
+
+        function initGeolocation() {
+            if (navigator && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
+            } else {
+                console.log('Geolocation is not supported');
+            }
+        }
+
+        function errorCallback() { }
+
+        function successCallback(position) {
+            var positionInfo = "Your current position is (" + "Latitude: " + position.coords.latitude + ", " + "Longitude: " + position.coords.longitude + "Exactitud: " + position.coords.accuracy +  ")";            
+            $("#gmap_canvas").attr("src", "https://maps.google.com/maps?q=" + position.coords.latitude + "%2C" + position.coords.longitude + "&t=&z=17&ie=UTF8&iwloc=&output=embed");
+            document.getElementById("result").innerHTML = positionInfo;
+            document.getElementById('gmap_canvas').contentWindow.location.reload(true);
+        }
+    </script>
+
+
+
+}*@

@@ -1,0 +1,207 @@
+﻿@model Wareways.PortalProv.Infraestructura.AspNetUsers
+
+
+
+
+
+
+@using (Html.BeginForm())
+{
+    <div class="box">
+        <div class="box-header with-border">
+            <h4 class="box-title">Usuario Edición</h4>
+        </div>
+        <div class="box-body">
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group">
+
+                    @Html.Label("Codigo Usuario", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Puesto, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Puesto, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Puesto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Correo", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">
+                        Roles Asignados
+                    </label>
+
+                    <div class="col-md-10 ">
+                        @foreach (Wareways.PortalProv.Infraestructura.V_GEN_UsuarioRoles _Item in ViewBag.RolesAsignados)
+                        {
+
+                            <a href="@Url.Action("RemoveRole", "Usuario", new { _roleid = _Item.Id, _UserName = _Item.UserId })" class="btn btn-default">
+                                @_Item.Name
+                                <span class="fa fa-remove" aria-hidden="true" style="color:red"></span>
+                            </a>
+                        }
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">
+                        Roles Disponibles
+                    </label>
+
+                    <div class="col-md-10 ">
+                        @foreach (Wareways.PortalProv.Infraestructura.V_GEN_UsuarioRoles_Diponibles _Item in ViewBag.RolesDisponibles)
+                        {
+                            <a href="@Url.Action("AddRole", "Usuario", new { _roleid = _Item.Id, _UserName = _Item.UserId })" class="btn btn-default">
+                                @_Item.Name
+                                <span class="fa fa-plus" aria-hidden="true" style="color:green"></span>
+                            </a>
+                        }
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.Label("Telefono", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+              
+
+            </div>
+
+
+            <div>
+
+            </div>
+        </div>
+        <div class="box-footer">
+            <div class="col-md-4">
+                <a href="@Url.Action("Index", "Usuario")" class="btn btn-default">
+                    Regresar
+                    <span class="fa fa-backward" aria-hidden="true" style="color:green"></span>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="@Url.Action("ChangePassword", "Usuario",new { _UserName = Model.UserName })" class="btn btn-default">
+                    Cambiar Contraseña
+                    <span class="fa fa-user-secret" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
+                    Grabar y Salir &nbsp;
+                    <i class="fa fa-save"></i>
+                </button>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    
+
+}
+
+
+@using (Html.BeginForm("AsignarRuta", "Usuario", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("puserId",Model.Id)
+    <div class="modal fade" id="ModalasignarRuta" role="dialog">
+        <div class="modal-dialog err-pop" style="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-11">
+                        <h4 class="box-title"> AsignarRuta </h4>
+                    </div>
+                    <div>
+                        <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="text-align:center;">
+                    <div class="form-horizontal">                        
+                       
+                        <div class="form-group">
+                            @Html.Label("Primaria", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10 " style="text-align:left">
+                                @Html.CheckBox("primaria",false)
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="pull-right">
+
+
+                            <button class="btn btn-success pull-right " type="submit" id="saveTeststeps">
+                                Grabar &nbsp;
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+@section scripts
+{
+   
+
+
+    
+
+    <script>
+        $(document).ready(function () {
+            $(".BtnOpenAsignarRuta").click(function () {
+                $('#ModalasignarRuta').modal('show');
+            })
+        });
+        
+
+    </script>
+}
+
+
+
+
+
+
+

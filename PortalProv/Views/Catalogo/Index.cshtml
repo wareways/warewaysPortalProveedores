@@ -1,0 +1,127 @@
+﻿@model Wareways.PortalProv.Models.CC.CatalogoIndexModel
+
+
+
+
+@using (Html.BeginForm("Index", "Catalogo", FormMethod.Post, new { @id = "Forma1" }))
+{
+    <div class="box box-default">
+
+        <div class="box-header">
+            <div class="col-md-6">
+                <h4 class="box-title"> Catálogos </h4>
+            </div>
+            <div class="col-md-6 " style="text-align:right">
+                
+                <a href="@Url.Action("Create",new { id = Model.CodigoCatalogoSeleccionado  })" class="btn btn-default btn-sm">
+                    Nuevo
+                    <span class="fa fa-plus-circle" aria-hidden="true"></span>
+                </a>
+            </div>
+        </div>
+        <div class="box-body">
+            <p>
+                @Html.Label("Seleccione Catalogo:")
+                @Html.DropDownListFor(p => p.CodigoCatalogoSeleccionado,
+                      new SelectList(ViewBag.Catalogo,
+                                     "Catalogo_Id", "Catalogo_Nombre"), new { @Class = "data-on-change-submit form-control" }
+                      )
+            </p>
+            <br />
+            <table class="table table-bordered table-condensed" id="Datos">
+                <thead>
+                    <tr>
+
+                        <th>
+                            @Html.DisplayName("Nombre")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Valor")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Orden")
+                        </th>
+                        <th>
+                            @ViewBag.VB_TextoPadre
+                        </th>
+                        <th>
+                            @ViewBag.VB_TextoParametro
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListaCatalogoDetalle)
+                    {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Valor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Orden)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ParentValor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Parametro1)
+                        </td>
+                        <td>
+                            @Html.ActionLink(" ", "Edit", new { id = item.CatalogoDetalleId }, new { @class = "btn btn-sm btn-warning glyphicon glyphicon-pencil", @title="Editar"  })
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+
+        </div>
+        <div class="box-footer">
+
+        </div>
+    </div>
+
+
+
+}
+
+@section scripts {
+    <script>
+        $(function () {
+            $(".data-on-change-submit")
+                .change(function () {
+                    var form = $("#Forma1");
+                    form.submit();
+                })
+        });
+    </script>
+
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('#Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'order' :  [[ 3, "desc" ]],
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 25,
+                "columnDefs": [
+                    { "width": "40%", "targets": 0 },
+                    { "width": "40%", "targets": 1 },
+                    { "width": "10%", "targets": 2 },
+                    { "width": "10%", "targets": 3 }
+                ],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+}

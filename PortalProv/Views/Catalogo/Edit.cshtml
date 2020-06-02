@@ -1,0 +1,110 @@
+﻿@model Wareways.PortalProv.Infraestructura.GEN_CatalogoDetalle
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="box box-default">
+
+        <div class="box-header">
+            <div class="col-md-6">
+                <h4 class="box-title"> Editar Opcion Detalle  </h4>
+            </div>
+            <div class="col-md-6 " style="text-align:right">
+
+
+            </div>
+        </div>
+        <div class="box-body">
+
+
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @Html.HiddenFor(model => model.CatalogoDetalleId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Valor, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Valor, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Valor, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Orden, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Orden, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Orden, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label((String)ViewBag.VB_TextoPadre, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @if (!String.IsNullOrEmpty(ViewBag.VB_TextoPadre))
+                        {
+                            @Html.EditorFor(model => model.ParentValor, new { htmlAttributes = new { @class = "form-control" } });
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label((String)ViewBag.VB_TextoParametro, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @if ((String)ViewBag.VB_TextoParametro != "")
+                        {
+                            @Html.EditorFor(model => model.Parametro1, new { htmlAttributes = new { @class = "form-control" } });
+                        }
+
+
+                    </div>
+                </div>
+
+                @Html.HiddenFor(p => p.Sistema)
+
+            </div>
+        </div>
+        <div class="box-footer">
+            <div class="col-md-6">
+                <a href="@Url.Action("Index",new Wareways.PortalProv.Models.CC.CatalogoIndexModel{ CodigoCatalogoSeleccionado = Model.Catalogo_Id })" class="btn btn-default ">
+                    <span class=" fa fa-backward" aria-hidden="true"></span>
+
+                    Regresar Lista
+                </a>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
+                    Grabar y Salir &nbsp;
+                    <i class="fa fa-save"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+         $(document).ready(function () {
+            if ($("#Sistema").val() == "True") {
+                $('#Nombre', 'form').attr('readonly', true);
+                $('#Valor', 'form').attr('readonly', true);
+            }
+        });
+    </script>
+    }

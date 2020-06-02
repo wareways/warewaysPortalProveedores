@@ -1,0 +1,1505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PortalProvModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="UserNameAudit" Type="nvarchar" MaxLength="128" />
+          <Property Name="Sistema" Type="bit" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="64" />
+          <Property Name="Puesto" Type="nvarchar" MaxLength="64" />
+          <Property Name="Sistema" Type="bit" />
+        </EntityType>
+        <EntityType Name="GEN_Audit">
+          <Key>
+            <PropertyRef Name="AuditID" />
+          </Key>
+          <Property Name="AuditID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="char" MaxLength="1" />
+          <Property Name="TableName" Type="varchar" MaxLength="128" />
+          <Property Name="PK" Type="varchar" MaxLength="1000" />
+          <Property Name="FieldName" Type="varchar" MaxLength="128" />
+          <Property Name="OldValue" Type="varchar" MaxLength="1000" />
+          <Property Name="NewValue" Type="varchar" MaxLength="1000" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="UserName" Type="varchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="GEN_Catalogo">
+          <Key>
+            <PropertyRef Name="Catalogo_Id" />
+          </Key>
+          <Property Name="Catalogo_Id" Type="int" Nullable="false" />
+          <Property Name="Catalogo_Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Catalogo_Orden" Type="int" Nullable="false" />
+          <Property Name="Nombre_ParentId" Type="varchar" MaxLength="64" />
+          <Property Name="Nombre_Parametro" Type="varchar" MaxLength="64" />
+        </EntityType>
+        <EntityType Name="GEN_CatalogoDetalle">
+          <Key>
+            <PropertyRef Name="CatalogoDetalleId" />
+          </Key>
+          <Property Name="Catalogo_Id" Type="int" />
+          <Property Name="CatalogoDetalleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="64" />
+          <Property Name="Valor" Type="varchar" MaxLength="64" />
+          <Property Name="Orden" Type="int" />
+          <Property Name="ParentValor" Type="varchar" MaxLength="64" />
+          <Property Name="Sistema" Type="bit" />
+          <Property Name="Parametro1" Type="varchar" MaxLength="64" />
+          <Property Name="Parametro2" Type="varchar" MaxLength="64" />
+        </EntityType>
+        <EntityType Name="GEN_Configuracion">
+          <Key>
+            <PropertyRef Name="ConfigNombre" />
+          </Key>
+          <Property Name="ConfigNombre" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="ConfigValor" Type="varchar" MaxLength="1024" Nullable="false" />
+          <Property Name="Sistema" Type="bit" />
+          <Property Name="SoloLectura" Type="bit" />
+        </EntityType>
+        <EntityType Name="GEN_Menu">
+          <Key>
+            <PropertyRef Name="Menu_Id" />
+          </Key>
+          <Property Name="Menu_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Menu_Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Menu_Url" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Menu_Icons" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Menu_Parent" Type="uniqueidentifier" />
+          <Property Name="Menu_Target" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Menu_Orden" Type="int" />
+        </EntityType>
+        <EntityType Name="GEN_Menu_Roles">
+          <Key>
+            <PropertyRef Name="Menu_Id" />
+            <PropertyRef Name="Role_Id" />
+          </Key>
+          <Property Name="Menu_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Role_Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PPROV_Adjuntos">
+          <Key>
+            <PropertyRef Name="Adjunto_Id" />
+          </Key>
+          <Property Name="Adjunto_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Doc_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Adjunto_FileName" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Adjunto_Tipo" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="PPROV_Contrasena">
+          <Key>
+            <PropertyRef Name="Contrasena_Id" />
+          </Key>
+          <Property Name="Contrasena_Id" Type="int" Nullable="false" />
+          <Property Name="Empresa_Id" Type="int" />
+          <Property Name="Contrasena_Fecha" Type="datetime" />
+          <Property Name="Contrasena_Fecha_Estimada" Type="datetime" />
+          <Property Name="Contrasena_Usuario" Type="varchar" MaxLength="64" />
+        </EntityType>
+        <EntityType Name="PPROV_Documento">
+          <Key>
+            <PropertyRef Name="Doc_Id" />
+          </Key>
+          <Property Name="Doc_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Doc_Estado" Type="varchar" MaxLength="32" />
+          <Property Name="Doc_Numero" Type="varchar" MaxLength="32" />
+          <Property Name="Doc_Serie" Type="varchar" MaxLength="32" />
+          <Property Name="Doc_Fecha" Type="datetime" />
+          <Property Name="Empresa_Id" Type="int" />
+          <Property Name="Doc_MontoNeto" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="Doc_Moneda" Type="varchar" MaxLength="16" />
+          <Property Name="Doc_Autorizacion" Type="varchar" MaxLength="64" />
+          <Property Name="Doc_Observaciones" Type="varchar(max)" />
+          <Property Name="Doc_TipoDocumento" Type="varchar" MaxLength="64" />
+          <Property Name="Doc_UsuarioCarga" Type="varchar" MaxLength="64" />
+          <Property Name="Doc_FechaCarga" Type="datetime" />
+          <Property Name="Doc_NumeroOC" Type="int" />
+          <Property Name="Contrasena_Id" Type="int" />
+          <Property Name="Doc_NumeroFactProv" Type="int" />
+          <Property Name="Doc_NumeroEntrega" Type="int" />
+        </EntityType>
+        <EntityType Name="PPROV_Estado">
+          <Key>
+            <PropertyRef Name="Doc_Estado" />
+          </Key>
+          <Property Name="Doc_Estado" Type="varchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PPROV_Nota">
+          <Key>
+            <PropertyRef Name="Nota_Id" />
+          </Key>
+          <Property Name="Nota_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Doc_Id" Type="uniqueidentifier" />
+          <Property Name="Nota_Fecha" Type="datetime" />
+          <Property Name="Nota_Usuario" Type="varchar" MaxLength="64" />
+          <Property Name="Nota_Descripción" Type="varbinary(max)" />
+          <Property Name="Doc_Estado" Type="varchar" MaxLength="32" />
+          <Property Name="Revisada" Type="bit" />
+          <Property Name="Revisada_Por" Type="varchar" MaxLength="32" />
+          <Property Name="Revisada_Fecha" Type="datetime" />
+        </EntityType>
+        <EntityType Name="PPROV_Retenciones">
+          <Key>
+            <PropertyRef Name="Retencion_Id" />
+          </Key>
+          <Property Name="Retencion_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Retencion_Fecha" Type="datetime" />
+          <Property Name="Retencion_Tipo" Type="int" />
+          <Property Name="Retencion_Usuario" Type="varchar" MaxLength="64" />
+          <Property Name="Retencion_Monto" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="Retencion_Moneda" Type="varchar" MaxLength="16" />
+          <Property Name="Doc_Id" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PPROV_RetencionTipo">
+          <Key>
+            <PropertyRef Name="Retencion_Tipo" />
+          </Key>
+          <Property Name="Retencion_Tipo" Type="int" Nullable="false" />
+          <Property Name="Retencion_Activo" Type="bit" Nullable="false" />
+          <Property Name="Retencion_Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PPROV_TipoAdjunto">
+          <Key>
+            <PropertyRef Name="Adjunto_Tipo" />
+          </Key>
+          <Property Name="Adjunto_Tipo" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Adjunto_Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Extension" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="Agrega_Prov" Type="bit" Nullable="false" />
+          <Property Name="Agregar_Empresa" Type="bit" Nullable="false" />
+          <Property Name="Requerido_Prov" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_GEN_MenuDisplay' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_GEN_MenuDisplay">
+          <Key>
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Menu_Id" />
+            <PropertyRef Name="Menu_Nombre" />
+            <PropertyRef Name="Menu_Url" />
+            <PropertyRef Name="Menu_Icons" />
+            <PropertyRef Name="Menu_Target" />
+          </Key>
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Menu_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Menu_Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Menu_Url" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Menu_Icons" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Menu_Parent" Type="uniqueidentifier" />
+          <Property Name="Menu_Target" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Menu_Orden" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_GEN_RolesDelMenu' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_GEN_RolesDelMenu">
+          <Key>
+            <PropertyRef Name="Menu_Id" />
+            <PropertyRef Name="Menu_Nombre" />
+            <PropertyRef Name="Menu_Url" />
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Linea" Type="bigint" />
+          <Property Name="Menu_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Menu_Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Menu_Url" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Activo" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioMenuPerfil' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_GEN_UsuarioMenuPerfil">
+          <Key>
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="RoleId" />
+            <PropertyRef Name="RoleName" />
+            <PropertyRef Name="Menu_Id" />
+            <PropertyRef Name="Menu_Nombre" />
+            <PropertyRef Name="Menu_Url" />
+            <PropertyRef Name="Menu_Icons" />
+            <PropertyRef Name="Menu_Target" />
+          </Key>
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Menu_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Menu_Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Menu_Url" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Menu_Icons" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Menu_Parent" Type="uniqueidentifier" />
+          <Property Name="Menu_Target" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Menu_Orden" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_GEN_UsuarioRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Active" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="UserNameAudit" Type="nvarchar" MaxLength="128" />
+          <Property Name="Sistema" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_GEN_UsuarioRoles_Diponibles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Active" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="UserNameAudit" Type="nvarchar" MaxLength="128" />
+          <Property Name="Sistema" Type="bit" />
+        </EntityType>
+        <Association Name="FK_CatalogoDetalle_Catalogo">
+          <End Role="GEN_Catalogo" Type="Self.GEN_Catalogo" Multiplicity="0..1" />
+          <End Role="GEN_CatalogoDetalle" Type="Self.GEN_CatalogoDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_Catalogo">
+              <PropertyRef Name="Catalogo_Id" />
+            </Principal>
+            <Dependent Role="GEN_CatalogoDetalle">
+              <PropertyRef Name="Catalogo_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Menu_Roles_AspNetRoles">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1" />
+          <End Role="GEN_Menu_Roles" Type="Self.GEN_Menu_Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GEN_Menu_Roles">
+              <PropertyRef Name="Role_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Menu_Roles_Menu">
+          <End Role="GEN_Menu" Type="Self.GEN_Menu" Multiplicity="1" />
+          <End Role="GEN_Menu_Roles" Type="Self.GEN_Menu_Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_Menu">
+              <PropertyRef Name="Menu_Id" />
+            </Principal>
+            <Dependent Role="GEN_Menu_Roles">
+              <PropertyRef Name="Menu_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Adjuntos_PPROV_Documento">
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="1" />
+          <End Role="PPROV_Adjuntos" Type="Self.PPROV_Adjuntos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Adjuntos">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Adjuntos_PPROV_TipoAdjunto">
+          <End Role="PPROV_TipoAdjunto" Type="Self.PPROV_TipoAdjunto" Multiplicity="0..1" />
+          <End Role="PPROV_Adjuntos" Type="Self.PPROV_Adjuntos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_TipoAdjunto">
+              <PropertyRef Name="Adjunto_Tipo" />
+            </Principal>
+            <Dependent Role="PPROV_Adjuntos">
+              <PropertyRef Name="Adjunto_Tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Documento_PPROV_Contrasena">
+          <End Role="PPROV_Contrasena" Type="Self.PPROV_Contrasena" Multiplicity="0..1" />
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Contrasena">
+              <PropertyRef Name="Contrasena_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Documento">
+              <PropertyRef Name="Contrasena_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Documento_PPROV_Estado">
+          <End Role="PPROV_Estado" Type="Self.PPROV_Estado" Multiplicity="0..1" />
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Estado">
+              <PropertyRef Name="Doc_Estado" />
+            </Principal>
+            <Dependent Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Nota_PPROV_Documento">
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="0..1" />
+          <End Role="PPROV_Nota" Type="Self.PPROV_Nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Nota">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Nota_PPROV_Estado">
+          <End Role="PPROV_Estado" Type="Self.PPROV_Estado" Multiplicity="0..1" />
+          <End Role="PPROV_Nota" Type="Self.PPROV_Nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Estado">
+              <PropertyRef Name="Doc_Estado" />
+            </Principal>
+            <Dependent Role="PPROV_Nota">
+              <PropertyRef Name="Doc_Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Retenciones_PPROV_Documento">
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="1" />
+          <End Role="PPROV_Retenciones" Type="Self.PPROV_Retenciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Retenciones">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Retenciones_PPROV_RetencionTipo">
+          <End Role="PPROV_RetencionTipo" Type="Self.PPROV_RetencionTipo" Multiplicity="0..1" />
+          <End Role="PPROV_Retenciones" Type="Self.PPROV_Retenciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_RetencionTipo">
+              <PropertyRef Name="Retencion_Tipo" />
+            </Principal>
+            <Dependent Role="PPROV_Retenciones">
+              <PropertyRef Name="Retencion_Tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PortalProvModelStoreContainer">
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_Audit" EntityType="Self.GEN_Audit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_Catalogo" EntityType="Self.GEN_Catalogo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_CatalogoDetalle" EntityType="Self.GEN_CatalogoDetalle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_Configuracion" EntityType="Self.GEN_Configuracion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_Menu" EntityType="Self.GEN_Menu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_Menu_Roles" EntityType="Self.GEN_Menu_Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_Adjuntos" EntityType="Self.PPROV_Adjuntos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_Contrasena" EntityType="Self.PPROV_Contrasena" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_Documento" EntityType="Self.PPROV_Documento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_Estado" EntityType="Self.PPROV_Estado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_Nota" EntityType="Self.PPROV_Nota" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_Retenciones" EntityType="Self.PPROV_Retenciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_RetencionTipo" EntityType="Self.PPROV_RetencionTipo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_TipoAdjunto" EntityType="Self.PPROV_TipoAdjunto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="V_GEN_MenuDisplay" EntityType="Self.V_GEN_MenuDisplay" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_GEN_MenuDisplay].[UserName] AS [UserName], 
+    [V_GEN_MenuDisplay].[Menu_Id] AS [Menu_Id], 
+    [V_GEN_MenuDisplay].[Menu_Nombre] AS [Menu_Nombre], 
+    [V_GEN_MenuDisplay].[Menu_Url] AS [Menu_Url], 
+    [V_GEN_MenuDisplay].[Menu_Icons] AS [Menu_Icons], 
+    [V_GEN_MenuDisplay].[Menu_Parent] AS [Menu_Parent], 
+    [V_GEN_MenuDisplay].[Menu_Target] AS [Menu_Target], 
+    [V_GEN_MenuDisplay].[Menu_Orden] AS [Menu_Orden]
+    FROM [dbo].[V_GEN_MenuDisplay] AS [V_GEN_MenuDisplay]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_GEN_RolesDelMenu" EntityType="Self.V_GEN_RolesDelMenu" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_GEN_RolesDelMenu].[Linea] AS [Linea], 
+    [V_GEN_RolesDelMenu].[Menu_Id] AS [Menu_Id], 
+    [V_GEN_RolesDelMenu].[Menu_Nombre] AS [Menu_Nombre], 
+    [V_GEN_RolesDelMenu].[Menu_Url] AS [Menu_Url], 
+    [V_GEN_RolesDelMenu].[Id] AS [Id], 
+    [V_GEN_RolesDelMenu].[Name] AS [Name], 
+    [V_GEN_RolesDelMenu].[Activo] AS [Activo]
+    FROM [dbo].[V_GEN_RolesDelMenu] AS [V_GEN_RolesDelMenu]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_GEN_UsuarioMenuPerfil" EntityType="Self.V_GEN_UsuarioMenuPerfil" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_GEN_UsuarioMenuPerfil].[UserName] AS [UserName], 
+    [V_GEN_UsuarioMenuPerfil].[RoleId] AS [RoleId], 
+    [V_GEN_UsuarioMenuPerfil].[RoleName] AS [RoleName], 
+    [V_GEN_UsuarioMenuPerfil].[Menu_Id] AS [Menu_Id], 
+    [V_GEN_UsuarioMenuPerfil].[Menu_Nombre] AS [Menu_Nombre], 
+    [V_GEN_UsuarioMenuPerfil].[Menu_Url] AS [Menu_Url], 
+    [V_GEN_UsuarioMenuPerfil].[Menu_Icons] AS [Menu_Icons], 
+    [V_GEN_UsuarioMenuPerfil].[Menu_Parent] AS [Menu_Parent], 
+    [V_GEN_UsuarioMenuPerfil].[Menu_Target] AS [Menu_Target], 
+    [V_GEN_UsuarioMenuPerfil].[Menu_Orden] AS [Menu_Orden]
+    FROM [dbo].[V_GEN_UsuarioMenuPerfil] AS [V_GEN_UsuarioMenuPerfil]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_GEN_UsuarioRoles" EntityType="Self.V_GEN_UsuarioRoles" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_GEN_UsuarioRoles].[UserId] AS [UserId], 
+    [V_GEN_UsuarioRoles].[Id] AS [Id], 
+    [V_GEN_UsuarioRoles].[Name] AS [Name], 
+    [V_GEN_UsuarioRoles].[Active] AS [Active], 
+    [V_GEN_UsuarioRoles].[UserNameAudit] AS [UserNameAudit], 
+    [V_GEN_UsuarioRoles].[Sistema] AS [Sistema]
+    FROM [dbo].[V_GEN_UsuarioRoles] AS [V_GEN_UsuarioRoles]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_GEN_UsuarioRoles_Diponibles" EntityType="Self.V_GEN_UsuarioRoles_Diponibles" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_GEN_UsuarioRoles_Diponibles].[UserId] AS [UserId], 
+    [V_GEN_UsuarioRoles_Diponibles].[Id] AS [Id], 
+    [V_GEN_UsuarioRoles_Diponibles].[Name] AS [Name], 
+    [V_GEN_UsuarioRoles_Diponibles].[Active] AS [Active], 
+    [V_GEN_UsuarioRoles_Diponibles].[UserNameAudit] AS [UserNameAudit], 
+    [V_GEN_UsuarioRoles_Diponibles].[Sistema] AS [Sistema]
+    FROM [dbo].[V_GEN_UsuarioRoles_Diponibles] AS [V_GEN_UsuarioRoles_Diponibles]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_CatalogoDetalle_Catalogo" Association="Self.FK_CatalogoDetalle_Catalogo">
+            <End Role="GEN_Catalogo" EntitySet="GEN_Catalogo" />
+            <End Role="GEN_CatalogoDetalle" EntitySet="GEN_CatalogoDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Menu_Roles_AspNetRoles" Association="Self.FK_Menu_Roles_AspNetRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="GEN_Menu_Roles" EntitySet="GEN_Menu_Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Menu_Roles_Menu" Association="Self.FK_Menu_Roles_Menu">
+            <End Role="GEN_Menu" EntitySet="GEN_Menu" />
+            <End Role="GEN_Menu_Roles" EntitySet="GEN_Menu_Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Adjuntos_PPROV_Documento" Association="Self.FK_PPROV_Adjuntos_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Adjuntos_PPROV_TipoAdjunto" Association="Self.FK_PPROV_Adjuntos_PPROV_TipoAdjunto">
+            <End Role="PPROV_TipoAdjunto" EntitySet="PPROV_TipoAdjunto" />
+            <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Documento_PPROV_Contrasena" Association="Self.FK_PPROV_Documento_PPROV_Contrasena">
+            <End Role="PPROV_Contrasena" EntitySet="PPROV_Contrasena" />
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Documento_PPROV_Estado" Association="Self.FK_PPROV_Documento_PPROV_Estado">
+            <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Nota_PPROV_Documento" Association="Self.FK_PPROV_Nota_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Nota_PPROV_Estado" Association="Self.FK_PPROV_Nota_PPROV_Estado">
+            <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
+            <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Retenciones_PPROV_Documento" Association="Self.FK_PPROV_Retenciones_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Retenciones" EntitySet="PPROV_Retenciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Retenciones_PPROV_RetencionTipo" Association="Self.FK_PPROV_Retenciones_PPROV_RetencionTipo">
+            <End Role="PPROV_RetencionTipo" EntitySet="PPROV_RetencionTipo" />
+            <End Role="PPROV_Retenciones" EntitySet="PPROV_Retenciones" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PortalProvModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="PortalProvModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="PortalProvModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="PPROV_Adjuntos">
+          <Key>
+            <PropertyRef Name="Adjunto_Id" />
+          </Key>
+          <Property Name="Adjunto_Id" Type="Guid" Nullable="false" />
+          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
+          <Property Name="Adjunto_FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Adjunto_Tipo" Type="Guid" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Adjuntos_PPROV_Documento" FromRole="PPROV_Adjuntos" ToRole="PPROV_Documento" />
+          <NavigationProperty Name="PPROV_TipoAdjunto" Relationship="Self.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" FromRole="PPROV_Adjuntos" ToRole="PPROV_TipoAdjunto" />
+        </EntityType>
+        <EntityType Name="PPROV_Contrasena">
+          <Key>
+            <PropertyRef Name="Contrasena_Id" />
+          </Key>
+          <Property Name="Contrasena_Id" Type="Int32" Nullable="false" />
+          <Property Name="Empresa_Id" Type="Int32" />
+          <Property Name="Contrasena_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Contrasena_Fecha_Estimada" Type="DateTime" Precision="3" />
+          <Property Name="Contrasena_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Contrasena" ToRole="PPROV_Documento" />
+        </EntityType>
+        <EntityType Name="PPROV_Documento">
+          <Key>
+            <PropertyRef Name="Doc_Id" />
+          </Key>
+          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
+          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Numero" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Serie" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Empresa_Id" Type="Int32" />
+          <Property Name="Doc_MontoNeto" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="Doc_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Autorizacion" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_TipoDocumento" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_UsuarioCarga" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_FechaCarga" Type="DateTime" Precision="3" />
+          <Property Name="Doc_NumeroOC" Type="Int32" />
+          <Property Name="Contrasena_Id" Type="Int32" />
+          <Property Name="Doc_NumeroFactProv" Type="Int32" />
+          <Property Name="Doc_NumeroEntrega" Type="Int32" />
+          <NavigationProperty Name="PPROV_Adjuntos" Relationship="Self.FK_PPROV_Adjuntos_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Adjuntos" />
+          <NavigationProperty Name="PPROV_Contrasena" Relationship="Self.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Documento" ToRole="PPROV_Contrasena" />
+          <NavigationProperty Name="PPROV_Estado" Relationship="Self.FK_PPROV_Documento_PPROV_Estado" FromRole="PPROV_Documento" ToRole="PPROV_Estado" />
+          <NavigationProperty Name="PPROV_Nota" Relationship="Self.FK_PPROV_Nota_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Nota" />
+          <NavigationProperty Name="PPROV_Retenciones" Relationship="Self.FK_PPROV_Retenciones_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Retenciones" />
+        </EntityType>
+        <EntityType Name="PPROV_Estado">
+          <Key>
+            <PropertyRef Name="Doc_Estado" />
+          </Key>
+          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Documento_PPROV_Estado" FromRole="PPROV_Estado" ToRole="PPROV_Documento" />
+          <NavigationProperty Name="PPROV_Nota" Relationship="Self.FK_PPROV_Nota_PPROV_Estado" FromRole="PPROV_Estado" ToRole="PPROV_Nota" />
+        </EntityType>
+        <EntityType Name="PPROV_Nota">
+          <Key>
+            <PropertyRef Name="Nota_Id" />
+          </Key>
+          <Property Name="Nota_Id" Type="Guid" Nullable="false" />
+          <Property Name="Doc_Id" Type="Guid" />
+          <Property Name="Nota_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Nota_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Nota_Descripción" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Revisada" Type="Boolean" />
+          <Property Name="Revisada_Por" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Revisada_Fecha" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Nota_PPROV_Documento" FromRole="PPROV_Nota" ToRole="PPROV_Documento" />
+          <NavigationProperty Name="PPROV_Estado" Relationship="Self.FK_PPROV_Nota_PPROV_Estado" FromRole="PPROV_Nota" ToRole="PPROV_Estado" />
+        </EntityType>
+        <EntityType Name="PPROV_Retenciones">
+          <Key>
+            <PropertyRef Name="Retencion_Id" />
+          </Key>
+          <Property Name="Retencion_Id" Type="Guid" Nullable="false" />
+          <Property Name="Retencion_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Retencion_Tipo" Type="Int32" />
+          <Property Name="Retencion_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Retencion_Monto" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="Retencion_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Retenciones_PPROV_Documento" FromRole="PPROV_Retenciones" ToRole="PPROV_Documento" />
+          <NavigationProperty Name="PPROV_RetencionTipo" Relationship="Self.FK_PPROV_Retenciones_PPROV_RetencionTipo" FromRole="PPROV_Retenciones" ToRole="PPROV_RetencionTipo" />
+        </EntityType>
+        <EntityType Name="PPROV_RetencionTipo">
+          <Key>
+            <PropertyRef Name="Retencion_Tipo" />
+          </Key>
+          <Property Name="Retencion_Tipo" Type="Int32" Nullable="false" />
+          <Property Name="Retencion_Activo" Type="Boolean" Nullable="false" />
+          <Property Name="Retencion_Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PPROV_Retenciones" Relationship="Self.FK_PPROV_Retenciones_PPROV_RetencionTipo" FromRole="PPROV_RetencionTipo" ToRole="PPROV_Retenciones" />
+        </EntityType>
+        <EntityType Name="PPROV_TipoAdjunto">
+          <Key>
+            <PropertyRef Name="Adjunto_Tipo" />
+          </Key>
+          <Property Name="Adjunto_Tipo" Type="Guid" Nullable="false" />
+          <Property Name="Adjunto_Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Extension" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Agrega_Prov" Type="Boolean" Nullable="false" />
+          <Property Name="Agregar_Empresa" Type="Boolean" Nullable="false" />
+          <Property Name="Requerido_Prov" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PPROV_Adjuntos" Relationship="Self.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" FromRole="PPROV_TipoAdjunto" ToRole="PPROV_Adjuntos" />
+        </EntityType>
+        <Association Name="FK_PPROV_Adjuntos_PPROV_Documento">
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="1" />
+          <End Role="PPROV_Adjuntos" Type="Self.PPROV_Adjuntos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Adjuntos">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Adjuntos_PPROV_TipoAdjunto">
+          <End Role="PPROV_TipoAdjunto" Type="Self.PPROV_TipoAdjunto" Multiplicity="0..1" />
+          <End Role="PPROV_Adjuntos" Type="Self.PPROV_Adjuntos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_TipoAdjunto">
+              <PropertyRef Name="Adjunto_Tipo" />
+            </Principal>
+            <Dependent Role="PPROV_Adjuntos">
+              <PropertyRef Name="Adjunto_Tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Documento_PPROV_Contrasena">
+          <End Role="PPROV_Contrasena" Type="Self.PPROV_Contrasena" Multiplicity="0..1" />
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Contrasena">
+              <PropertyRef Name="Contrasena_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Documento">
+              <PropertyRef Name="Contrasena_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Documento_PPROV_Estado">
+          <End Role="PPROV_Estado" Type="Self.PPROV_Estado" Multiplicity="0..1" />
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Estado">
+              <PropertyRef Name="Doc_Estado" />
+            </Principal>
+            <Dependent Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Nota_PPROV_Documento">
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="0..1" />
+          <End Role="PPROV_Nota" Type="Self.PPROV_Nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Nota">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Retenciones_PPROV_Documento">
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="1" />
+          <End Role="PPROV_Retenciones" Type="Self.PPROV_Retenciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Retenciones">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Nota_PPROV_Estado">
+          <End Role="PPROV_Estado" Type="Self.PPROV_Estado" Multiplicity="0..1" />
+          <End Role="PPROV_Nota" Type="Self.PPROV_Nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Estado">
+              <PropertyRef Name="Doc_Estado" />
+            </Principal>
+            <Dependent Role="PPROV_Nota">
+              <PropertyRef Name="Doc_Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Retenciones_PPROV_RetencionTipo">
+          <End Role="PPROV_RetencionTipo" Type="Self.PPROV_RetencionTipo" Multiplicity="0..1" />
+          <End Role="PPROV_Retenciones" Type="Self.PPROV_Retenciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_RetencionTipo">
+              <PropertyRef Name="Retencion_Tipo" />
+            </Principal>
+            <Dependent Role="PPROV_Retenciones">
+              <PropertyRef Name="Retencion_Tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PortalProvEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" />
+          <EntitySet Name="PPROV_Adjuntos" EntityType="Self.PPROV_Adjuntos" />
+          <EntitySet Name="PPROV_Contrasena" EntityType="Self.PPROV_Contrasena" />
+          <EntitySet Name="PPROV_Documento" EntityType="Self.PPROV_Documento" />
+          <EntitySet Name="PPROV_Estado" EntityType="Self.PPROV_Estado" />
+          <EntitySet Name="PPROV_Nota" EntityType="Self.PPROV_Nota" />
+          <EntitySet Name="PPROV_Retenciones" EntityType="Self.PPROV_Retenciones" />
+          <EntitySet Name="PPROV_RetencionTipo" EntityType="Self.PPROV_RetencionTipo" />
+          <EntitySet Name="PPROV_TipoAdjunto" EntityType="Self.PPROV_TipoAdjunto" />
+          <AssociationSet Name="FK_PPROV_Adjuntos_PPROV_Documento" Association="Self.FK_PPROV_Adjuntos_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Adjuntos_PPROV_TipoAdjunto" Association="Self.FK_PPROV_Adjuntos_PPROV_TipoAdjunto">
+            <End Role="PPROV_TipoAdjunto" EntitySet="PPROV_TipoAdjunto" />
+            <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Documento_PPROV_Contrasena" Association="Self.FK_PPROV_Documento_PPROV_Contrasena">
+            <End Role="PPROV_Contrasena" EntitySet="PPROV_Contrasena" />
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Documento_PPROV_Estado" Association="Self.FK_PPROV_Documento_PPROV_Estado">
+            <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Nota_PPROV_Documento" Association="Self.FK_PPROV_Nota_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Retenciones_PPROV_Documento" Association="Self.FK_PPROV_Retenciones_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Retenciones" EntitySet="PPROV_Retenciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Nota_PPROV_Estado" Association="Self.FK_PPROV_Nota_PPROV_Estado">
+            <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
+            <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Retenciones_PPROV_RetencionTipo" Association="Self.FK_PPROV_Retenciones_PPROV_RetencionTipo">
+            <End Role="PPROV_RetencionTipo" EntitySet="PPROV_RetencionTipo" />
+            <End Role="PPROV_Retenciones" EntitySet="PPROV_Retenciones" />
+          </AssociationSet>
+          <EntitySet Name="GEN_Configuracion" EntityType="PortalProvModel.GEN_Configuracion" />
+          <EntitySet Name="GEN_Audit" EntityType="PortalProvModel.GEN_Audit" />
+          <EntitySet Name="GEN_Catalogo" EntityType="PortalProvModel.GEN_Catalogo" />
+          <EntitySet Name="GEN_CatalogoDetalle" EntityType="PortalProvModel.GEN_CatalogoDetalle" />
+          <EntitySet Name="GEN_Menu" EntityType="PortalProvModel.GEN_Menu" />
+          <AssociationSet Name="FK_CatalogoDetalle_Catalogo" Association="PortalProvModel.FK_CatalogoDetalle_Catalogo">
+            <End Role="GEN_Catalogo" EntitySet="GEN_Catalogo" />
+            <End Role="GEN_CatalogoDetalle" EntitySet="GEN_CatalogoDetalle" />
+          </AssociationSet>
+          <EntitySet Name="V_GEN_MenuDisplay" EntityType="PortalProvModel.V_GEN_MenuDisplay" />
+          <EntitySet Name="V_GEN_RolesDelMenu" EntityType="PortalProvModel.V_GEN_RolesDelMenu" />
+          <EntitySet Name="V_GEN_UsuarioMenuPerfil" EntityType="PortalProvModel.V_GEN_UsuarioMenuPerfil" />
+          <EntitySet Name="V_GEN_UsuarioRoles" EntityType="PortalProvModel.V_GEN_UsuarioRoles" />
+          <EntitySet Name="V_GEN_UsuarioRoles_Diponibles" EntityType="PortalProvModel.V_GEN_UsuarioRoles_Diponibles" />
+          <EntitySet Name="AspNetRoles" EntityType="PortalProvModel.AspNetRoles" />
+          <EntitySet Name="AspNetUsers" EntityType="PortalProvModel.AspNetUsers" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="PortalProvModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="PortalProvModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="PortalProvModel.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="GEN_Menu_Roles" Association="PortalProvModel.GEN_Menu_Roles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="GEN_Menu" EntitySet="GEN_Menu" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="GEN_Configuracion">
+          <Key>
+            <PropertyRef Name="ConfigNombre" />
+          </Key>
+          <Property Name="ConfigNombre" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="ConfigValor" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Sistema" Type="Boolean" />
+          <Property Name="SoloLectura" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="GEN_Audit">
+          <Key>
+            <PropertyRef Name="AuditID" />
+          </Key>
+          <Property Name="AuditID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="TableName" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="PK" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="FieldName" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="OldValue" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="NewValue" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="UserName" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="GEN_Catalogo">
+          <Key>
+            <PropertyRef Name="Catalogo_Id" />
+          </Key>
+          <Property Name="Catalogo_Id" Type="Int32" Nullable="false" />
+          <Property Name="Catalogo_Nombre" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Catalogo_Orden" Type="Int32" Nullable="false" />
+          <Property Name="Nombre_ParentId" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre_Parametro" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="GEN_CatalogoDetalle" Relationship="PortalProvModel.FK_CatalogoDetalle_Catalogo" FromRole="GEN_Catalogo" ToRole="GEN_CatalogoDetalle" />
+        </EntityType>
+        <EntityType Name="GEN_CatalogoDetalle">
+          <Key>
+            <PropertyRef Name="CatalogoDetalleId" />
+          </Key>
+          <Property Name="Catalogo_Id" Type="Int32" />
+          <Property Name="CatalogoDetalleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Valor" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Orden" Type="Int32" />
+          <Property Name="ParentValor" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Sistema" Type="Boolean" />
+          <Property Name="Parametro1" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Parametro2" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="GEN_Catalogo" Relationship="PortalProvModel.FK_CatalogoDetalle_Catalogo" FromRole="GEN_CatalogoDetalle" ToRole="GEN_Catalogo" />
+        </EntityType>
+        <EntityType Name="GEN_Menu">
+          <Key>
+            <PropertyRef Name="Menu_Id" />
+          </Key>
+          <Property Name="Menu_Id" Type="Guid" Nullable="false" />
+          <Property Name="Menu_Nombre" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Url" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Icons" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Parent" Type="Guid" />
+          <Property Name="Menu_Target" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Orden" Type="Int32" />
+          <NavigationProperty Name="AspNetRoles" Relationship="PortalProvModel.GEN_Menu_Roles" FromRole="GEN_Menu" ToRole="AspNetRoles" />
+        </EntityType>
+        <Association Name="FK_CatalogoDetalle_Catalogo">
+          <End Type="PortalProvModel.GEN_Catalogo" Role="GEN_Catalogo" Multiplicity="0..1" />
+          <End Type="PortalProvModel.GEN_CatalogoDetalle" Role="GEN_CatalogoDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_Catalogo">
+              <PropertyRef Name="Catalogo_Id" />
+            </Principal>
+            <Dependent Role="GEN_CatalogoDetalle">
+              <PropertyRef Name="Catalogo_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="V_GEN_MenuDisplay">
+          <Key>
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Menu_Id" />
+            <PropertyRef Name="Menu_Nombre" />
+            <PropertyRef Name="Menu_Url" />
+            <PropertyRef Name="Menu_Icons" />
+            <PropertyRef Name="Menu_Target" />
+          </Key>
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Menu_Id" Type="Guid" Nullable="false" />
+          <Property Name="Menu_Nombre" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Url" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Icons" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Parent" Type="Guid" />
+          <Property Name="Menu_Target" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Orden" Type="Int32" />
+        </EntityType>
+        <EntityType Name="V_GEN_RolesDelMenu">
+          <Key>
+            <PropertyRef Name="Menu_Id" />
+            <PropertyRef Name="Menu_Nombre" />
+            <PropertyRef Name="Menu_Url" />
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Linea" Type="Int64" />
+          <Property Name="Menu_Id" Type="Guid" Nullable="false" />
+          <Property Name="Menu_Nombre" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Url" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="Int32" />
+        </EntityType>
+        <EntityType Name="V_GEN_UsuarioMenuPerfil">
+          <Key>
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="RoleId" />
+            <PropertyRef Name="RoleName" />
+            <PropertyRef Name="Menu_Id" />
+            <PropertyRef Name="Menu_Nombre" />
+            <PropertyRef Name="Menu_Url" />
+            <PropertyRef Name="Menu_Icons" />
+            <PropertyRef Name="Menu_Target" />
+          </Key>
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="RoleId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="RoleName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Menu_Id" Type="Guid" Nullable="false" />
+          <Property Name="Menu_Nombre" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Url" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Icons" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Parent" Type="Guid" />
+          <Property Name="Menu_Target" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Menu_Orden" Type="Int32" />
+        </EntityType>
+        <EntityType Name="V_GEN_UsuarioRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Active" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="UserNameAudit" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Sistema" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="V_GEN_UsuarioRoles_Diponibles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Active" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="UserNameAudit" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Sistema" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="UserNameAudit" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Sistema" Type="Boolean" />
+          <NavigationProperty Name="AspNetUsers" Relationship="PortalProvModel.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+          <NavigationProperty Name="GEN_Menu" Relationship="PortalProvModel.GEN_Menu_Roles" FromRole="AspNetRoles" ToRole="GEN_Menu" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Puesto" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Sistema" Type="Boolean" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="PortalProvModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="PortalProvModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="AspNetRoles" Relationship="PortalProvModel.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Type="PortalProvModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PortalProvModel.AspNetUserClaims" Role="AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Type="PortalProvModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PortalProvModel.AspNetUserLogins" Role="AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="PortalProvModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
+          <End Type="PortalProvModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
+        </Association>
+        <Association Name="GEN_Menu_Roles">
+          <End Type="PortalProvModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
+          <End Type="PortalProvModel.GEN_Menu" Role="GEN_Menu" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PortalProvModelStoreContainer" CdmEntityContainer="PortalProvEntities">
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="PortalProvModel.AspNetUserClaims">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="PortalProvModel.AspNetUserLogins">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Adjuntos">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Adjuntos">
+              <MappingFragment StoreEntitySet="PPROV_Adjuntos">
+                <ScalarProperty Name="Adjunto_Id" ColumnName="Adjunto_Id" />
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+                <ScalarProperty Name="Adjunto_FileName" ColumnName="Adjunto_FileName" />
+                <ScalarProperty Name="Adjunto_Tipo" ColumnName="Adjunto_Tipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Contrasena">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Contrasena">
+              <MappingFragment StoreEntitySet="PPROV_Contrasena">
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="Contrasena_Fecha" ColumnName="Contrasena_Fecha" />
+                <ScalarProperty Name="Contrasena_Fecha_Estimada" ColumnName="Contrasena_Fecha_Estimada" />
+                <ScalarProperty Name="Contrasena_Usuario" ColumnName="Contrasena_Usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Documento">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Documento">
+              <MappingFragment StoreEntitySet="PPROV_Documento">
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
+                <ScalarProperty Name="Doc_Numero" ColumnName="Doc_Numero" />
+                <ScalarProperty Name="Doc_Serie" ColumnName="Doc_Serie" />
+                <ScalarProperty Name="Doc_Fecha" ColumnName="Doc_Fecha" />
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="Doc_MontoNeto" ColumnName="Doc_MontoNeto" />
+                <ScalarProperty Name="Doc_Moneda" ColumnName="Doc_Moneda" />
+                <ScalarProperty Name="Doc_Autorizacion" ColumnName="Doc_Autorizacion" />
+                <ScalarProperty Name="Doc_Observaciones" ColumnName="Doc_Observaciones" />
+                <ScalarProperty Name="Doc_TipoDocumento" ColumnName="Doc_TipoDocumento" />
+                <ScalarProperty Name="Doc_UsuarioCarga" ColumnName="Doc_UsuarioCarga" />
+                <ScalarProperty Name="Doc_FechaCarga" ColumnName="Doc_FechaCarga" />
+                <ScalarProperty Name="Doc_NumeroOC" ColumnName="Doc_NumeroOC" />
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+                <ScalarProperty Name="Doc_NumeroFactProv" ColumnName="Doc_NumeroFactProv" />
+                <ScalarProperty Name="Doc_NumeroEntrega" ColumnName="Doc_NumeroEntrega" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Estado">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Estado">
+              <MappingFragment StoreEntitySet="PPROV_Estado">
+                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Nota">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Nota">
+              <MappingFragment StoreEntitySet="PPROV_Nota">
+                <ScalarProperty Name="Nota_Id" ColumnName="Nota_Id" />
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+                <ScalarProperty Name="Nota_Fecha" ColumnName="Nota_Fecha" />
+                <ScalarProperty Name="Nota_Usuario" ColumnName="Nota_Usuario" />
+                <ScalarProperty Name="Nota_Descripción" ColumnName="Nota_Descripción" />
+                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
+                <ScalarProperty Name="Revisada" ColumnName="Revisada" />
+                <ScalarProperty Name="Revisada_Por" ColumnName="Revisada_Por" />
+                <ScalarProperty Name="Revisada_Fecha" ColumnName="Revisada_Fecha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Retenciones">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Retenciones">
+              <MappingFragment StoreEntitySet="PPROV_Retenciones">
+                <ScalarProperty Name="Retencion_Id" ColumnName="Retencion_Id" />
+                <ScalarProperty Name="Retencion_Fecha" ColumnName="Retencion_Fecha" />
+                <ScalarProperty Name="Retencion_Tipo" ColumnName="Retencion_Tipo" />
+                <ScalarProperty Name="Retencion_Usuario" ColumnName="Retencion_Usuario" />
+                <ScalarProperty Name="Retencion_Monto" ColumnName="Retencion_Monto" />
+                <ScalarProperty Name="Retencion_Moneda" ColumnName="Retencion_Moneda" />
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_RetencionTipo">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_RetencionTipo">
+              <MappingFragment StoreEntitySet="PPROV_RetencionTipo">
+                <ScalarProperty Name="Retencion_Tipo" ColumnName="Retencion_Tipo" />
+                <ScalarProperty Name="Retencion_Activo" ColumnName="Retencion_Activo" />
+                <ScalarProperty Name="Retencion_Nombre" ColumnName="Retencion_Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_TipoAdjunto">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_TipoAdjunto">
+              <MappingFragment StoreEntitySet="PPROV_TipoAdjunto">
+                <ScalarProperty Name="Adjunto_Tipo" ColumnName="Adjunto_Tipo" />
+                <ScalarProperty Name="Adjunto_Nombre" ColumnName="Adjunto_Nombre" />
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="Agrega_Prov" ColumnName="Agrega_Prov" />
+                <ScalarProperty Name="Agregar_Empresa" ColumnName="Agregar_Empresa" />
+                <ScalarProperty Name="Requerido_Prov" ColumnName="Requerido_Prov" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_Configuracion">
+            <EntityTypeMapping TypeName="PortalProvModel.GEN_Configuracion">
+              <MappingFragment StoreEntitySet="GEN_Configuracion">
+                <ScalarProperty Name="SoloLectura" ColumnName="SoloLectura" />
+                <ScalarProperty Name="Sistema" ColumnName="Sistema" />
+                <ScalarProperty Name="ConfigValor" ColumnName="ConfigValor" />
+                <ScalarProperty Name="ConfigNombre" ColumnName="ConfigNombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_Audit">
+            <EntityTypeMapping TypeName="PortalProvModel.GEN_Audit">
+              <MappingFragment StoreEntitySet="GEN_Audit">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="NewValue" ColumnName="NewValue" />
+                <ScalarProperty Name="OldValue" ColumnName="OldValue" />
+                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
+                <ScalarProperty Name="PK" ColumnName="PK" />
+                <ScalarProperty Name="TableName" ColumnName="TableName" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="AuditID" ColumnName="AuditID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_Catalogo">
+            <EntityTypeMapping TypeName="PortalProvModel.GEN_Catalogo">
+              <MappingFragment StoreEntitySet="GEN_Catalogo">
+                <ScalarProperty Name="Nombre_Parametro" ColumnName="Nombre_Parametro" />
+                <ScalarProperty Name="Nombre_ParentId" ColumnName="Nombre_ParentId" />
+                <ScalarProperty Name="Catalogo_Orden" ColumnName="Catalogo_Orden" />
+                <ScalarProperty Name="Catalogo_Nombre" ColumnName="Catalogo_Nombre" />
+                <ScalarProperty Name="Catalogo_Id" ColumnName="Catalogo_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_CatalogoDetalle">
+            <EntityTypeMapping TypeName="PortalProvModel.GEN_CatalogoDetalle">
+              <MappingFragment StoreEntitySet="GEN_CatalogoDetalle">
+                <ScalarProperty Name="Parametro2" ColumnName="Parametro2" />
+                <ScalarProperty Name="Parametro1" ColumnName="Parametro1" />
+                <ScalarProperty Name="Sistema" ColumnName="Sistema" />
+                <ScalarProperty Name="ParentValor" ColumnName="ParentValor" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="Valor" ColumnName="Valor" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="CatalogoDetalleId" ColumnName="CatalogoDetalleId" />
+                <ScalarProperty Name="Catalogo_Id" ColumnName="Catalogo_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_Menu">
+            <EntityTypeMapping TypeName="PortalProvModel.GEN_Menu">
+              <MappingFragment StoreEntitySet="GEN_Menu">
+                <ScalarProperty Name="Menu_Orden" ColumnName="Menu_Orden" />
+                <ScalarProperty Name="Menu_Target" ColumnName="Menu_Target" />
+                <ScalarProperty Name="Menu_Parent" ColumnName="Menu_Parent" />
+                <ScalarProperty Name="Menu_Icons" ColumnName="Menu_Icons" />
+                <ScalarProperty Name="Menu_Url" ColumnName="Menu_Url" />
+                <ScalarProperty Name="Menu_Nombre" ColumnName="Menu_Nombre" />
+                <ScalarProperty Name="Menu_Id" ColumnName="Menu_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_GEN_MenuDisplay">
+            <EntityTypeMapping TypeName="PortalProvModel.V_GEN_MenuDisplay">
+              <MappingFragment StoreEntitySet="V_GEN_MenuDisplay">
+                <ScalarProperty Name="Menu_Orden" ColumnName="Menu_Orden" />
+                <ScalarProperty Name="Menu_Target" ColumnName="Menu_Target" />
+                <ScalarProperty Name="Menu_Parent" ColumnName="Menu_Parent" />
+                <ScalarProperty Name="Menu_Icons" ColumnName="Menu_Icons" />
+                <ScalarProperty Name="Menu_Url" ColumnName="Menu_Url" />
+                <ScalarProperty Name="Menu_Nombre" ColumnName="Menu_Nombre" />
+                <ScalarProperty Name="Menu_Id" ColumnName="Menu_Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_GEN_RolesDelMenu">
+            <EntityTypeMapping TypeName="PortalProvModel.V_GEN_RolesDelMenu">
+              <MappingFragment StoreEntitySet="V_GEN_RolesDelMenu">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Menu_Url" ColumnName="Menu_Url" />
+                <ScalarProperty Name="Menu_Nombre" ColumnName="Menu_Nombre" />
+                <ScalarProperty Name="Menu_Id" ColumnName="Menu_Id" />
+                <ScalarProperty Name="Linea" ColumnName="Linea" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_GEN_UsuarioMenuPerfil">
+            <EntityTypeMapping TypeName="PortalProvModel.V_GEN_UsuarioMenuPerfil">
+              <MappingFragment StoreEntitySet="V_GEN_UsuarioMenuPerfil">
+                <ScalarProperty Name="Menu_Orden" ColumnName="Menu_Orden" />
+                <ScalarProperty Name="Menu_Target" ColumnName="Menu_Target" />
+                <ScalarProperty Name="Menu_Parent" ColumnName="Menu_Parent" />
+                <ScalarProperty Name="Menu_Icons" ColumnName="Menu_Icons" />
+                <ScalarProperty Name="Menu_Url" ColumnName="Menu_Url" />
+                <ScalarProperty Name="Menu_Nombre" ColumnName="Menu_Nombre" />
+                <ScalarProperty Name="Menu_Id" ColumnName="Menu_Id" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_GEN_UsuarioRoles">
+            <EntityTypeMapping TypeName="PortalProvModel.V_GEN_UsuarioRoles">
+              <MappingFragment StoreEntitySet="V_GEN_UsuarioRoles">
+                <ScalarProperty Name="Sistema" ColumnName="Sistema" />
+                <ScalarProperty Name="UserNameAudit" ColumnName="UserNameAudit" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_GEN_UsuarioRoles_Diponibles">
+            <EntityTypeMapping TypeName="PortalProvModel.V_GEN_UsuarioRoles_Diponibles">
+              <MappingFragment StoreEntitySet="V_GEN_UsuarioRoles_Diponibles">
+                <ScalarProperty Name="Sistema" ColumnName="Sistema" />
+                <ScalarProperty Name="UserNameAudit" ColumnName="UserNameAudit" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="PortalProvModel.AspNetRoles">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Sistema" ColumnName="Sistema" />
+                <ScalarProperty Name="UserNameAudit" ColumnName="UserNameAudit" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="PortalProvModel.AspNetUsers">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Sistema" ColumnName="Sistema" />
+                <ScalarProperty Name="Puesto" ColumnName="Puesto" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="PortalProvModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="GEN_Menu_Roles" TypeName="PortalProvModel.GEN_Menu_Roles" StoreEntitySet="GEN_Menu_Roles">
+            <EndProperty Name="GEN_Menu">
+              <ScalarProperty Name="Menu_Id" ColumnName="Menu_Id" />
+            </EndProperty>
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="Role_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

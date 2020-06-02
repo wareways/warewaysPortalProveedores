@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Wareways.PortalProv.Infraestructura.CC_Notas>
+
+@{
+    Layout = "";
+}
+
+
+<div class="box box-info box-solid">
+    <div class="box-header">
+        <h4 class="box-title">Comentarios</h4>
+    </div>
+    <div class="box-body">
+        <table class="table" id="datatableNotas">
+            <thead>
+                <tr>
+
+                    <th>
+                        @Html.DisplayName("Tipo")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Comentario")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Usuario")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Fecha")
+                    </th>
+
+
+                </tr>
+                </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Notas_Tipo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Notas_Comentario)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Notas_UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Notas_Date)
+                        </td>
+
+
+                    </tr>
+                }
+            </tbody>
+</table>
+    </div>
+</div>
+
+

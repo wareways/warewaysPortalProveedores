@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Wareways.PortalProv.Infraestructura.SP_ObtenerRutasUsuario_Result>
+
+@{
+    Layout = "";
+}
+
+
+<div class="box box-warning box-solid">
+    <div class="box-header">               
+        <div class="col-md-6 col-xs-6">
+            <h4 class="box-title">Rutas Asignadas</h4>
+        </div>
+        <div class="col-md-6 col-xs-6" style="text-align:right">
+            <a href="#" class="btn btn-default BtnOpenAsignarRuta">
+                Nuevo
+                <span class="fa fa-plus"></span>
+            </a>
+        </div>
+    </div>
+    <div class="box-body">
+        <table class="table" id="datatableNotas">
+            <thead>
+                <tr>
+
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Primario
+                    </th>
+
+                    <th>
+
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Ruta_Nombre)
+                        </td>
+                        <td>
+                            @Html.CheckBox( "Primario", (Boolean)item.Primario.Value,new { @disabled = "disabled"})                            
+                        </td>
+                        <td>
+                            @Html.ActionLink(" ", "EliminarRuta", new { prutaId = item.Ruta_Id, puserId = item.UserId }, new { @class = "btn btn-sm btn-danger  glyphicon glyphicon-remove ", @title="Eliminar", @onclick = "return confirm('¿ Esta seguro de Eliminar el Usuario ?')" })
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

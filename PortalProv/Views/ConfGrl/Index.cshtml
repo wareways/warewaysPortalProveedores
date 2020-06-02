@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Wareways.PortalProv.Infraestructura.GEN_Configuracion>
+
+
+<div class="box box-default box-solid">
+    <div class="box-header">
+        <h4 class="box-title">Configuración General</h4>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+
+
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ConfigNombre)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ConfigValor)
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ConfigNombre)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ConfigValor)
+                        </td>
+
+                        <td>
+                            @if (!(Boolean)item.SoloLectura)
+                            {
+
+                                @Html.ActionLink(" ", "Edit", new { id = item.ConfigNombre }, new { @Class = "btn btn-warning fa fa-edit" , @title="Editar" })
+                            }
+
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+   
+</div>
+
+

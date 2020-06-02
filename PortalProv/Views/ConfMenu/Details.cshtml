@@ -1,0 +1,112 @@
+﻿@model Wareways.PortalProv.Infraestructura.GEN_Menu
+
+
+<div class="box box-default">
+    <div class="box-header">
+        <div class="col-md-8">
+            <h4 class="box-title">Permisos Menú</h4>
+        </div>
+
+    </div>
+
+    <div class="box-body">
+
+
+
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayName("Nombre")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Menu_Nombre)
+            </dd>
+
+            <dt>
+                @Html.DisplayName("Url")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Menu_Url)
+            </dd>
+
+            <dt>
+                @Html.DisplayName("Iconos")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Menu_Icons)
+            </dd>
+
+            <dt>
+                @Html.DisplayName("Padre")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Menu_Parent)
+            </dd>
+
+
+
+            <dt>
+                @Html.DisplayName("Orden")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Menu_Orden)
+            </dd>
+
+        </dl>
+    </div>
+    <div class="box-footer">
+        <div class="col-md-3">
+            <a href="@Url.Action("Index")" class="btn btn-default ">
+                <span class=" fa fa-backward" aria-hidden="true"></span>
+                Regresar Lista
+            </a>
+        </div>
+
+
+    </div>
+
+</div>
+
+<div class="box box-default">
+    <div class="box-header">
+        <div class="col-md-8">
+            <h4 class="box-title">Listado Roles</h4>
+        </div>
+    </div>
+
+    <div class="box-body">
+        <div class="table-responsive">
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                    <tbody>
+                        @foreach (var _Item in (List<Wareways.PortalProv.Infraestructura.V_GEN_RolesDelMenu>)ViewBag.Permisos)
+                        {
+                        <tr>
+                            <td>@_Item.Name &nbsp;   <span class="@( (@_Item.Activo== 1) ? "fa fa-check-circle" : "") bg-success"></span>  </td>                            
+
+                            <td>
+                                @if (_Item.Activo == 1)
+                                {
+                                    <a href='@Url.Action("Permisos",new { MenuId = _Item.Menu_Id, RoleId = _Item.Id , Accion = "Delete"})' class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-remove">   </span> Eliminar Permiso
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href='@Url.Action("Permisos",new { MenuId = _Item.Menu_Id, RoleId = _Item.Id , Accion = "Add"})' class="btn btn-success">
+                                        <span class="glyphicon glyphicon-plus">   </span> Asignar Permiso
+                                    </a>
+                                }
+
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

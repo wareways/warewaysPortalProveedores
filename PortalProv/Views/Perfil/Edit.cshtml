@@ -1,0 +1,113 @@
+﻿@model Wareways.PortalProv.Infraestructura.AspNetRoles
+
+
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <div class="box-title">Perfil Modificar</div>
+                </div>
+                <div class="box-body">
+
+                    <div class="form-horizontal">
+                        
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.Id)
+
+                        <div class="form-group">
+                            @Html.Label("Nombre", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Activo", htmlAttributes: new { @class = "control-label col-md-2" })
+
+                            @Html.EditorFor(model => model.Active)
+
+                            <div class="col-md-10">
+                                <div class="checkbox">
+
+                                    @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                           
+                        </div>
+
+
+                    
+                </div>
+                <div class="box-footer">
+                    <div class="col-md-6">
+                        <a href="@Url.Action("Index", "Perfil")" class="btn btn-default ">
+                            <span class=" fa fa-backward" aria-hidden="true"></span>
+
+                            Regresar Lista
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
+                            Grabar &nbsp;
+                            <i class="fa fa-save"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<div class="box box-default">
+    <div class="box-header">
+        <h4 class="box-title">Listado de Menus</h4>
+    </div>
+
+
+    <div class="box-body">
+        <div class="table-responsive">
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed">
+                    <tbody>
+                        @foreach (var _Item in (List<Wareways.PortalProv.Infraestructura.V_RolesDelMenu>)ViewBag.ListaMenus)
+                        {
+                            <tr>
+                                <td>@_Item.Menu_Nombre &nbsp;   <span class="@( (@_Item.Activo== 1) ? "fa fa-check-circle" : "") bg-success"></span>  </td>
+                                <td>@_Item.Menu_Url   </td>
+
+                                <td>
+                                    @if (_Item.Activo == 1)
+                                    {
+                                        <a href='@Url.Action("Permisos","ConfMenu",new { MenuId = _Item.Menu_Id, RoleId = _Item.Id , Accion = "Delete"})' class="btn btn-danger">
+                                            <span class="glyphicon glyphicon-remove">   </span> Eliminar Permiso
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href='@Url.Action("Permisos","ConfMenu",new { MenuId = _Item.Menu_Id, RoleId = _Item.Id , Accion = "Add"})' class="btn btn-success">
+                                            <span class="glyphicon glyphicon-plus">   </span> Asignar Permiso
+                                        </a>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

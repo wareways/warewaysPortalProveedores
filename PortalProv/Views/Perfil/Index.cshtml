@@ -1,0 +1,160 @@
+﻿@model IEnumerable<Wareways.PortalProv.Infraestructura.AspNetRoles>
+
+
+@Html.AntiForgeryToken()
+
+
+@section Header{
+    <style>
+        .modal-dialog.modal-800 {
+            width: 95%;
+            margin: 30px auto;
+        }
+    </style>
+}
+
+@section scripts {
+
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('#Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                "columnDefs": [
+                    { "width": "60%", "targets": 0 },
+                    { "width": "20%", "targets": 1 },
+                    { "width": "20%", "targets": 2 }
+                ],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+    <script>
+        var TeamDetailPostBackURL = '/Perfil/Audit';
+        $(function () {
+            $(".anchorDetail").click(function () {
+                debugger;
+                var $buttonClicked = $(this);
+                var id = $buttonClicked.attr('data-id');
+                var options = { "backdrop": "static", keyboard: true };
+                $.ajax({
+                    type: "GET",
+                    url: TeamDetailPostBackURL,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "Id": id },
+                    datatype: "json",
+                    success: function (data) {
+                        debugger;
+                        $('#myModalContent').html(data);
+                        $('#myModal').modal(options);
+                        $('#myModal').modal('show');
+
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+            //$("#closebtn").on('click',function(){
+            //    $('#myModal').modal('hide');
+
+            $("#closbtn").click(function () {
+                $('#myModal').modal('hide');
+            });
+        });
+
+    </script>
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <div class="col-md-8">
+                    <h3 class="box-title">Listado de Perfiles</h3>
+                </div>                
+                <div class="col-md-4" style="text-align:right">
+                    <a href="@Url.Action("ExportExcel", "Perfil")" class="btn btn-info btn-sm">
+                        Excel
+                        <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+                    </a>|
+                        <a href="@Url.Action("Create", "Perfil")" class="btn btn-default btn-sm ">
+                            Nuevo
+                            <span class=" fa fa-plus" aria-hidden="true"></span>
+                        </a>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered" id="Datos">
+                    <thead>
+                        <tr>
+                            <th>
+                                Nombre
+                            </th>
+                            <th>
+                                Activo
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Active)
+                                </td>
+                                <td class="text-right">
+                                    @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning glyphicon glyphicon-pencil", @title="Editar" })
+                                    <a href="javascript:void(0);" title="Ver historial" class="anchorDetail btn btn-sm btn-default" data-id='@(item.Id+";AspNetRoles") '> <span class="fa fa-history"></span>   </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+<div id='myModal' class='modal'>
+    <div class="modal-dialog modal-lg modal-800">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="col-md-10">
+                    <h4 class="modal-title" id="exampleModalLabel">Bitacora Cambios</h4>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>                                
+            </div>
+            <div class="modal-body">
+                <div id='myModalContent' class="modal-content"></div>
+            </div>
+            </div>
+    </div>
+
+</div>
