@@ -4,25 +4,9 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="0ab7fc1b8bfc46d8b2f515972c0a642c" Name="Diagram1" ZoomLevel="74">
+      <Diagram DiagramId="0ab7fc1b8bfc46d8b2f515972c0a642c" Name="Diagram1" ZoomLevel="84">
         <EntityTypeShape EntityType="PortalProvModel.AspNetUserClaims" Width="1.5" PointX="10.25" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="PortalProvModel.AspNetUserLogins" Width="1.5" PointX="10.25" PointY="12.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="PortalProvModel.PPROV_Adjuntos" Width="1.5" PointX="5.25" PointY="5.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="PortalProvModel.PPROV_Contrasena" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="PortalProvModel.PPROV_Documento" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
-        <EntityTypeShape EntityType="PortalProvModel.PPROV_Estado" Width="1.5" PointX="0.75" PointY="5.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="PortalProvModel.PPROV_Nota" Width="1.5" PointX="8.25" PointY="5.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="PortalProvModel.PPROV_Retenciones" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="PortalProvModel.PPROV_RetencionTipo" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PortalProvModel.PPROV_TipoAdjunto" Width="1.5" PointX="3" PointY="10.5" IsExpanded="true" />
-        <AssociationConnector Association="PortalProvModel.FK_PPROV_Adjuntos_PPROV_Documento" ManuallyRouted="false" />
-        <AssociationConnector Association="PortalProvModel.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" ManuallyRouted="false" />
-        <AssociationConnector Association="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" ManuallyRouted="false" />
-        <AssociationConnector Association="PortalProvModel.FK_PPROV_Documento_PPROV_Estado" ManuallyRouted="false" />
-        <AssociationConnector Association="PortalProvModel.FK_PPROV_Nota_PPROV_Documento" ManuallyRouted="false" />
-        <AssociationConnector Association="PortalProvModel.FK_PPROV_Retenciones_PPROV_Documento" ManuallyRouted="false" />
-        <AssociationConnector Association="PortalProvModel.FK_PPROV_Nota_PPROV_Estado" ManuallyRouted="false" />
-        <AssociationConnector Association="PortalProvModel.FK_PPROV_Retenciones_PPROV_RetencionTipo" ManuallyRouted="false" />
         <EntityTypeShape EntityType="PortalProvModel.GEN_Configuracion" Width="1.5" PointX="12.375" PointY="13.75" />
         <EntityTypeShape EntityType="PortalProvModel.GEN_Audit" Width="1.5" PointX="12.375" PointY="0.75" />
         <EntityTypeShape EntityType="PortalProvModel.GEN_Catalogo" Width="1.5" PointX="7.375" PointY="1.375" />
@@ -40,6 +24,30 @@
         <AssociationConnector Association="PortalProvModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="PortalProvModel.AspNetUserRoles" />
         <AssociationConnector Association="PortalProvModel.GEN_Menu_Roles" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_Adjuntos" Width="1.5" PointX="18.875" PointY="17" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_Contrasena" Width="1.5" PointX="14.375" PointY="19.875" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_Estado" Width="1.5" PointX="14.375" PointY="17.125" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_Nota" Width="1.5" PointX="21.875" PointY="16.5" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_Retencion" Width="1.5" PointX="18.875" PointY="12.75" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_RetencionTipo" Width="1.5" PointX="16.625" PointY="12.125" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_TipoAdjunto" Width="1.5" PointX="16.625" PointY="21.875" />
+        <AssociationConnector Association="PortalProvModel.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" />
+        <AssociationConnector Association="PortalProvModel.FK_PPROV_Nota_PPROV_Estado" />
+        <AssociationConnector Association="PortalProvModel.FK_PPROV_Retenciones_PPROV_RetencionTipo" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_UsuarioProveedor" Width="1.5" PointX="10.25" PointY="16.375" />
+        <AssociationConnector Association="PortalProvModel.FK_PPROV_UsuarioProveedor_AspNetUsers" />
+        <EntityTypeShape EntityType="PortalProvModel.PPROV_Documento" Width="1.5" PointX="16.625" PointY="15" />
+        <AssociationConnector Association="PortalProvModel.FK_PPROV_Adjuntos_PPROV_Documento" />
+        <AssociationConnector Association="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" />
+        <AssociationConnector Association="PortalProvModel.FK_PPROV_Documento_PPROV_Estado" />
+        <AssociationConnector Association="PortalProvModel.FK_PPROV_Nota_PPROV_Documento" />
+        <AssociationConnector Association="PortalProvModel.PPROV_RetencionFactura" />
+        <EntityTypeShape EntityType="PortalProvModel.v_PPROV_FacturasIngresadasPorUsuario" Width="1.5" PointX="5.375" PointY="4.75" />
+        <EntityTypeShape EntityType="PortalProvModel.V_PPROV_Contrasena_PorUsuario" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="PortalProvModel.V_PPROV_Empresas" Width="1.5" PointX="7.375" PointY="4.75" />
+        <EntityTypeShape EntityType="PortalProvModel.v_PPROV_Usuario_Proveedor" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="PortalProvModel.V_PPROV_DocumentosPorUsuario" Width="1.5" PointX="15.375" PointY="5.75" />
+        <EntityTypeShape EntityType="PortalProvModel.V_PPROV_RetencionesPorUsuario" Width="1.5" PointX="0.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

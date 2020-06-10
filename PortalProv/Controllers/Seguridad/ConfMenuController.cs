@@ -49,7 +49,7 @@ namespace Wareways.PortalProv.Controllers.Seguridad
 
                     _Db.SaveChanges();
                 }
-                catch (Exception ex) { }
+                catch  { }
             }
             if (Accion == "Delete")
             {
@@ -60,7 +60,7 @@ namespace Wareways.PortalProv.Controllers.Seguridad
                     //_Db.Menu_Roles.RemoveRange(_Eliminar);
                     _Db.SaveChanges();
                 }
-                catch (Exception ex) { }
+                catch  { }
             }
 
             return RedirectToAction("Details", new { id = MenuId });

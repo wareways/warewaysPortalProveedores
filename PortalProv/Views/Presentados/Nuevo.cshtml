@@ -1,0 +1,241 @@
+﻿@model  Wareways.PortalProv.Models.PP.PresentadosModel
+
+@section Header
+{
+    <link href="~/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+}
+
+
+<div>
+    <div class="box box-default box-solid">
+        <div class="box-header with-border">
+            <h4 class="box-title"> <span class="fa fa-plus-square fa-2x"></span>&nbsp;Nuevo Documento</h4>
+            <div class="box-tools pull-right">
+                <div class=""></div>
+            </div>
+        </div>
+        <div class="box-body">
+
+
+
+            @using (Html.BeginForm("Nuevo", "Presentados", FormMethod.Post, new { enctype = "multipart/form-data", id = "formainicial" }))
+            {
+                @Html.HiddenFor(model => model.ModoActivo)
+                @Html.HiddenFor(model => Model.Nuevo_Pdf_Facturas)
+                @Html.HiddenFor(Model => Model.Nuevo_Pdf_OC)
+                @Html.HiddenFor(model => Model.Nuevo_CardCode)
+
+                
+                if (Model.ModoActivo == "Nuevo_Paso1")
+                {
+
+
+
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="box box-default box-solid">
+                                <div class="box-header with-border">
+                                    <h2 class="box-title">Factura</h2>
+                                </div>
+                                <div class="box-body">
+                                    <label for="filefac" class="btn btn-success">Seleccionar Arhivo PDF</label>
+                                    @Html.TextBox("filefac", "", new { type = "file", @title = "Seleccione PDF", @style = "visibility:hidden;" })
+                                    <label id="filefac_sel"></label>
+                                    <p class="help-block">Solo se pueden subir archivos PDF</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="box box-default box-solid">
+                                <div class="box-header with-border">
+                                    <h2 class="box-title">Orden Compra</h2>
+                                </div>
+                                <div class="box-body">
+                                    <label for="fileoc" class="btn btn-success">Seleccionar Arhivo PDF</label>
+                                    @Html.TextBox("fileoc", "", new { type = "file", @title = "Seleccione PDF", @style = "visibility:hidden;" })
+                                    <label id="fileoc_sel"></label>
+                                    <p class="help-block">Solo se pueden subir archivos PDF</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-warning " type="submit" name="CargarDocumentos" value="CargarDocumentos">
+                                Cargar Documentos &nbsp;
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+
+
+                }
+
+                @*Paso 2*@
+                if (Model.ModoActivo == "Nuevo_Paso2")
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-3">
+                                @*Ingreso Datos*@
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Empresa</label>
+                                        @Html.DropDownListFor(m => m.Nuevo.Doc_EmpresaId,
+                                                new SelectList(Model.Usuario_Empresas, "Empresa_Id", "AliasName"),
+                                                new { @Class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Numero Factura</label>
+                                        @Html.EditorFor(model => model.Nuevo.Doc_Numero, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese Numero" } })
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Serie Factura</label>
+                                        @Html.EditorFor(model => model.Nuevo.Doc_Serie, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese Serie" } })
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Autorizacion</label>
+                                        @Html.EditorFor(model => model.Nuevo.Doc_Autorizacion, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese Autorizacion" } })
+                                    </div>
+                                    <div class="form-group">
+
+                                        <label for="exampleInputEmail1">Fecha Factura</label>
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+
+                                            @Html.EditorFor(model => model.Nuevo.Doc_Fecha, new { htmlAttributes = new { @class = "form-control pull-right datepicker", @placeholder = "dd/mm/yyyy" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Monto</label>
+                                                    @Html.EditorFor(model => model.Nuevo.Doc_MontoNeto, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese Monto Neto" } })
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Moneda</label>
+                                                    @Html.DropDownListFor(m => m.Nuevo.Doc_Moneda,
+                                                        new SelectList(Model.Usuario_Moneda, "Valor", "Nombre"),
+                                                        new { @Class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">No. Orden Compra / Servicio</label>
+                                        @Html.EditorFor(model => model.Nuevo.Doc_NumeroOC, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese OC" } })
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label>Observaciones</label>
+                                        @Html.TextAreaFor(model => model.Nuevo.Doc_Observaciones, new { rows = 3, @class = "form-control", @placeholder = "Opcional ...", @type = "text" })
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="#" onclick="Submitforma2()" class="btn btn-success"><span class="fa fa-save"></span>&nbsp; Enviar Factura  </a>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="@Url.Action("Index","Presentados")" class="pull-right btn btn-danger"><span class="fa fa-ban"></span>&nbsp; Cancelar  </a>
+                                    </div>
+                                </div>
+                                <br />
+                                @if (@ViewBag.Message_Paso2 != null)
+                                {
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        <h4><i class="icon fa fa-ban"></i> Alerta !</h4>
+                                        @ViewBag.Message_Paso2
+                                    </div>
+                                }
+
+                            </div>
+                            <div class="col-md-9">
+                                @*Visualización Documentos*@
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#" onclick="MostrarFactura();">Ver Factura</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" onclick="MostrarOC()">Ver Orden Compra</a>
+                                    </li>
+
+                                </ul>
+
+                                <embed src="~/Cargados/@Model.Nuevo_CardCode/@Model.Nuevo_Pdf_Facturas" type="application/pdf" style="width:90%; height:50vw;" id="uipdfembfac" />
+                                <embed src="~/Cargados/@Model.Nuevo_CardCode/@Model.Nuevo_Pdf_OC" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdfemboc" />
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                }
+
+            }
+        </div>
+        <div class="box-footer">
+            @if (@ViewBag.Message != null)
+            {
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Alerta !</h4>
+                    @ViewBag.Message
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script src="~/admin-lte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+        $(".datepicker").datepicker({
+            autoclose: true,
+            format: 'dd/mm/yyyy'
+        })
+
+        $("#fileoc").change(function () {
+            var filename = this.files[0].name
+            $("#fileoc_sel").text(filename);
+        });
+
+        $("#filefac").change(function () {
+            var filename = this.files[0].name
+            $("#filefac_sel").text(filename);
+        });
+
+        function MostrarOC() {
+            $("#uipdfembfac").hide();
+            $("#uipdfemboc").show();
+        }
+
+        function MostrarFactura() {
+            $("#uipdfembfac").show();
+            $("#uipdfemboc").hide();
+        }
+
+        function Submitforma2() {
+            $("#formainicial").submit();
+        }
+    </script>
+
+
+}

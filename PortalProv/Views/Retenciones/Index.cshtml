@@ -1,0 +1,92 @@
+﻿@model  Wareways.PortalProv.Models.PP.RetencionesModel
+
+<!DOCTYPE html>
+
+
+<div>
+    <div class="box box-default box-solid">
+        <div class="box-header with-border">
+            <h4 class="box-title"><span class="fa fa-file fa-2x"></span> Retenciones</h4>
+        </div>
+        <div class="box-body">
+            <table class="table table-bordered table-condensed table-hover Datos">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Tipo</th>
+                        <th>Numero</th>
+                        <th>Fecha</th>
+                        <th>Monto</th>
+                        <th>Moneda</th>
+
+                        <th>Empresa</th>
+                        <th>Factura </th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.L_Retenciones)
+                    {
+                    <tr>
+                        <td>
+                            <a href="#" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:blue"></span></a>
+                        </td>
+                        <td>@item.Retencion_Nombre</td>
+
+                        <td>@item.Retencion_Numero</td>
+
+                        <td>@item.Retencion_Fecha.Value.ToString("yyyy-MM-dd")</td>
+
+                        <td>@item.Retencion_Monto.Value.ToString("#,###,##0.00")</td>
+
+                        <td>@item.Retencion_Moneda</td>
+
+
+
+                        <td>@item.Empresa_Name</td>
+
+                        <td>@item.Doc_Serie - @item.Doc_Numero  (@item.Doc_TipoDocumento)</td>
+
+
+
+
+
+
+
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('.Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                //"columnDefs": [
+                //    { "width": "60%", "targets": 0 },
+                //    { "width": "20%", "targets": 1 },
+                //    { "width": "20%", "targets": 2 }
+                //],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+
+}

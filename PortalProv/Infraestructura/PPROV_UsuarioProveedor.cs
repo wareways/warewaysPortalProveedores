@@ -12,14 +12,11 @@ namespace Wareways.PortalProv.Infraestructura
     using System;
     using System.Collections.Generic;
     
-    public partial class PPROV_Adjuntos
+    public partial class PPROV_UsuarioProveedor
     {
-        public System.Guid Adjunto_Id { get; set; }
-        public System.Guid Doc_Id { get; set; }
-        public string Adjunto_FileName { get; set; }
-        public Nullable<System.Guid> Adjunto_Tipo { get; set; }
+        public string UserId { get; set; }
+        public string CardCode { get; set; }
     
-        public virtual PPROV_TipoAdjunto PPROV_TipoAdjunto { get; set; }
-        public virtual PPROV_Documento PPROV_Documento { get; set; }
+        public virtual AspNetUsers AspNetUsers { get; set; }
     }
 }

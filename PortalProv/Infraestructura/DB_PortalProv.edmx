@@ -142,22 +142,24 @@
           <Key>
             <PropertyRef Name="Contrasena_Id" />
           </Key>
-          <Property Name="Contrasena_Id" Type="int" Nullable="false" />
-          <Property Name="Empresa_Id" Type="int" />
-          <Property Name="Contrasena_Fecha" Type="datetime" />
-          <Property Name="Contrasena_Fecha_Estimada" Type="datetime" />
-          <Property Name="Contrasena_Usuario" Type="varchar" MaxLength="64" />
+          <Property Name="Contrasena_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Contrasena_Numero" Type="int" Nullable="false" />
+          <Property Name="Empresa_Id" Type="int" Nullable="false" />
+          <Property Name="Contrasena_Fecha" Type="datetime" Nullable="false" />
+          <Property Name="Contrasena_Fecha_Estimada" Type="datetime" Nullable="false" />
+          <Property Name="Contrasena_Usuario" Type="varchar" MaxLength="64" Nullable="false" />
         </EntityType>
         <EntityType Name="PPROV_Documento">
           <Key>
             <PropertyRef Name="Doc_Id" />
           </Key>
           <Property Name="Doc_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Doc_CardCorde" Type="nvarchar" MaxLength="15" />
           <Property Name="Doc_Estado" Type="varchar" MaxLength="32" />
           <Property Name="Doc_Numero" Type="varchar" MaxLength="32" />
           <Property Name="Doc_Serie" Type="varchar" MaxLength="32" />
           <Property Name="Doc_Fecha" Type="datetime" />
-          <Property Name="Empresa_Id" Type="int" />
+          <Property Name="Doc_EmpresaId" Type="int" />
           <Property Name="Doc_MontoNeto" Type="decimal" Precision="18" Scale="6" />
           <Property Name="Doc_Moneda" Type="varchar" MaxLength="16" />
           <Property Name="Doc_Autorizacion" Type="varchar" MaxLength="64" />
@@ -166,15 +168,18 @@
           <Property Name="Doc_UsuarioCarga" Type="varchar" MaxLength="64" />
           <Property Name="Doc_FechaCarga" Type="datetime" />
           <Property Name="Doc_NumeroOC" Type="int" />
-          <Property Name="Contrasena_Id" Type="int" />
           <Property Name="Doc_NumeroFactProv" Type="int" />
           <Property Name="Doc_NumeroEntrega" Type="int" />
+          <Property Name="Contrasena_Id" Type="uniqueidentifier" />
+          <Property Name="Doc_PdfFactura" Type="varchar" MaxLength="1024" />
+          <Property Name="Doc_PdfOC" Type="varchar" MaxLength="1024" />
         </EntityType>
         <EntityType Name="PPROV_Estado">
           <Key>
             <PropertyRef Name="Doc_Estado" />
           </Key>
           <Property Name="Doc_Estado" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="Doc_Orden" Type="int" />
         </EntityType>
         <EntityType Name="PPROV_Nota">
           <Key>
@@ -190,16 +195,24 @@
           <Property Name="Revisada_Por" Type="varchar" MaxLength="32" />
           <Property Name="Revisada_Fecha" Type="datetime" />
         </EntityType>
-        <EntityType Name="PPROV_Retenciones">
+        <EntityType Name="PPROV_Retencion">
           <Key>
             <PropertyRef Name="Retencion_Id" />
           </Key>
           <Property Name="Retencion_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Retencion_Numero" Type="varchar" MaxLength="64" />
           <Property Name="Retencion_Fecha" Type="datetime" />
           <Property Name="Retencion_Tipo" Type="int" />
           <Property Name="Retencion_Usuario" Type="varchar" MaxLength="64" />
           <Property Name="Retencion_Monto" Type="decimal" Precision="18" Scale="6" />
           <Property Name="Retencion_Moneda" Type="varchar" MaxLength="16" />
+        </EntityType>
+        <EntityType Name="PPROV_RetencionFactura">
+          <Key>
+            <PropertyRef Name="Retencion_Id" />
+            <PropertyRef Name="Doc_Id" />
+          </Key>
+          <Property Name="Retencion_Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Doc_Id" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="PPROV_RetencionTipo">
@@ -220,6 +233,14 @@
           <Property Name="Agrega_Prov" Type="bit" Nullable="false" />
           <Property Name="Agregar_Empresa" Type="bit" Nullable="false" />
           <Property Name="Requerido_Prov" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PPROV_UsuarioProveedor">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="CardCode" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_GEN_MenuDisplay' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -314,6 +335,166 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="UserNameAudit" Type="nvarchar" MaxLength="128" />
           <Property Name="Sistema" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Contrasena_PorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_PPROV_Contrasena_PorUsuario">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Empresa_Name" />
+            <PropertyRef Name="Contrasena_Id" />
+            <PropertyRef Name="Contrasena_Numero" />
+            <PropertyRef Name="Empresa_Id" />
+            <PropertyRef Name="Contrasena_Fecha" />
+            <PropertyRef Name="Contrasena_Fecha_Estimada" />
+            <PropertyRef Name="Contrasena_Usuario" />
+            <PropertyRef Name="Cantidad" />
+            <PropertyRef Name="Monto" />
+          </Key>
+          <Property Name="RowNbr" Type="bigint" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Empresa_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Contrasena_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Contrasena_Numero" Type="int" Nullable="false" />
+          <Property Name="Empresa_Id" Type="int" Nullable="false" />
+          <Property Name="Contrasena_Fecha" Type="datetime" Nullable="false" />
+          <Property Name="Contrasena_Fecha_Estimada" Type="datetime" Nullable="false" />
+          <Property Name="Contrasena_Usuario" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Cantidad" Type="int" Nullable="false" />
+          <Property Name="Monto" Type="decimal" Precision="38" Scale="6" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_PPROV_DocumentosPorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_PPROV_DocumentosPorUsuario">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Doc_Id" />
+            <PropertyRef Name="Empresa_Name" />
+          </Key>
+          <Property Name="RowNbr" Type="bigint" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Doc_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Doc_CardCorde" Type="nvarchar" MaxLength="15" />
+          <Property Name="Doc_Estado" Type="varchar" MaxLength="32" />
+          <Property Name="Doc_Numero" Type="varchar" MaxLength="32" />
+          <Property Name="Doc_Serie" Type="varchar" MaxLength="32" />
+          <Property Name="Doc_Fecha" Type="datetime" />
+          <Property Name="Doc_EmpresaId" Type="int" />
+          <Property Name="Doc_MontoNeto" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="Doc_Moneda" Type="varchar" MaxLength="16" />
+          <Property Name="Doc_Autorizacion" Type="varchar" MaxLength="64" />
+          <Property Name="Doc_Observaciones" Type="varchar(max)" />
+          <Property Name="Doc_TipoDocumento" Type="varchar" MaxLength="64" />
+          <Property Name="Doc_UsuarioCarga" Type="varchar" MaxLength="64" />
+          <Property Name="Doc_FechaCarga" Type="datetime" />
+          <Property Name="Doc_NumeroOC" Type="int" />
+          <Property Name="Doc_NumeroFactProv" Type="int" />
+          <Property Name="Doc_NumeroEntrega" Type="int" />
+          <Property Name="Contrasena_Id" Type="uniqueidentifier" />
+          <Property Name="Doc_PdfFactura" Type="varchar" MaxLength="64" />
+          <Property Name="Doc_PdfOC" Type="varchar" MaxLength="64" />
+          <Property Name="Empresa_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Empresas' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_PPROV_Empresas">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            
+            
+          </Key>
+          <Property Name="RowNbr" Type="bigint" Nullable="false" />
+          <Property Name="Empresa_Id" Type="int" Nullable="false" />
+          <Property Name="Empresa_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Nit" Type="nvarchar" MaxLength="100" />
+          <Property Name="AliasName" Type="ntext" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.v_PPROV_FacturasIngresadasPorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="v_PPROV_FacturasIngresadasPorUsuario">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Empresa_Name" />
+            <PropertyRef Name="Tipo" />
+            <PropertyRef Name="DocEntry" />
+          </Key>
+          <Property Name="RowNbr" Type="bigint" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="BPLId" Type="int" />
+          <Property Name="Empresa_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TrsfrRef" Type="nvarchar" MaxLength="27" />
+          <Property Name="TrsfrDate" Type="datetime" />
+          <Property Name="TrsfrSum" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="DocCurr" Type="nvarchar" MaxLength="3" />
+          <Property Name="Tipo" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="U_FacSerie" Type="nvarchar" MaxLength="20" />
+          <Property Name="U_Facnum" Type="nvarchar" MaxLength="20" />
+          <Property Name="Total" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="MontoTrans" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="DocCur" Type="nvarchar" MaxLength="3" />
+          <Property Name="Retenciones" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Vencimiento" Type="datetime" />
+          <Property Name="DocNum" Type="int" />
+          <Property Name="DocEntry" Type="int" Nullable="false" />
+          <Property Name="U_NumContrase" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_PPROV_RetencionesPorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_PPROV_RetencionesPorUsuario">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Retencion_Id" />
+            <PropertyRef Name="Retencion_Nombre" />
+            <PropertyRef Name="Empresa_Name" />
+          </Key>
+          <Property Name="RowNbr" Type="bigint" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Doc_Serie" Type="varchar" MaxLength="32" />
+          <Property Name="Doc_Numero" Type="varchar" MaxLength="32" />
+          <Property Name="Doc_TipoDocumento" Type="varchar" MaxLength="64" />
+          <Property Name="Retencion_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Retencion_Numero" Type="varchar" MaxLength="64" />
+          <Property Name="Retencion_Fecha" Type="datetime" />
+          <Property Name="Retencion_Tipo" Type="int" />
+          <Property Name="Retencion_Usuario" Type="varchar" MaxLength="64" />
+          <Property Name="Retencion_Monto" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="Retencion_Moneda" Type="varchar" MaxLength="16" />
+          <Property Name="Retencion_Nombre" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Empresa_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="v_PPROV_Usuario_Proveedor">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="EmailConfirmed" />
+            <PropertyRef Name="PhoneNumberConfirmed" />
+            <PropertyRef Name="TwoFactorEnabled" />
+            <PropertyRef Name="LockoutEnabled" />
+            <PropertyRef Name="AccessFailedCount" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="CardCode" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="64" />
+          <Property Name="Puesto" Type="nvarchar" MaxLength="64" />
+          <Property Name="Sistema" Type="bit" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" Nullable="false" />
         </EntityType>
         <Association Name="FK_CatalogoDetalle_Catalogo">
           <End Role="GEN_Catalogo" Type="Self.GEN_Catalogo" Multiplicity="0..1" />
@@ -479,27 +660,51 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_PPROV_Retenciones_PPROV_Documento">
-          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="1" />
-          <End Role="PPROV_Retenciones" Type="Self.PPROV_Retenciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_Documento">
-              <PropertyRef Name="Doc_Id" />
-            </Principal>
-            <Dependent Role="PPROV_Retenciones">
-              <PropertyRef Name="Doc_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_PPROV_Retenciones_PPROV_RetencionTipo">
           <End Role="PPROV_RetencionTipo" Type="Self.PPROV_RetencionTipo" Multiplicity="0..1" />
-          <End Role="PPROV_Retenciones" Type="Self.PPROV_Retenciones" Multiplicity="*" />
+          <End Role="PPROV_Retencion" Type="Self.PPROV_Retencion" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="PPROV_RetencionTipo">
               <PropertyRef Name="Retencion_Tipo" />
             </Principal>
-            <Dependent Role="PPROV_Retenciones">
+            <Dependent Role="PPROV_Retencion">
               <PropertyRef Name="Retencion_Tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_RetencionFactura_PPROV_Documento">
+          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="1" />
+          <End Role="PPROV_RetencionFactura" Type="Self.PPROV_RetencionFactura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_RetencionFactura">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_RetencionFactura_PPROV_Retenciones">
+          <End Role="PPROV_Retencion" Type="Self.PPROV_Retencion" Multiplicity="1" />
+          <End Role="PPROV_RetencionFactura" Type="Self.PPROV_RetencionFactura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Retencion">
+              <PropertyRef Name="Retencion_Id" />
+            </Principal>
+            <Dependent Role="PPROV_RetencionFactura">
+              <PropertyRef Name="Retencion_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_UsuarioProveedor_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="PPROV_UsuarioProveedor" Type="Self.PPROV_UsuarioProveedor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPROV_UsuarioProveedor">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -520,9 +725,11 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
           <EntitySet Name="PPROV_Documento" EntityType="Self.PPROV_Documento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPROV_Estado" EntityType="Self.PPROV_Estado" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPROV_Nota" EntityType="Self.PPROV_Nota" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PPROV_Retenciones" EntityType="Self.PPROV_Retenciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_Retencion" EntityType="Self.PPROV_Retencion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_RetencionFactura" EntityType="Self.PPROV_RetencionFactura" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPROV_RetencionTipo" EntityType="Self.PPROV_RetencionTipo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPROV_TipoAdjunto" EntityType="Self.PPROV_TipoAdjunto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_UsuarioProveedor" EntityType="Self.PPROV_UsuarioProveedor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="V_GEN_MenuDisplay" EntityType="Self.V_GEN_MenuDisplay" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [V_GEN_MenuDisplay].[UserName] AS [UserName], 
@@ -580,6 +787,118 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
     [V_GEN_UsuarioRoles_Diponibles].[Sistema] AS [Sistema]
     FROM [dbo].[V_GEN_UsuarioRoles_Diponibles] AS [V_GEN_UsuarioRoles_Diponibles]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="V_PPROV_Contrasena_PorUsuario" EntityType="Self.V_PPROV_Contrasena_PorUsuario" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_PPROV_Contrasena_PorUsuario].[RowNbr] AS [RowNbr], 
+    [V_PPROV_Contrasena_PorUsuario].[UserName] AS [UserName], 
+    [V_PPROV_Contrasena_PorUsuario].[Empresa_Name] AS [Empresa_Name], 
+    [V_PPROV_Contrasena_PorUsuario].[Contrasena_Id] AS [Contrasena_Id], 
+    [V_PPROV_Contrasena_PorUsuario].[Contrasena_Numero] AS [Contrasena_Numero], 
+    [V_PPROV_Contrasena_PorUsuario].[Empresa_Id] AS [Empresa_Id], 
+    [V_PPROV_Contrasena_PorUsuario].[Contrasena_Fecha] AS [Contrasena_Fecha], 
+    [V_PPROV_Contrasena_PorUsuario].[Contrasena_Fecha_Estimada] AS [Contrasena_Fecha_Estimada], 
+    [V_PPROV_Contrasena_PorUsuario].[Contrasena_Usuario] AS [Contrasena_Usuario], 
+    [V_PPROV_Contrasena_PorUsuario].[Cantidad] AS [Cantidad], 
+    [V_PPROV_Contrasena_PorUsuario].[Monto] AS [Monto]
+    FROM [dbo].[V_PPROV_Contrasena_PorUsuario] AS [V_PPROV_Contrasena_PorUsuario]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_PPROV_DocumentosPorUsuario" EntityType="Self.V_PPROV_DocumentosPorUsuario" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_PPROV_DocumentosPorUsuario].[RowNbr] AS [RowNbr], 
+    [V_PPROV_DocumentosPorUsuario].[UserName] AS [UserName], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_Id] AS [Doc_Id], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_CardCorde] AS [Doc_CardCorde], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_Estado] AS [Doc_Estado], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_Numero] AS [Doc_Numero], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_Serie] AS [Doc_Serie], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_Fecha] AS [Doc_Fecha], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_EmpresaId] AS [Doc_EmpresaId], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_MontoNeto] AS [Doc_MontoNeto], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_Moneda] AS [Doc_Moneda], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_Autorizacion] AS [Doc_Autorizacion], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_Observaciones] AS [Doc_Observaciones], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_TipoDocumento] AS [Doc_TipoDocumento], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_UsuarioCarga] AS [Doc_UsuarioCarga], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_FechaCarga] AS [Doc_FechaCarga], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_NumeroOC] AS [Doc_NumeroOC], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_NumeroFactProv] AS [Doc_NumeroFactProv], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_NumeroEntrega] AS [Doc_NumeroEntrega], 
+    [V_PPROV_DocumentosPorUsuario].[Contrasena_Id] AS [Contrasena_Id], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_PdfFactura] AS [Doc_PdfFactura], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_PdfOC] AS [Doc_PdfOC], 
+    [V_PPROV_DocumentosPorUsuario].[Empresa_Name] AS [Empresa_Name]
+    FROM [dbo].[V_PPROV_DocumentosPorUsuario] AS [V_PPROV_DocumentosPorUsuario]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_PPROV_Empresas" EntityType="Self.V_PPROV_Empresas" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_PPROV_Empresas].[RowNbr] AS [RowNbr], 
+    [V_PPROV_Empresas].[Empresa_Id] AS [Empresa_Id], 
+    [V_PPROV_Empresas].[Empresa_Name] AS [Empresa_Name], 
+    [V_PPROV_Empresas].[Nit] AS [Nit], 
+    [V_PPROV_Empresas].[AliasName] AS [AliasName]
+    FROM [dbo].[V_PPROV_Empresas] AS [V_PPROV_Empresas]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="v_PPROV_FacturasIngresadasPorUsuario" EntityType="Self.v_PPROV_FacturasIngresadasPorUsuario" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [v_PPROV_FacturasIngresadasPorUsuario].[RowNbr] AS [RowNbr], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[UserName] AS [UserName], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[BPLId] AS [BPLId], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[Empresa_Name] AS [Empresa_Name], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[TrsfrRef] AS [TrsfrRef], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[TrsfrDate] AS [TrsfrDate], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[TrsfrSum] AS [TrsfrSum], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[DocCurr] AS [DocCurr], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[Tipo] AS [Tipo], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[U_FacSerie] AS [U_FacSerie], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[U_Facnum] AS [U_Facnum], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[Total] AS [Total], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[MontoTrans] AS [MontoTrans], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[DocCur] AS [DocCur], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[Retenciones] AS [Retenciones], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[Vencimiento] AS [Vencimiento], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[DocNum] AS [DocNum], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[DocEntry] AS [DocEntry], 
+    [v_PPROV_FacturasIngresadasPorUsuario].[U_NumContrase] AS [U_NumContrase]
+    FROM [dbo].[v_PPROV_FacturasIngresadasPorUsuario] AS [v_PPROV_FacturasIngresadasPorUsuario]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_PPROV_RetencionesPorUsuario" EntityType="Self.V_PPROV_RetencionesPorUsuario" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_PPROV_RetencionesPorUsuario].[RowNbr] AS [RowNbr], 
+    [V_PPROV_RetencionesPorUsuario].[UserName] AS [UserName], 
+    [V_PPROV_RetencionesPorUsuario].[Doc_Serie] AS [Doc_Serie], 
+    [V_PPROV_RetencionesPorUsuario].[Doc_Numero] AS [Doc_Numero], 
+    [V_PPROV_RetencionesPorUsuario].[Doc_TipoDocumento] AS [Doc_TipoDocumento], 
+    [V_PPROV_RetencionesPorUsuario].[Retencion_Id] AS [Retencion_Id], 
+    [V_PPROV_RetencionesPorUsuario].[Retencion_Numero] AS [Retencion_Numero], 
+    [V_PPROV_RetencionesPorUsuario].[Retencion_Fecha] AS [Retencion_Fecha], 
+    [V_PPROV_RetencionesPorUsuario].[Retencion_Tipo] AS [Retencion_Tipo], 
+    [V_PPROV_RetencionesPorUsuario].[Retencion_Usuario] AS [Retencion_Usuario], 
+    [V_PPROV_RetencionesPorUsuario].[Retencion_Monto] AS [Retencion_Monto], 
+    [V_PPROV_RetencionesPorUsuario].[Retencion_Moneda] AS [Retencion_Moneda], 
+    [V_PPROV_RetencionesPorUsuario].[Retencion_Nombre] AS [Retencion_Nombre], 
+    [V_PPROV_RetencionesPorUsuario].[Empresa_Name] AS [Empresa_Name]
+    FROM [dbo].[V_PPROV_RetencionesPorUsuario] AS [V_PPROV_RetencionesPorUsuario]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="v_PPROV_Usuario_Proveedor" EntityType="Self.v_PPROV_Usuario_Proveedor" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [v_PPROV_Usuario_Proveedor].[Id] AS [Id], 
+    [v_PPROV_Usuario_Proveedor].[Email] AS [Email], 
+    [v_PPROV_Usuario_Proveedor].[EmailConfirmed] AS [EmailConfirmed], 
+    [v_PPROV_Usuario_Proveedor].[PasswordHash] AS [PasswordHash], 
+    [v_PPROV_Usuario_Proveedor].[SecurityStamp] AS [SecurityStamp], 
+    [v_PPROV_Usuario_Proveedor].[PhoneNumber] AS [PhoneNumber], 
+    [v_PPROV_Usuario_Proveedor].[PhoneNumberConfirmed] AS [PhoneNumberConfirmed], 
+    [v_PPROV_Usuario_Proveedor].[TwoFactorEnabled] AS [TwoFactorEnabled], 
+    [v_PPROV_Usuario_Proveedor].[LockoutEndDateUtc] AS [LockoutEndDateUtc], 
+    [v_PPROV_Usuario_Proveedor].[LockoutEnabled] AS [LockoutEnabled], 
+    [v_PPROV_Usuario_Proveedor].[AccessFailedCount] AS [AccessFailedCount], 
+    [v_PPROV_Usuario_Proveedor].[UserName] AS [UserName], 
+    [v_PPROV_Usuario_Proveedor].[Nombre] AS [Nombre], 
+    [v_PPROV_Usuario_Proveedor].[Puesto] AS [Puesto], 
+    [v_PPROV_Usuario_Proveedor].[Sistema] AS [Sistema], 
+    [v_PPROV_Usuario_Proveedor].[CardCode] AS [CardCode]
+    FROM [dbo].[v_PPROV_Usuario_Proveedor] AS [v_PPROV_Usuario_Proveedor]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_CatalogoDetalle_Catalogo" Association="Self.FK_CatalogoDetalle_Catalogo">
             <End Role="GEN_Catalogo" EntitySet="GEN_Catalogo" />
             <End Role="GEN_CatalogoDetalle" EntitySet="GEN_CatalogoDetalle" />
@@ -632,13 +951,21 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
             <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
             <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
           </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Retenciones_PPROV_Documento" Association="Self.FK_PPROV_Retenciones_PPROV_Documento">
-            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
-            <End Role="PPROV_Retenciones" EntitySet="PPROV_Retenciones" />
-          </AssociationSet>
           <AssociationSet Name="FK_PPROV_Retenciones_PPROV_RetencionTipo" Association="Self.FK_PPROV_Retenciones_PPROV_RetencionTipo">
             <End Role="PPROV_RetencionTipo" EntitySet="PPROV_RetencionTipo" />
-            <End Role="PPROV_Retenciones" EntitySet="PPROV_Retenciones" />
+            <End Role="PPROV_Retencion" EntitySet="PPROV_Retencion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_RetencionFactura_PPROV_Documento" Association="Self.FK_PPROV_RetencionFactura_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_RetencionFactura" EntitySet="PPROV_RetencionFactura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_RetencionFactura_PPROV_Retenciones" Association="Self.FK_PPROV_RetencionFactura_PPROV_Retenciones">
+            <End Role="PPROV_Retencion" EntitySet="PPROV_Retencion" />
+            <End Role="PPROV_RetencionFactura" EntitySet="PPROV_RetencionFactura" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_UsuarioProveedor_AspNetUsers" Association="Self.FK_PPROV_UsuarioProveedor_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="PPROV_UsuarioProveedor" EntitySet="PPROV_UsuarioProveedor" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -666,253 +993,9 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="AspNetUsers" Relationship="PortalProvModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
         </EntityType>
-        <EntityType Name="PPROV_Adjuntos">
-          <Key>
-            <PropertyRef Name="Adjunto_Id" />
-          </Key>
-          <Property Name="Adjunto_Id" Type="Guid" Nullable="false" />
-          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
-          <Property Name="Adjunto_FileName" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Adjunto_Tipo" Type="Guid" />
-          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Adjuntos_PPROV_Documento" FromRole="PPROV_Adjuntos" ToRole="PPROV_Documento" />
-          <NavigationProperty Name="PPROV_TipoAdjunto" Relationship="Self.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" FromRole="PPROV_Adjuntos" ToRole="PPROV_TipoAdjunto" />
-        </EntityType>
-        <EntityType Name="PPROV_Contrasena">
-          <Key>
-            <PropertyRef Name="Contrasena_Id" />
-          </Key>
-          <Property Name="Contrasena_Id" Type="Int32" Nullable="false" />
-          <Property Name="Empresa_Id" Type="Int32" />
-          <Property Name="Contrasena_Fecha" Type="DateTime" Precision="3" />
-          <Property Name="Contrasena_Fecha_Estimada" Type="DateTime" Precision="3" />
-          <Property Name="Contrasena_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Contrasena" ToRole="PPROV_Documento" />
-        </EntityType>
-        <EntityType Name="PPROV_Documento">
-          <Key>
-            <PropertyRef Name="Doc_Id" />
-          </Key>
-          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
-          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_Numero" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_Serie" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_Fecha" Type="DateTime" Precision="3" />
-          <Property Name="Empresa_Id" Type="Int32" />
-          <Property Name="Doc_MontoNeto" Type="Decimal" Precision="18" Scale="6" />
-          <Property Name="Doc_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_Autorizacion" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_Observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_TipoDocumento" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_UsuarioCarga" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_FechaCarga" Type="DateTime" Precision="3" />
-          <Property Name="Doc_NumeroOC" Type="Int32" />
-          <Property Name="Contrasena_Id" Type="Int32" />
-          <Property Name="Doc_NumeroFactProv" Type="Int32" />
-          <Property Name="Doc_NumeroEntrega" Type="Int32" />
-          <NavigationProperty Name="PPROV_Adjuntos" Relationship="Self.FK_PPROV_Adjuntos_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Adjuntos" />
-          <NavigationProperty Name="PPROV_Contrasena" Relationship="Self.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Documento" ToRole="PPROV_Contrasena" />
-          <NavigationProperty Name="PPROV_Estado" Relationship="Self.FK_PPROV_Documento_PPROV_Estado" FromRole="PPROV_Documento" ToRole="PPROV_Estado" />
-          <NavigationProperty Name="PPROV_Nota" Relationship="Self.FK_PPROV_Nota_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Nota" />
-          <NavigationProperty Name="PPROV_Retenciones" Relationship="Self.FK_PPROV_Retenciones_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Retenciones" />
-        </EntityType>
-        <EntityType Name="PPROV_Estado">
-          <Key>
-            <PropertyRef Name="Doc_Estado" />
-          </Key>
-          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Documento_PPROV_Estado" FromRole="PPROV_Estado" ToRole="PPROV_Documento" />
-          <NavigationProperty Name="PPROV_Nota" Relationship="Self.FK_PPROV_Nota_PPROV_Estado" FromRole="PPROV_Estado" ToRole="PPROV_Nota" />
-        </EntityType>
-        <EntityType Name="PPROV_Nota">
-          <Key>
-            <PropertyRef Name="Nota_Id" />
-          </Key>
-          <Property Name="Nota_Id" Type="Guid" Nullable="false" />
-          <Property Name="Doc_Id" Type="Guid" />
-          <Property Name="Nota_Fecha" Type="DateTime" Precision="3" />
-          <Property Name="Nota_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="Nota_Descripción" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="Revisada" Type="Boolean" />
-          <Property Name="Revisada_Por" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
-          <Property Name="Revisada_Fecha" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Nota_PPROV_Documento" FromRole="PPROV_Nota" ToRole="PPROV_Documento" />
-          <NavigationProperty Name="PPROV_Estado" Relationship="Self.FK_PPROV_Nota_PPROV_Estado" FromRole="PPROV_Nota" ToRole="PPROV_Estado" />
-        </EntityType>
-        <EntityType Name="PPROV_Retenciones">
-          <Key>
-            <PropertyRef Name="Retencion_Id" />
-          </Key>
-          <Property Name="Retencion_Id" Type="Guid" Nullable="false" />
-          <Property Name="Retencion_Fecha" Type="DateTime" Precision="3" />
-          <Property Name="Retencion_Tipo" Type="Int32" />
-          <Property Name="Retencion_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-          <Property Name="Retencion_Monto" Type="Decimal" Precision="18" Scale="6" />
-          <Property Name="Retencion_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
-          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="PPROV_Documento" Relationship="Self.FK_PPROV_Retenciones_PPROV_Documento" FromRole="PPROV_Retenciones" ToRole="PPROV_Documento" />
-          <NavigationProperty Name="PPROV_RetencionTipo" Relationship="Self.FK_PPROV_Retenciones_PPROV_RetencionTipo" FromRole="PPROV_Retenciones" ToRole="PPROV_RetencionTipo" />
-        </EntityType>
-        <EntityType Name="PPROV_RetencionTipo">
-          <Key>
-            <PropertyRef Name="Retencion_Tipo" />
-          </Key>
-          <Property Name="Retencion_Tipo" Type="Int32" Nullable="false" />
-          <Property Name="Retencion_Activo" Type="Boolean" Nullable="false" />
-          <Property Name="Retencion_Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="PPROV_Retenciones" Relationship="Self.FK_PPROV_Retenciones_PPROV_RetencionTipo" FromRole="PPROV_RetencionTipo" ToRole="PPROV_Retenciones" />
-        </EntityType>
-        <EntityType Name="PPROV_TipoAdjunto">
-          <Key>
-            <PropertyRef Name="Adjunto_Tipo" />
-          </Key>
-          <Property Name="Adjunto_Tipo" Type="Guid" Nullable="false" />
-          <Property Name="Adjunto_Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Extension" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Agrega_Prov" Type="Boolean" Nullable="false" />
-          <Property Name="Agregar_Empresa" Type="Boolean" Nullable="false" />
-          <Property Name="Requerido_Prov" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="PPROV_Adjuntos" Relationship="Self.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" FromRole="PPROV_TipoAdjunto" ToRole="PPROV_Adjuntos" />
-        </EntityType>
-        <Association Name="FK_PPROV_Adjuntos_PPROV_Documento">
-          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="1" />
-          <End Role="PPROV_Adjuntos" Type="Self.PPROV_Adjuntos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_Documento">
-              <PropertyRef Name="Doc_Id" />
-            </Principal>
-            <Dependent Role="PPROV_Adjuntos">
-              <PropertyRef Name="Doc_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PPROV_Adjuntos_PPROV_TipoAdjunto">
-          <End Role="PPROV_TipoAdjunto" Type="Self.PPROV_TipoAdjunto" Multiplicity="0..1" />
-          <End Role="PPROV_Adjuntos" Type="Self.PPROV_Adjuntos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_TipoAdjunto">
-              <PropertyRef Name="Adjunto_Tipo" />
-            </Principal>
-            <Dependent Role="PPROV_Adjuntos">
-              <PropertyRef Name="Adjunto_Tipo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PPROV_Documento_PPROV_Contrasena">
-          <End Role="PPROV_Contrasena" Type="Self.PPROV_Contrasena" Multiplicity="0..1" />
-          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_Contrasena">
-              <PropertyRef Name="Contrasena_Id" />
-            </Principal>
-            <Dependent Role="PPROV_Documento">
-              <PropertyRef Name="Contrasena_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PPROV_Documento_PPROV_Estado">
-          <End Role="PPROV_Estado" Type="Self.PPROV_Estado" Multiplicity="0..1" />
-          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_Estado">
-              <PropertyRef Name="Doc_Estado" />
-            </Principal>
-            <Dependent Role="PPROV_Documento">
-              <PropertyRef Name="Doc_Estado" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PPROV_Nota_PPROV_Documento">
-          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="0..1" />
-          <End Role="PPROV_Nota" Type="Self.PPROV_Nota" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_Documento">
-              <PropertyRef Name="Doc_Id" />
-            </Principal>
-            <Dependent Role="PPROV_Nota">
-              <PropertyRef Name="Doc_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PPROV_Retenciones_PPROV_Documento">
-          <End Role="PPROV_Documento" Type="Self.PPROV_Documento" Multiplicity="1" />
-          <End Role="PPROV_Retenciones" Type="Self.PPROV_Retenciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_Documento">
-              <PropertyRef Name="Doc_Id" />
-            </Principal>
-            <Dependent Role="PPROV_Retenciones">
-              <PropertyRef Name="Doc_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PPROV_Nota_PPROV_Estado">
-          <End Role="PPROV_Estado" Type="Self.PPROV_Estado" Multiplicity="0..1" />
-          <End Role="PPROV_Nota" Type="Self.PPROV_Nota" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_Estado">
-              <PropertyRef Name="Doc_Estado" />
-            </Principal>
-            <Dependent Role="PPROV_Nota">
-              <PropertyRef Name="Doc_Estado" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PPROV_Retenciones_PPROV_RetencionTipo">
-          <End Role="PPROV_RetencionTipo" Type="Self.PPROV_RetencionTipo" Multiplicity="0..1" />
-          <End Role="PPROV_Retenciones" Type="Self.PPROV_Retenciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_RetencionTipo">
-              <PropertyRef Name="Retencion_Tipo" />
-            </Principal>
-            <Dependent Role="PPROV_Retenciones">
-              <PropertyRef Name="Retencion_Tipo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="PortalProvEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" />
-          <EntitySet Name="PPROV_Adjuntos" EntityType="Self.PPROV_Adjuntos" />
-          <EntitySet Name="PPROV_Contrasena" EntityType="Self.PPROV_Contrasena" />
-          <EntitySet Name="PPROV_Documento" EntityType="Self.PPROV_Documento" />
-          <EntitySet Name="PPROV_Estado" EntityType="Self.PPROV_Estado" />
-          <EntitySet Name="PPROV_Nota" EntityType="Self.PPROV_Nota" />
-          <EntitySet Name="PPROV_Retenciones" EntityType="Self.PPROV_Retenciones" />
-          <EntitySet Name="PPROV_RetencionTipo" EntityType="Self.PPROV_RetencionTipo" />
-          <EntitySet Name="PPROV_TipoAdjunto" EntityType="Self.PPROV_TipoAdjunto" />
-          <AssociationSet Name="FK_PPROV_Adjuntos_PPROV_Documento" Association="Self.FK_PPROV_Adjuntos_PPROV_Documento">
-            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
-            <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Adjuntos_PPROV_TipoAdjunto" Association="Self.FK_PPROV_Adjuntos_PPROV_TipoAdjunto">
-            <End Role="PPROV_TipoAdjunto" EntitySet="PPROV_TipoAdjunto" />
-            <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Documento_PPROV_Contrasena" Association="Self.FK_PPROV_Documento_PPROV_Contrasena">
-            <End Role="PPROV_Contrasena" EntitySet="PPROV_Contrasena" />
-            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Documento_PPROV_Estado" Association="Self.FK_PPROV_Documento_PPROV_Estado">
-            <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
-            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Nota_PPROV_Documento" Association="Self.FK_PPROV_Nota_PPROV_Documento">
-            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
-            <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Retenciones_PPROV_Documento" Association="Self.FK_PPROV_Retenciones_PPROV_Documento">
-            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
-            <End Role="PPROV_Retenciones" EntitySet="PPROV_Retenciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Nota_PPROV_Estado" Association="Self.FK_PPROV_Nota_PPROV_Estado">
-            <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
-            <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Retenciones_PPROV_RetencionTipo" Association="Self.FK_PPROV_Retenciones_PPROV_RetencionTipo">
-            <End Role="PPROV_RetencionTipo" EntitySet="PPROV_RetencionTipo" />
-            <End Role="PPROV_Retenciones" EntitySet="PPROV_Retenciones" />
-          </AssociationSet>
           <EntitySet Name="GEN_Configuracion" EntityType="PortalProvModel.GEN_Configuracion" />
           <EntitySet Name="GEN_Audit" EntityType="PortalProvModel.GEN_Audit" />
           <EntitySet Name="GEN_Catalogo" EntityType="PortalProvModel.GEN_Catalogo" />
@@ -945,6 +1028,57 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="GEN_Menu" EntitySet="GEN_Menu" />
           </AssociationSet>
+          <EntitySet Name="PPROV_Adjuntos" EntityType="PortalProvModel.PPROV_Adjuntos" />
+          <EntitySet Name="PPROV_Contrasena" EntityType="PortalProvModel.PPROV_Contrasena" />
+          <EntitySet Name="PPROV_Estado" EntityType="PortalProvModel.PPROV_Estado" />
+          <EntitySet Name="PPROV_Nota" EntityType="PortalProvModel.PPROV_Nota" />
+          <EntitySet Name="PPROV_Retencion" EntityType="PortalProvModel.PPROV_Retencion" />
+          <EntitySet Name="PPROV_RetencionTipo" EntityType="PortalProvModel.PPROV_RetencionTipo" />
+          <EntitySet Name="PPROV_TipoAdjunto" EntityType="PortalProvModel.PPROV_TipoAdjunto" />
+          <AssociationSet Name="FK_PPROV_Adjuntos_PPROV_TipoAdjunto" Association="PortalProvModel.FK_PPROV_Adjuntos_PPROV_TipoAdjunto">
+            <End Role="PPROV_TipoAdjunto" EntitySet="PPROV_TipoAdjunto" />
+            <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Nota_PPROV_Estado" Association="PortalProvModel.FK_PPROV_Nota_PPROV_Estado">
+            <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
+            <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Retenciones_PPROV_RetencionTipo" Association="PortalProvModel.FK_PPROV_Retenciones_PPROV_RetencionTipo">
+            <End Role="PPROV_RetencionTipo" EntitySet="PPROV_RetencionTipo" />
+            <End Role="PPROV_Retencion" EntitySet="PPROV_Retencion" />
+          </AssociationSet>
+          <EntitySet Name="PPROV_UsuarioProveedor" EntityType="PortalProvModel.PPROV_UsuarioProveedor" />
+          <AssociationSet Name="FK_PPROV_UsuarioProveedor_AspNetUsers" Association="PortalProvModel.FK_PPROV_UsuarioProveedor_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="PPROV_UsuarioProveedor" EntitySet="PPROV_UsuarioProveedor" />
+          </AssociationSet>
+          <EntitySet Name="PPROV_Documento" EntityType="PortalProvModel.PPROV_Documento" />
+          <AssociationSet Name="FK_PPROV_Adjuntos_PPROV_Documento" Association="PortalProvModel.FK_PPROV_Adjuntos_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Documento_PPROV_Contrasena" Association="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena">
+            <End Role="PPROV_Contrasena" EntitySet="PPROV_Contrasena" />
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Documento_PPROV_Estado" Association="PortalProvModel.FK_PPROV_Documento_PPROV_Estado">
+            <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPROV_Nota_PPROV_Documento" Association="PortalProvModel.FK_PPROV_Nota_PPROV_Documento">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Nota" EntitySet="PPROV_Nota" />
+          </AssociationSet>
+          <AssociationSet Name="PPROV_RetencionFactura" Association="PortalProvModel.PPROV_RetencionFactura">
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+            <End Role="PPROV_Retencion" EntitySet="PPROV_Retencion" />
+          </AssociationSet>
+          <EntitySet Name="v_PPROV_FacturasIngresadasPorUsuario" EntityType="PortalProvModel.v_PPROV_FacturasIngresadasPorUsuario" />
+          <EntitySet Name="V_PPROV_Contrasena_PorUsuario" EntityType="PortalProvModel.V_PPROV_Contrasena_PorUsuario" />
+          <EntitySet Name="V_PPROV_Empresas" EntityType="PortalProvModel.V_PPROV_Empresas" />
+          <EntitySet Name="v_PPROV_Usuario_Proveedor" EntityType="PortalProvModel.v_PPROV_Usuario_Proveedor" />
+          <EntitySet Name="V_PPROV_DocumentosPorUsuario" EntityType="PortalProvModel.V_PPROV_DocumentosPorUsuario" />
+          <EntitySet Name="V_PPROV_RetencionesPorUsuario" EntityType="PortalProvModel.V_PPROV_RetencionesPorUsuario" />
         </EntityContainer>
         <EntityType Name="GEN_Configuracion">
           <Key>
@@ -1138,6 +1272,7 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
           <NavigationProperty Name="AspNetUserClaims" Relationship="PortalProvModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="PortalProvModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="AspNetRoles" Relationship="PortalProvModel.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+          <NavigationProperty Name="PPROV_UsuarioProveedor" Relationship="PortalProvModel.FK_PPROV_UsuarioProveedor_AspNetUsers" FromRole="AspNetUsers" ToRole="PPROV_UsuarioProveedor" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="PortalProvModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
@@ -1175,6 +1310,374 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
           <End Type="PortalProvModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
           <End Type="PortalProvModel.GEN_Menu" Role="GEN_Menu" Multiplicity="*" />
         </Association>
+        <EntityType Name="PPROV_Adjuntos">
+          <Key>
+            <PropertyRef Name="Adjunto_Id" />
+          </Key>
+          <Property Name="Adjunto_Id" Type="Guid" Nullable="false" />
+          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
+          <Property Name="Adjunto_FileName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Adjunto_Tipo" Type="Guid" />
+          <NavigationProperty Name="PPROV_TipoAdjunto" Relationship="PortalProvModel.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" FromRole="PPROV_Adjuntos" ToRole="PPROV_TipoAdjunto" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="PortalProvModel.FK_PPROV_Adjuntos_PPROV_Documento" FromRole="PPROV_Adjuntos" ToRole="PPROV_Documento" />
+        </EntityType>
+        <EntityType Name="PPROV_Contrasena">
+          <Key>
+            <PropertyRef Name="Contrasena_Id" />
+          </Key>
+          <Property Name="Contrasena_Id" Type="Guid" Nullable="false" />
+          <Property Name="Contrasena_Numero" Type="Int32" Nullable="false" />
+          <Property Name="Empresa_Id" Type="Int32" Nullable="false" />
+          <Property Name="Contrasena_Fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Contrasena_Fecha_Estimada" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Contrasena_Usuario" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Contrasena" ToRole="PPROV_Documento" />
+        </EntityType>
+        <EntityType Name="PPROV_Estado">
+          <Key>
+            <PropertyRef Name="Doc_Estado" />
+          </Key>
+          <Property Name="Doc_Estado" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Orden" Type="Int32" />
+          <NavigationProperty Name="PPROV_Nota" Relationship="PortalProvModel.FK_PPROV_Nota_PPROV_Estado" FromRole="PPROV_Estado" ToRole="PPROV_Nota" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Estado" FromRole="PPROV_Estado" ToRole="PPROV_Documento" />
+        </EntityType>
+        <EntityType Name="PPROV_Nota">
+          <Key>
+            <PropertyRef Name="Nota_Id" />
+          </Key>
+          <Property Name="Nota_Id" Type="Guid" Nullable="false" />
+          <Property Name="Doc_Id" Type="Guid" />
+          <Property Name="Nota_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Nota_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Nota_Descripción" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Revisada" Type="Boolean" />
+          <Property Name="Revisada_Por" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Revisada_Fecha" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="PPROV_Estado" Relationship="PortalProvModel.FK_PPROV_Nota_PPROV_Estado" FromRole="PPROV_Nota" ToRole="PPROV_Estado" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="PortalProvModel.FK_PPROV_Nota_PPROV_Documento" FromRole="PPROV_Nota" ToRole="PPROV_Documento" />
+        </EntityType>
+        <EntityType Name="PPROV_Retencion">
+          <Key>
+            <PropertyRef Name="Retencion_Id" />
+          </Key>
+          <Property Name="Retencion_Id" Type="Guid" Nullable="false" />
+          <Property Name="Retencion_Numero" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Retencion_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Retencion_Tipo" Type="Int32" />
+          <Property Name="Retencion_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Retencion_Monto" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="Retencion_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PPROV_RetencionTipo" Relationship="PortalProvModel.FK_PPROV_Retenciones_PPROV_RetencionTipo" FromRole="PPROV_Retencion" ToRole="PPROV_RetencionTipo" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="PortalProvModel.PPROV_RetencionFactura" FromRole="PPROV_Retencion" ToRole="PPROV_Documento" />
+        </EntityType>
+        <EntityType Name="PPROV_RetencionTipo">
+          <Key>
+            <PropertyRef Name="Retencion_Tipo" />
+          </Key>
+          <Property Name="Retencion_Tipo" Type="Int32" Nullable="false" />
+          <Property Name="Retencion_Activo" Type="Boolean" Nullable="false" />
+          <Property Name="Retencion_Nombre" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PPROV_Retencion" Relationship="PortalProvModel.FK_PPROV_Retenciones_PPROV_RetencionTipo" FromRole="PPROV_RetencionTipo" ToRole="PPROV_Retencion" />
+        </EntityType>
+        <EntityType Name="PPROV_TipoAdjunto">
+          <Key>
+            <PropertyRef Name="Adjunto_Tipo" />
+          </Key>
+          <Property Name="Adjunto_Tipo" Type="Guid" Nullable="false" />
+          <Property Name="Adjunto_Nombre" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Extension" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Agrega_Prov" Type="Boolean" Nullable="false" />
+          <Property Name="Agregar_Empresa" Type="Boolean" Nullable="false" />
+          <Property Name="Requerido_Prov" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PPROV_Adjuntos" Relationship="PortalProvModel.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" FromRole="PPROV_TipoAdjunto" ToRole="PPROV_Adjuntos" />
+        </EntityType>
+        <Association Name="FK_PPROV_Adjuntos_PPROV_TipoAdjunto">
+          <End Type="PortalProvModel.PPROV_TipoAdjunto" Role="PPROV_TipoAdjunto" Multiplicity="0..1" />
+          <End Type="PortalProvModel.PPROV_Adjuntos" Role="PPROV_Adjuntos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_TipoAdjunto">
+              <PropertyRef Name="Adjunto_Tipo" />
+            </Principal>
+            <Dependent Role="PPROV_Adjuntos">
+              <PropertyRef Name="Adjunto_Tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Nota_PPROV_Estado">
+          <End Type="PortalProvModel.PPROV_Estado" Role="PPROV_Estado" Multiplicity="0..1" />
+          <End Type="PortalProvModel.PPROV_Nota" Role="PPROV_Nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Estado">
+              <PropertyRef Name="Doc_Estado" />
+            </Principal>
+            <Dependent Role="PPROV_Nota">
+              <PropertyRef Name="Doc_Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Retenciones_PPROV_RetencionTipo">
+          <End Type="PortalProvModel.PPROV_RetencionTipo" Role="PPROV_RetencionTipo" Multiplicity="0..1" />
+          <End Type="PortalProvModel.PPROV_Retencion" Role="PPROV_Retencion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_RetencionTipo">
+              <PropertyRef Name="Retencion_Tipo" />
+            </Principal>
+            <Dependent Role="PPROV_Retencion">
+              <PropertyRef Name="Retencion_Tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PPROV_UsuarioProveedor">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="CardCode" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="CardCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="PortalProvModel.FK_PPROV_UsuarioProveedor_AspNetUsers" FromRole="PPROV_UsuarioProveedor" ToRole="AspNetUsers" />
+        </EntityType>
+        <Association Name="FK_PPROV_UsuarioProveedor_AspNetUsers">
+          <End Type="PortalProvModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="PortalProvModel.PPROV_UsuarioProveedor" Role="PPROV_UsuarioProveedor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PPROV_UsuarioProveedor">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PPROV_Documento">
+          <Key>
+            <PropertyRef Name="Doc_Id" />
+          </Key>
+          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
+          <Property Name="Doc_CardCorde" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Numero" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Serie" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Doc_EmpresaId" Type="Int32" />
+          <Property Name="Doc_MontoNeto" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="Doc_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Autorizacion" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_TipoDocumento" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_UsuarioCarga" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_FechaCarga" Type="DateTime" Precision="3" />
+          <Property Name="Doc_NumeroOC" Type="Int32" />
+          <Property Name="Doc_NumeroFactProv" Type="Int32" />
+          <Property Name="Doc_NumeroEntrega" Type="Int32" />
+          <Property Name="Contrasena_Id" Type="Guid" />
+          <NavigationProperty Name="PPROV_Adjuntos" Relationship="PortalProvModel.FK_PPROV_Adjuntos_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Adjuntos" />
+          <NavigationProperty Name="PPROV_Contrasena" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Documento" ToRole="PPROV_Contrasena" />
+          <NavigationProperty Name="PPROV_Estado" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Estado" FromRole="PPROV_Documento" ToRole="PPROV_Estado" />
+          <NavigationProperty Name="PPROV_Nota" Relationship="PortalProvModel.FK_PPROV_Nota_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Nota" />
+          <NavigationProperty Name="PPROV_Retencion" Relationship="PortalProvModel.PPROV_RetencionFactura" FromRole="PPROV_Documento" ToRole="PPROV_Retencion" />
+          <Property Name="Doc_PdfFactura" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_PdfOC" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_PPROV_Adjuntos_PPROV_Documento">
+          <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="1" />
+          <End Type="PortalProvModel.PPROV_Adjuntos" Role="PPROV_Adjuntos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Adjuntos">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Documento_PPROV_Contrasena">
+          <End Type="PortalProvModel.PPROV_Contrasena" Role="PPROV_Contrasena" Multiplicity="0..1" />
+          <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Contrasena">
+              <PropertyRef Name="Contrasena_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Documento">
+              <PropertyRef Name="Contrasena_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Documento_PPROV_Estado">
+          <End Type="PortalProvModel.PPROV_Estado" Role="PPROV_Estado" Multiplicity="0..1" />
+          <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Estado">
+              <PropertyRef Name="Doc_Estado" />
+            </Principal>
+            <Dependent Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPROV_Nota_PPROV_Documento">
+          <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="0..1" />
+          <End Type="PortalProvModel.PPROV_Nota" Role="PPROV_Nota" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Documento">
+              <PropertyRef Name="Doc_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Nota">
+              <PropertyRef Name="Doc_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PPROV_RetencionFactura">
+          <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="*" />
+          <End Type="PortalProvModel.PPROV_Retencion" Role="PPROV_Retencion" Multiplicity="*" />
+        </Association>
+        <EntityType Name="v_PPROV_FacturasIngresadasPorUsuario">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Tipo" />
+            <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="Empresa_Name" />
+          </Key>
+          <Property Name="RowNbr" Type="Int64" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="BPLId" Type="Int32" />
+          <Property Name="TrsfrRef" Type="String" MaxLength="27" FixedLength="false" Unicode="true" />
+          <Property Name="TrsfrDate" Type="DateTime" Precision="3" />
+          <Property Name="TrsfrSum" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="DocCurr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="Tipo" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="U_FacSerie" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="U_Facnum" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Total" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="DocCur" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="Retenciones" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Vencimiento" Type="DateTime" Precision="3" />
+          <Property Name="DocNum" Type="Int32" />
+          <Property Name="DocEntry" Type="Int32" Nullable="false" />
+          <Property Name="MontoTrans" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="U_NumContrase" Type="Int32" />
+        </EntityType>
+        <EntityType Name="V_PPROV_Contrasena_PorUsuario">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Contrasena_Id" />
+            <PropertyRef Name="Contrasena_Numero" />
+            <PropertyRef Name="Empresa_Id" />
+            <PropertyRef Name="Contrasena_Fecha" />
+            <PropertyRef Name="Contrasena_Fecha_Estimada" />
+            <PropertyRef Name="Contrasena_Usuario" />
+            <PropertyRef Name="Cantidad" />
+            <PropertyRef Name="Monto" />
+            <PropertyRef Name="Empresa_Name" />
+          </Key>
+          <Property Name="RowNbr" Type="Int64" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Contrasena_Id" Type="Guid" Nullable="false" />
+          <Property Name="Contrasena_Numero" Type="Int32" Nullable="false" />
+          <Property Name="Empresa_Id" Type="Int32" Nullable="false" />
+          <Property Name="Contrasena_Fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Contrasena_Fecha_Estimada" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Contrasena_Usuario" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Cantidad" Type="Int32" Nullable="false" />
+          <Property Name="Monto" Type="Decimal" Nullable="false" Precision="38" Scale="6" />
+          <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="V_PPROV_Empresas">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+          </Key>
+          <Property Name="RowNbr" Type="Int64" Nullable="false" />
+          <Property Name="Empresa_Id" Type="Int32" Nullable="false" />
+          <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Nit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AliasName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="v_PPROV_Usuario_Proveedor">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="EmailConfirmed" />
+            <PropertyRef Name="PhoneNumberConfirmed" />
+            <PropertyRef Name="TwoFactorEnabled" />
+            <PropertyRef Name="LockoutEnabled" />
+            <PropertyRef Name="AccessFailedCount" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="CardCode" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Puesto" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Sistema" Type="Boolean" />
+          <Property Name="CardCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="V_PPROV_DocumentosPorUsuario">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Doc_Id" />
+            <PropertyRef Name="Empresa_Name" />
+          </Key>
+          <Property Name="RowNbr" Type="Int64" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Doc_Id" Type="Guid" Nullable="false" />
+          <Property Name="Doc_CardCorde" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Doc_Estado" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Numero" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Serie" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Doc_EmpresaId" Type="Int32" />
+          <Property Name="Doc_MontoNeto" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="Doc_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Autorizacion" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_TipoDocumento" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_UsuarioCarga" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_FechaCarga" Type="DateTime" Precision="3" />
+          <Property Name="Doc_NumeroOC" Type="Int32" />
+          <Property Name="Doc_NumeroFactProv" Type="Int32" />
+          <Property Name="Doc_NumeroEntrega" Type="Int32" />
+          <Property Name="Contrasena_Id" Type="Guid" />
+          <Property Name="Doc_PdfFactura" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_PdfOC" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="V_PPROV_RetencionesPorUsuario">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="Retencion_Id" />
+            <PropertyRef Name="Retencion_Nombre" />
+            <PropertyRef Name="Empresa_Name" />
+          </Key>
+          <Property Name="RowNbr" Type="Int64" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Doc_Serie" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_Numero" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_TipoDocumento" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Retencion_Id" Type="Guid" Nullable="false" />
+          <Property Name="Retencion_Numero" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Retencion_Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Retencion_Tipo" Type="Int32" />
+          <Property Name="Retencion_Usuario" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Retencion_Monto" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="Retencion_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="Retencion_Nombre" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1197,106 +1700,6 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
                 <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
                 <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_Adjuntos">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Adjuntos">
-              <MappingFragment StoreEntitySet="PPROV_Adjuntos">
-                <ScalarProperty Name="Adjunto_Id" ColumnName="Adjunto_Id" />
-                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
-                <ScalarProperty Name="Adjunto_FileName" ColumnName="Adjunto_FileName" />
-                <ScalarProperty Name="Adjunto_Tipo" ColumnName="Adjunto_Tipo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_Contrasena">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Contrasena">
-              <MappingFragment StoreEntitySet="PPROV_Contrasena">
-                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
-                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
-                <ScalarProperty Name="Contrasena_Fecha" ColumnName="Contrasena_Fecha" />
-                <ScalarProperty Name="Contrasena_Fecha_Estimada" ColumnName="Contrasena_Fecha_Estimada" />
-                <ScalarProperty Name="Contrasena_Usuario" ColumnName="Contrasena_Usuario" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_Documento">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Documento">
-              <MappingFragment StoreEntitySet="PPROV_Documento">
-                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
-                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
-                <ScalarProperty Name="Doc_Numero" ColumnName="Doc_Numero" />
-                <ScalarProperty Name="Doc_Serie" ColumnName="Doc_Serie" />
-                <ScalarProperty Name="Doc_Fecha" ColumnName="Doc_Fecha" />
-                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
-                <ScalarProperty Name="Doc_MontoNeto" ColumnName="Doc_MontoNeto" />
-                <ScalarProperty Name="Doc_Moneda" ColumnName="Doc_Moneda" />
-                <ScalarProperty Name="Doc_Autorizacion" ColumnName="Doc_Autorizacion" />
-                <ScalarProperty Name="Doc_Observaciones" ColumnName="Doc_Observaciones" />
-                <ScalarProperty Name="Doc_TipoDocumento" ColumnName="Doc_TipoDocumento" />
-                <ScalarProperty Name="Doc_UsuarioCarga" ColumnName="Doc_UsuarioCarga" />
-                <ScalarProperty Name="Doc_FechaCarga" ColumnName="Doc_FechaCarga" />
-                <ScalarProperty Name="Doc_NumeroOC" ColumnName="Doc_NumeroOC" />
-                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
-                <ScalarProperty Name="Doc_NumeroFactProv" ColumnName="Doc_NumeroFactProv" />
-                <ScalarProperty Name="Doc_NumeroEntrega" ColumnName="Doc_NumeroEntrega" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_Estado">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Estado">
-              <MappingFragment StoreEntitySet="PPROV_Estado">
-                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_Nota">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Nota">
-              <MappingFragment StoreEntitySet="PPROV_Nota">
-                <ScalarProperty Name="Nota_Id" ColumnName="Nota_Id" />
-                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
-                <ScalarProperty Name="Nota_Fecha" ColumnName="Nota_Fecha" />
-                <ScalarProperty Name="Nota_Usuario" ColumnName="Nota_Usuario" />
-                <ScalarProperty Name="Nota_Descripción" ColumnName="Nota_Descripción" />
-                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
-                <ScalarProperty Name="Revisada" ColumnName="Revisada" />
-                <ScalarProperty Name="Revisada_Por" ColumnName="Revisada_Por" />
-                <ScalarProperty Name="Revisada_Fecha" ColumnName="Revisada_Fecha" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_Retenciones">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Retenciones">
-              <MappingFragment StoreEntitySet="PPROV_Retenciones">
-                <ScalarProperty Name="Retencion_Id" ColumnName="Retencion_Id" />
-                <ScalarProperty Name="Retencion_Fecha" ColumnName="Retencion_Fecha" />
-                <ScalarProperty Name="Retencion_Tipo" ColumnName="Retencion_Tipo" />
-                <ScalarProperty Name="Retencion_Usuario" ColumnName="Retencion_Usuario" />
-                <ScalarProperty Name="Retencion_Monto" ColumnName="Retencion_Monto" />
-                <ScalarProperty Name="Retencion_Moneda" ColumnName="Retencion_Moneda" />
-                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_RetencionTipo">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_RetencionTipo">
-              <MappingFragment StoreEntitySet="PPROV_RetencionTipo">
-                <ScalarProperty Name="Retencion_Tipo" ColumnName="Retencion_Tipo" />
-                <ScalarProperty Name="Retencion_Activo" ColumnName="Retencion_Activo" />
-                <ScalarProperty Name="Retencion_Nombre" ColumnName="Retencion_Nombre" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_TipoAdjunto">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_TipoAdjunto">
-              <MappingFragment StoreEntitySet="PPROV_TipoAdjunto">
-                <ScalarProperty Name="Adjunto_Tipo" ColumnName="Adjunto_Tipo" />
-                <ScalarProperty Name="Adjunto_Nombre" ColumnName="Adjunto_Nombre" />
-                <ScalarProperty Name="Extension" ColumnName="Extension" />
-                <ScalarProperty Name="Agrega_Prov" ColumnName="Agrega_Prov" />
-                <ScalarProperty Name="Agregar_Empresa" ColumnName="Agregar_Empresa" />
-                <ScalarProperty Name="Requerido_Prov" ColumnName="Requerido_Prov" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1479,6 +1882,251 @@ warning 6002: The table/view 'PortalProv.dbo.V_GEN_UsuarioRoles_Diponibles' does
               <ScalarProperty Name="Id" ColumnName="Role_Id" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="PPROV_Adjuntos">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Adjuntos">
+              <MappingFragment StoreEntitySet="PPROV_Adjuntos">
+                <ScalarProperty Name="Adjunto_Tipo" ColumnName="Adjunto_Tipo" />
+                <ScalarProperty Name="Adjunto_FileName" ColumnName="Adjunto_FileName" />
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+                <ScalarProperty Name="Adjunto_Id" ColumnName="Adjunto_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Contrasena">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Contrasena">
+              <MappingFragment StoreEntitySet="PPROV_Contrasena">
+                <ScalarProperty Name="Contrasena_Usuario" ColumnName="Contrasena_Usuario" />
+                <ScalarProperty Name="Contrasena_Fecha_Estimada" ColumnName="Contrasena_Fecha_Estimada" />
+                <ScalarProperty Name="Contrasena_Fecha" ColumnName="Contrasena_Fecha" />
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="Contrasena_Numero" ColumnName="Contrasena_Numero" />
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Estado">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Estado">
+              <MappingFragment StoreEntitySet="PPROV_Estado">
+                <ScalarProperty Name="Doc_Orden" ColumnName="Doc_Orden" />
+                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Nota">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Nota">
+              <MappingFragment StoreEntitySet="PPROV_Nota">
+                <ScalarProperty Name="Revisada_Fecha" ColumnName="Revisada_Fecha" />
+                <ScalarProperty Name="Revisada_Por" ColumnName="Revisada_Por" />
+                <ScalarProperty Name="Revisada" ColumnName="Revisada" />
+                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
+                <ScalarProperty Name="Nota_Descripción" ColumnName="Nota_Descripción" />
+                <ScalarProperty Name="Nota_Usuario" ColumnName="Nota_Usuario" />
+                <ScalarProperty Name="Nota_Fecha" ColumnName="Nota_Fecha" />
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+                <ScalarProperty Name="Nota_Id" ColumnName="Nota_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Retencion">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Retencion">
+              <MappingFragment StoreEntitySet="PPROV_Retencion">
+                <ScalarProperty Name="Retencion_Moneda" ColumnName="Retencion_Moneda" />
+                <ScalarProperty Name="Retencion_Monto" ColumnName="Retencion_Monto" />
+                <ScalarProperty Name="Retencion_Usuario" ColumnName="Retencion_Usuario" />
+                <ScalarProperty Name="Retencion_Tipo" ColumnName="Retencion_Tipo" />
+                <ScalarProperty Name="Retencion_Fecha" ColumnName="Retencion_Fecha" />
+                <ScalarProperty Name="Retencion_Numero" ColumnName="Retencion_Numero" />
+                <ScalarProperty Name="Retencion_Id" ColumnName="Retencion_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_RetencionTipo">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_RetencionTipo">
+              <MappingFragment StoreEntitySet="PPROV_RetencionTipo">
+                <ScalarProperty Name="Retencion_Nombre" ColumnName="Retencion_Nombre" />
+                <ScalarProperty Name="Retencion_Activo" ColumnName="Retencion_Activo" />
+                <ScalarProperty Name="Retencion_Tipo" ColumnName="Retencion_Tipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_TipoAdjunto">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_TipoAdjunto">
+              <MappingFragment StoreEntitySet="PPROV_TipoAdjunto">
+                <ScalarProperty Name="Requerido_Prov" ColumnName="Requerido_Prov" />
+                <ScalarProperty Name="Agregar_Empresa" ColumnName="Agregar_Empresa" />
+                <ScalarProperty Name="Agrega_Prov" ColumnName="Agrega_Prov" />
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="Adjunto_Nombre" ColumnName="Adjunto_Nombre" />
+                <ScalarProperty Name="Adjunto_Tipo" ColumnName="Adjunto_Tipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_UsuarioProveedor">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_UsuarioProveedor">
+              <MappingFragment StoreEntitySet="PPROV_UsuarioProveedor">
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_Documento">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Documento">
+              <MappingFragment StoreEntitySet="PPROV_Documento">
+                <ScalarProperty Name="Doc_PdfOC" ColumnName="Doc_PdfOC" />
+                <ScalarProperty Name="Doc_PdfFactura" ColumnName="Doc_PdfFactura" />
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+                <ScalarProperty Name="Doc_NumeroEntrega" ColumnName="Doc_NumeroEntrega" />
+                <ScalarProperty Name="Doc_NumeroFactProv" ColumnName="Doc_NumeroFactProv" />
+                <ScalarProperty Name="Doc_NumeroOC" ColumnName="Doc_NumeroOC" />
+                <ScalarProperty Name="Doc_FechaCarga" ColumnName="Doc_FechaCarga" />
+                <ScalarProperty Name="Doc_UsuarioCarga" ColumnName="Doc_UsuarioCarga" />
+                <ScalarProperty Name="Doc_TipoDocumento" ColumnName="Doc_TipoDocumento" />
+                <ScalarProperty Name="Doc_Observaciones" ColumnName="Doc_Observaciones" />
+                <ScalarProperty Name="Doc_Autorizacion" ColumnName="Doc_Autorizacion" />
+                <ScalarProperty Name="Doc_Moneda" ColumnName="Doc_Moneda" />
+                <ScalarProperty Name="Doc_MontoNeto" ColumnName="Doc_MontoNeto" />
+                <ScalarProperty Name="Doc_EmpresaId" ColumnName="Doc_EmpresaId" />
+                <ScalarProperty Name="Doc_Fecha" ColumnName="Doc_Fecha" />
+                <ScalarProperty Name="Doc_Serie" ColumnName="Doc_Serie" />
+                <ScalarProperty Name="Doc_Numero" ColumnName="Doc_Numero" />
+                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
+                <ScalarProperty Name="Doc_CardCorde" ColumnName="Doc_CardCorde" />
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="PPROV_RetencionFactura" TypeName="PortalProvModel.PPROV_RetencionFactura" StoreEntitySet="PPROV_RetencionFactura">
+            <EndProperty Name="PPROV_Retencion">
+              <ScalarProperty Name="Retencion_Id" ColumnName="Retencion_Id" />
+            </EndProperty>
+            <EndProperty Name="PPROV_Documento">
+              <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="v_PPROV_FacturasIngresadasPorUsuario">
+            <EntityTypeMapping TypeName="PortalProvModel.v_PPROV_FacturasIngresadasPorUsuario">
+              <MappingFragment StoreEntitySet="v_PPROV_FacturasIngresadasPorUsuario">
+                <ScalarProperty Name="U_NumContrase" ColumnName="U_NumContrase" />
+                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
+                <ScalarProperty Name="MontoTrans" ColumnName="MontoTrans" />
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="Vencimiento" ColumnName="Vencimiento" />
+                <ScalarProperty Name="Retenciones" ColumnName="Retenciones" />
+                <ScalarProperty Name="DocCur" ColumnName="DocCur" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="U_Facnum" ColumnName="U_Facnum" />
+                <ScalarProperty Name="U_FacSerie" ColumnName="U_FacSerie" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="DocCurr" ColumnName="DocCurr" />
+                <ScalarProperty Name="TrsfrSum" ColumnName="TrsfrSum" />
+                <ScalarProperty Name="TrsfrDate" ColumnName="TrsfrDate" />
+                <ScalarProperty Name="TrsfrRef" ColumnName="TrsfrRef" />
+                <ScalarProperty Name="BPLId" ColumnName="BPLId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_PPROV_Contrasena_PorUsuario">
+            <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Contrasena_PorUsuario">
+              <MappingFragment StoreEntitySet="V_PPROV_Contrasena_PorUsuario">
+                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="Contrasena_Usuario" ColumnName="Contrasena_Usuario" />
+                <ScalarProperty Name="Contrasena_Fecha_Estimada" ColumnName="Contrasena_Fecha_Estimada" />
+                <ScalarProperty Name="Contrasena_Fecha" ColumnName="Contrasena_Fecha" />
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="Contrasena_Numero" ColumnName="Contrasena_Numero" />
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_PPROV_Empresas">
+            <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Empresas">
+              <MappingFragment StoreEntitySet="V_PPROV_Empresas">
+                <ScalarProperty Name="AliasName" ColumnName="AliasName" />
+                <ScalarProperty Name="Nit" ColumnName="Nit" />
+                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v_PPROV_Usuario_Proveedor">
+            <EntityTypeMapping TypeName="PortalProvModel.v_PPROV_Usuario_Proveedor">
+              <MappingFragment StoreEntitySet="v_PPROV_Usuario_Proveedor">
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="Sistema" ColumnName="Sistema" />
+                <ScalarProperty Name="Puesto" ColumnName="Puesto" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_PPROV_DocumentosPorUsuario">
+            <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_DocumentosPorUsuario">
+              <MappingFragment StoreEntitySet="V_PPROV_DocumentosPorUsuario">
+                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
+                <ScalarProperty Name="Doc_PdfOC" ColumnName="Doc_PdfOC" />
+                <ScalarProperty Name="Doc_PdfFactura" ColumnName="Doc_PdfFactura" />
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+                <ScalarProperty Name="Doc_NumeroEntrega" ColumnName="Doc_NumeroEntrega" />
+                <ScalarProperty Name="Doc_NumeroFactProv" ColumnName="Doc_NumeroFactProv" />
+                <ScalarProperty Name="Doc_NumeroOC" ColumnName="Doc_NumeroOC" />
+                <ScalarProperty Name="Doc_FechaCarga" ColumnName="Doc_FechaCarga" />
+                <ScalarProperty Name="Doc_UsuarioCarga" ColumnName="Doc_UsuarioCarga" />
+                <ScalarProperty Name="Doc_TipoDocumento" ColumnName="Doc_TipoDocumento" />
+                <ScalarProperty Name="Doc_Observaciones" ColumnName="Doc_Observaciones" />
+                <ScalarProperty Name="Doc_Autorizacion" ColumnName="Doc_Autorizacion" />
+                <ScalarProperty Name="Doc_Moneda" ColumnName="Doc_Moneda" />
+                <ScalarProperty Name="Doc_MontoNeto" ColumnName="Doc_MontoNeto" />
+                <ScalarProperty Name="Doc_EmpresaId" ColumnName="Doc_EmpresaId" />
+                <ScalarProperty Name="Doc_Fecha" ColumnName="Doc_Fecha" />
+                <ScalarProperty Name="Doc_Serie" ColumnName="Doc_Serie" />
+                <ScalarProperty Name="Doc_Numero" ColumnName="Doc_Numero" />
+                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
+                <ScalarProperty Name="Doc_CardCorde" ColumnName="Doc_CardCorde" />
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_PPROV_RetencionesPorUsuario">
+            <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_RetencionesPorUsuario">
+              <MappingFragment StoreEntitySet="V_PPROV_RetencionesPorUsuario">
+                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
+                <ScalarProperty Name="Retencion_Nombre" ColumnName="Retencion_Nombre" />
+                <ScalarProperty Name="Retencion_Moneda" ColumnName="Retencion_Moneda" />
+                <ScalarProperty Name="Retencion_Monto" ColumnName="Retencion_Monto" />
+                <ScalarProperty Name="Retencion_Usuario" ColumnName="Retencion_Usuario" />
+                <ScalarProperty Name="Retencion_Tipo" ColumnName="Retencion_Tipo" />
+                <ScalarProperty Name="Retencion_Fecha" ColumnName="Retencion_Fecha" />
+                <ScalarProperty Name="Retencion_Numero" ColumnName="Retencion_Numero" />
+                <ScalarProperty Name="Retencion_Id" ColumnName="Retencion_Id" />
+                <ScalarProperty Name="Doc_TipoDocumento" ColumnName="Doc_TipoDocumento" />
+                <ScalarProperty Name="Doc_Numero" ColumnName="Doc_Numero" />
+                <ScalarProperty Name="Doc_Serie" ColumnName="Doc_Serie" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -12,17 +12,24 @@ namespace Wareways.PortalProv.Infraestructura
     using System;
     using System.Collections.Generic;
     
-    public partial class PPROV_Retenciones
+    public partial class PPROV_Retencion
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public PPROV_Retencion()
+        {
+            this.PPROV_Documento = new HashSet<PPROV_Documento>();
+        }
+    
         public System.Guid Retencion_Id { get; set; }
+        public string Retencion_Numero { get; set; }
         public Nullable<System.DateTime> Retencion_Fecha { get; set; }
         public Nullable<int> Retencion_Tipo { get; set; }
         public string Retencion_Usuario { get; set; }
         public Nullable<decimal> Retencion_Monto { get; set; }
         public string Retencion_Moneda { get; set; }
-        public System.Guid Doc_Id { get; set; }
     
-        public virtual PPROV_Documento PPROV_Documento { get; set; }
         public virtual PPROV_RetencionTipo PPROV_RetencionTipo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PPROV_Documento> PPROV_Documento { get; set; }
     }
 }

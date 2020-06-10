@@ -17,7 +17,7 @@ namespace Wareways.PortalProv.Infraestructura
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PPROV_RetencionTipo()
         {
-            this.PPROV_Retenciones = new HashSet<PPROV_Retenciones>();
+            this.PPROV_Retencion = new HashSet<PPROV_Retencion>();
         }
     
         public int Retencion_Tipo { get; set; }
@@ -25,6 +25,6 @@ namespace Wareways.PortalProv.Infraestructura
         public string Retencion_Nombre { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PPROV_Retenciones> PPROV_Retenciones { get; set; }
+        public virtual ICollection<PPROV_Retencion> PPROV_Retencion { get; set; }
     }
 }

@@ -1,0 +1,81 @@
+﻿@model  Wareways.PortalProv.Models.PP.PagosModel
+
+<!DOCTYPE html>
+
+
+<div>
+    <div class="box box-default box-solid">
+        <div class="box-header with-border">
+            <h4 class="box-title"><span class="fa fa-road fa-2x"></span> Pendiente de Pago</h4>
+        </div>
+        <div class="box-body">
+            <table class="table table-bordered table-condensed table-hover Datos">
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+
+
+                        <th>Factura </th>
+                        <th>Monto</th>
+                        <th>Moneda</th>
+                        <th>Retenciones</th>
+                        <th>Estimada Pago</th>
+                        <th>Contraseña</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.L_Documentos)
+                    {
+                        <tr>
+                            <td>@item.Empresa_Name</td>
+
+
+
+
+
+                            <td>@item.U_FacSerie - @item.U_Facnum </td>
+                            <td>@item.Total.Value.ToString("#,###,##0.00")</td>
+                            <td>@item.DocCur</td>
+                            <td>@item.Retenciones.Value.ToString("#,###,##0.00")</td>
+                            <td>@item.Vencimiento.Value.ToString("yyyy-MM-dd")</td>
+                            <td>@item.U_NumContrase</td>
+
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('.Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                "order": [[5, "desc"]],
+                //"columnDefs": [
+                //    { "width": "60%", "targets": 0 },
+                //    { "width": "20%", "targets": 1 },
+                //    { "width": "20%", "targets": 2 }
+                //],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+
+}

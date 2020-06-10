@@ -12,16 +12,10 @@ namespace Wareways.PortalProv.Infraestructura
     using System;
     using System.Collections.Generic;
     
-    public partial class PPROV_Documento
+    public partial class V_PPROV_DocumentosPorUsuario
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PPROV_Documento()
-        {
-            this.PPROV_Adjuntos = new HashSet<PPROV_Adjuntos>();
-            this.PPROV_Nota = new HashSet<PPROV_Nota>();
-            this.PPROV_Retencion = new HashSet<PPROV_Retencion>();
-        }
-    
+        public long RowNbr { get; set; }
+        public string UserName { get; set; }
         public System.Guid Doc_Id { get; set; }
         public string Doc_CardCorde { get; set; }
         public string Doc_Estado { get; set; }
@@ -42,14 +36,6 @@ namespace Wareways.PortalProv.Infraestructura
         public Nullable<System.Guid> Contrasena_Id { get; set; }
         public string Doc_PdfFactura { get; set; }
         public string Doc_PdfOC { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
-        public virtual PPROV_Contrasena PPROV_Contrasena { get; set; }
-        public virtual PPROV_Estado PPROV_Estado { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PPROV_Nota> PPROV_Nota { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PPROV_Retencion> PPROV_Retencion { get; set; }
+        public string Empresa_Name { get; set; }
     }
 }

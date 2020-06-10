@@ -20,6 +20,7 @@ namespace Wareways.PortalProv.Infraestructura
             this.AspNetUserClaims = new HashSet<AspNetUserClaims>();
             this.AspNetUserLogins = new HashSet<AspNetUserLogins>();
             this.AspNetRoles = new HashSet<AspNetRoles>();
+            this.PPROV_UsuarioProveedor = new HashSet<PPROV_UsuarioProveedor>();
         }
     
         public string Id { get; set; }
@@ -44,5 +45,7 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetRoles> AspNetRoles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PPROV_UsuarioProveedor> PPROV_UsuarioProveedor { get; set; }
     }
 }

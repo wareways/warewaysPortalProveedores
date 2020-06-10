@@ -12,22 +12,18 @@ namespace Wareways.PortalProv.Infraestructura
     using System;
     using System.Collections.Generic;
     
-    public partial class PPROV_Contrasena
+    public partial class V_PPROV_Contrasena_PorUsuario
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PPROV_Contrasena()
-        {
-            this.PPROV_Documento = new HashSet<PPROV_Documento>();
-        }
-    
+        public long RowNbr { get; set; }
+        public string UserName { get; set; }
         public System.Guid Contrasena_Id { get; set; }
         public int Contrasena_Numero { get; set; }
         public int Empresa_Id { get; set; }
         public System.DateTime Contrasena_Fecha { get; set; }
         public System.DateTime Contrasena_Fecha_Estimada { get; set; }
         public string Contrasena_Usuario { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PPROV_Documento> PPROV_Documento { get; set; }
+        public int Cantidad { get; set; }
+        public decimal Monto { get; set; }
+        public string Empresa_Name { get; set; }
     }
 }

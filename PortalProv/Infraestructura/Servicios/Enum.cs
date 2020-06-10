@@ -24,6 +24,7 @@ namespace Wareways.PortalProv.Servicios
         ConceptoCaja = 15,
         EstadosCiclos = 16,
         MotivoVisita = 17,
+        Moneda = 20
         
     }
 

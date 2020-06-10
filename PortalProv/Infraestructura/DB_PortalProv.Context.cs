@@ -27,14 +27,6 @@ namespace Wareways.PortalProv.Infraestructura
     
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public virtual DbSet<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
-        public virtual DbSet<PPROV_Contrasena> PPROV_Contrasena { get; set; }
-        public virtual DbSet<PPROV_Documento> PPROV_Documento { get; set; }
-        public virtual DbSet<PPROV_Estado> PPROV_Estado { get; set; }
-        public virtual DbSet<PPROV_Nota> PPROV_Nota { get; set; }
-        public virtual DbSet<PPROV_Retenciones> PPROV_Retenciones { get; set; }
-        public virtual DbSet<PPROV_RetencionTipo> PPROV_RetencionTipo { get; set; }
-        public virtual DbSet<PPROV_TipoAdjunto> PPROV_TipoAdjunto { get; set; }
         public virtual DbSet<GEN_Configuracion> GEN_Configuracion { get; set; }
         public virtual DbSet<GEN_Audit> GEN_Audit { get; set; }
         public virtual DbSet<GEN_Catalogo> GEN_Catalogo { get; set; }
@@ -47,5 +39,20 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<V_GEN_UsuarioRoles_Diponibles> V_GEN_UsuarioRoles_Diponibles { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
+        public virtual DbSet<PPROV_Contrasena> PPROV_Contrasena { get; set; }
+        public virtual DbSet<PPROV_Estado> PPROV_Estado { get; set; }
+        public virtual DbSet<PPROV_Nota> PPROV_Nota { get; set; }
+        public virtual DbSet<PPROV_Retencion> PPROV_Retencion { get; set; }
+        public virtual DbSet<PPROV_RetencionTipo> PPROV_RetencionTipo { get; set; }
+        public virtual DbSet<PPROV_TipoAdjunto> PPROV_TipoAdjunto { get; set; }
+        public virtual DbSet<PPROV_UsuarioProveedor> PPROV_UsuarioProveedor { get; set; }
+        public virtual DbSet<PPROV_Documento> PPROV_Documento { get; set; }
+        public virtual DbSet<v_PPROV_FacturasIngresadasPorUsuario> v_PPROV_FacturasIngresadasPorUsuario { get; set; }
+        public virtual DbSet<V_PPROV_Contrasena_PorUsuario> V_PPROV_Contrasena_PorUsuario { get; set; }
+        public virtual DbSet<V_PPROV_Empresas> V_PPROV_Empresas { get; set; }
+        public virtual DbSet<v_PPROV_Usuario_Proveedor> v_PPROV_Usuario_Proveedor { get; set; }
+        public virtual DbSet<V_PPROV_DocumentosPorUsuario> V_PPROV_DocumentosPorUsuario { get; set; }
+        public virtual DbSet<V_PPROV_RetencionesPorUsuario> V_PPROV_RetencionesPorUsuario { get; set; }
     }
 }

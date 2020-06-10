@@ -24,7 +24,7 @@ namespace Wareways.PortalProv.Infraestructura
         public string Revisada_Por { get; set; }
         public Nullable<System.DateTime> Revisada_Fecha { get; set; }
     
-        public virtual PPROV_Documento PPROV_Documento { get; set; }
         public virtual PPROV_Estado PPROV_Estado { get; set; }
+        public virtual PPROV_Documento PPROV_Documento { get; set; }
     }
 }

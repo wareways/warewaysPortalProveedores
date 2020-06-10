@@ -12,14 +12,12 @@ namespace Wareways.PortalProv.Infraestructura
     using System;
     using System.Collections.Generic;
     
-    public partial class PPROV_Adjuntos
+    public partial class V_PPROV_Empresas
     {
-        public System.Guid Adjunto_Id { get; set; }
-        public System.Guid Doc_Id { get; set; }
-        public string Adjunto_FileName { get; set; }
-        public Nullable<System.Guid> Adjunto_Tipo { get; set; }
-    
-        public virtual PPROV_TipoAdjunto PPROV_TipoAdjunto { get; set; }
-        public virtual PPROV_Documento PPROV_Documento { get; set; }
+        public long RowNbr { get; set; }
+        public int Empresa_Id { get; set; }
+        public string Empresa_Name { get; set; }
+        public string Nit { get; set; }
+        public string AliasName { get; set; }
     }
 }

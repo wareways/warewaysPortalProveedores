@@ -1,0 +1,136 @@
+﻿@model  Wareways.PortalProv.Models.PP.PresentadosModel
+
+<!DOCTYPE html>
+
+
+<div>
+    <div class="box box-default box-solid">
+        <div class="box-header with-border">
+            <h4 class="box-title"> <span class="fa fa-inbox fa-2x"></span>&nbsp;  Documentos Presentados</h4>
+            <div class="box-tools pull-right">
+
+            </div>
+        </div>
+        <div class="box-body">
+            <table class="table table-bordered table-condensed table-hover Datos">
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Tipo</th>
+                        <th>Serie - Numero </th>
+
+                        <th>Fecha Emision</th>
+                        <th>Empresa</th>
+                        <th>Moneda</th>
+                        <th>Monto</th>
+                        <th>Cargado el</th>
+                        <th>Orden Compra</th>
+                        <th>Observacion</th>
+                        <th>Archivos</th>
+                        <th>Mensajes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.L_Documentos)
+                    {
+                        <tr>
+                            <td>@item.Doc_Estado</td>
+
+                            <td>@item.Doc_TipoDocumento</td>
+
+                            <td>@item.Doc_Serie - @item.Doc_Numero</td>
+
+
+
+                            <td>@item.Doc_Fecha.Value.ToString("yyyy-MM-dd")</td>
+
+                            <td>@item.Empresa_Name</td>
+
+                            <td>@item.Doc_Moneda</td>
+
+                            <td>@item.Doc_MontoNeto.Value.ToString("#,###,##0.00")</td>
+
+                            <td>@item.Doc_FechaCarga.Value.ToString("yyyy-MM-dd HH:mm")</td>
+
+                            <td>@item.Doc_NumeroOC</td>
+
+                            <td>@item.Doc_Observaciones</td>
+
+                            <td>
+
+                                <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
+                                |
+                                <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
+
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-default" title="OC"><span class="fa fa-envelope-open "></span> <span class="badge bg-yellow">0</span> </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="box-footer">
+            <a href="@Url.Action("Nuevo","Presentados")" class="btn btn-success" style="color:white">Nuevo Documento  &nbsp; <span class="fa fa-plus-circle"></span> </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+
+            <div class="modal-body">
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myModal").on("show.bs.modal", function (e) {
+                var id = $(e.relatedTarget).data('nombre');
+                var titulo = $(e.relatedTarget).data('titulo');
+
+                $(".modal-body").html("<embed src='" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                $(".modal-title").html(titulo);
+
+            });
+        });
+
+        $(function () {
+            $('.Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                "order": [[7, "desc"]],
+                //"columnDefs": [
+                //    { "width": "60%", "targets": 0 },
+                //    { "width": "20%", "targets": 1 },
+                //    { "width": "20%", "targets": 2 }
+                //],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+
+}

@@ -39,7 +39,7 @@ namespace Wareways.PortalProv.Servicios
             var _Roles = (from l in _Db.V_GEN_UsuarioRoles where l.Active == true && l.UserId == _Usuario.Id select l).ToList();
 
             HttpContext.Current.Session["MenuList"] = _MenusPermitidos;
-            HttpContext.Current.Session["UserName"] = _Email;
+            HttpContext.Current.Session["UserName"] = _Usuario.UserName;
             HttpContext.Current.Session["UsuariosRoles"] = _Roles;
 
 
