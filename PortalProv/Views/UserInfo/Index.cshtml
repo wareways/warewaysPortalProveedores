@@ -1,0 +1,211 @@
+﻿@model Wareways.PortalProv.Infraestructura.AspNetUsers
+
+@section PageHeader
+{
+    <section class="content-header">
+        <h1>
+            Información del Usuario
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+            <li class="active">Información del Usuario</li>
+        </ol>
+    </section>
+}
+<div class="row">
+    <div class="col-md-3">
+        <div class="box box-primary">
+            <div class="box-body box-profile">
+                <div style="text-align:center">
+                    <span class="fa fa-user-circle-o fa-4x"></span>
+                </div>
+
+                <h3 class="profile-username text-center">@Model.Nombre</h3>
+
+                <p class="text-muted text-center">@Model.Puesto</p>
+
+                <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                        <b>Nit:</b> <a class="pull-right">@Model.Nit</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Razon Social:</b> <a class="pull-right">@Model.RazonSocial</a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Telefono:</b> <a class="pull-right">@Model.PhoneNumber</a>
+                    </li>
+                </ul>
+
+
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="
+                    @if (ViewBag.TabName == "Permisos" || ViewBag.TabName == null )
+                  {
+                     @:active
+                  }
+                    "><a href="#permisos" data-toggle="tab" aria-expanded="true">Informacion de Permisos</a></li>
+
+                <li class="
+                     @if (ViewBag.TabName == "Actualizacion")
+                  {
+                     @:active
+                  }
+                    ">
+                    <a href="#Actualizacion" data-toggle="tab" aria-expanded="false">Actualizar Datos</a>
+                </li>
+                <li class="
+                     @if (ViewBag.TabName == "Password")
+                  {
+                     @:active
+                  }
+                    "><a href="#Contrasena" data-toggle="tab" aria-expanded="false">Cambiar Contraseña</a></li>
+            </ul>
+            <div class="tab-content
+
+                    ">
+                <div class="tab-pane
+                     @if (ViewBag.TabName == "Permisos" || ViewBag.TabName == null )
+                  {
+                     @:active
+                  }
+                     " id="permisos">
+
+                    <table class="table table-condensed table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Nit</th>
+                                <th>Codigo Proveedor</th>
+                                <th>Nit Proveedor</th>
+                                <th>Estado</th>
+                                
+                            </tr>
+                        
+                        </thead>
+                        <tbody>
+                            @foreach (var item in (List<Wareways.PortalProv.Infraestructura.SP_PPROV_PermisosCodigosProv_Usuario_Result>)ViewBag.PermisosCodigos)
+                            {
+                                <tr>
+                                    <td>@item.AliasName</td>
+                               
+                                    <td>@item.Empresa_Nit</td>
+                                
+                                    <td>@item.CardCode - @item.CardName</td>
+                               
+                                    <td>@item.Nit</td>
+                                
+                                    <td>@item.EstadoCliente</td>
+                                </tr>
+                            }
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+
+
+                <div class="tab-pane
+                      @if (ViewBag.TabName == "Password")
+                  {
+                     @:active
+                  }
+                     " id="Contrasena">
+                    @{
+                        Html.RenderAction("ChangePassword");
+
+                        if (ViewBag.TabName == "Password")
+                        {
+
+                            if (ViewBag.StatusMessage != "")
+                            {
+                                <div class="alert alert-warning alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <h4><i class="icon fa fa-check"></i> Alerta!</h4>
+                                    @ViewBag.StatusMessage
+                                </div>
+                            }
+                        }
+
+                    }
+                </div>
+
+
+
+
+
+
+                <div class="tab-pane
+                     @if (ViewBag.TabName == "Actualizacion")
+                  {
+                     @:active
+                  }
+                     " id="Actualizacion">
+                    @using (Html.BeginForm("UpdateUserInfo", "UserInfo", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label for="inputName" class="col-sm-2 control-label">Nombre</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(p => p.Nombre, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese Nombre" } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail" class="col-sm-2 control-label">Puesto</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(p => p.Puesto, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese Puesto" } })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputEmail" class="col-sm-2 control-label">Telefono</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(p => p.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ingrese Telefono" } })
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        if (ViewBag.StatusMessage != "")
+                        {
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <h4><i class="icon fa fa-check"></i> Alerta!</h4>
+                                @ViewBag.StatusMessage
+                            </div>
+                        }
+
+
+                    }
+
+
+
+
+
+
+
+                    <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+            </div>
+            <!-- /.nav-tabs-custom -->
+        </div>
+    </div>
+

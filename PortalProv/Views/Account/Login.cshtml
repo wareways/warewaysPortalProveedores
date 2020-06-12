@@ -2,67 +2,69 @@
 
 @model LoginViewModel
 
-<div class="box box-default">
-    <div class="box-header with-border">
-        <h4 class="box-title">Iniciar Sesión</h4>
+<div class="login-box">
+    <div class="login-logo">
+
+
     </div>
-    <div class="box-body">
-        <div class="row">
-            <div class="col-md-8">
-                <section id="loginForm">
-                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
+    <!-- /.login-logo -->
 
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-                            <div class="col-md-6">
-                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                            <div class="col-md-6">
-                                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group" style="display:none">
-                            <div class="col-md-offset-2 col-md-10">
-                                <div class="checkbox">
-                                    @Html.CheckBoxFor(m => m.RememberMe)
-                                    @Html.LabelFor(m => m.RememberMe)
-                                </div>
-                            </div>
-                        </div>
-                        @*<input type="submit" value="Iniciar Session" class="btn btn-default" >*@
-                        <div class="col-md-offset-6 col-md-2">
-                            <button class="btn btn-success pull-right" type="submit" name="Login" value="Grabar">
-                                <i class="fa fa-sign-in"></i>
-                                 &nbsp; Iniciar Sesión
+    <div class="login-box-body">
+        <img src="~/Content/PolytecLogo.png" width="100%"/>
+        
+        <p class="login-box-msg">Ingrese sus Credenciales para Iniciar Session</p>
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
 
-                            </button>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 
-                        </div>
 
 
-                        @* Enable this once you have account confirmation enabled for password reset functionality
-                            <p>
-                                @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                            </p>*@
-                    }
-                </section>
+
+            /// Este se queda
+            ///
+            <div class="form-group has-feedback">
+
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Usuario" })
+                <span class="fa fa-user form-control-feedback"></span>
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
             </div>
-            @*<div class="col-md-4">
-                    <section id="socialLoginForm">
-                        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-                    </section>
-                </div>*@
-        </div>
+            <div class="form-group has-feedback">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Contraseña" })
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button class="btn btn-success pull-right" type="submit" name="Login" value="Grabar">
+                        <i class="fa fa-sign-in"></i>
+                        &nbsp; Iniciar Sesión
+                    </button>
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="form-group" style="display:none">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                    </div>
+                </div>
+            </div>
+
+        }
+
+
+
+
     </div>
+    <!-- /.login-box-body -->
 </div>
 
 

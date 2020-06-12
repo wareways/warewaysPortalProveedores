@@ -91,6 +91,9 @@
     <Reference Include="itext.svg, Version=7.1.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\itext7.7.1.9\lib\net40\itext.svg.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\MicrosoftReportViewerWebForms.11.0.0.0\lib\Microsoft.ReportViewer.Common.dll</HintPath>
@@ -439,6 +442,18 @@
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\PPROV_UsuarioProveedor.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_DatosOrdenCompra_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_Indicadores_Usuario_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_PermisosCodigosProv_Usuario_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_STATS_FacturacionUltimoAnio_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\V_GEN_MenuDisplay.cs">
@@ -6858,6 +6873,7 @@
     <Content Include="admin-lte\plugins\timepicker\bootstrap-timepicker.js" />
     <Content Include="admin-lte\plugins\timepicker\bootstrap-timepicker.min.css" />
     <Content Include="admin-lte\plugins\timepicker\bootstrap-timepicker.min.js" />
+    <Content Include="Content\Beneficions del Portal Proveedores.jpg" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -6870,6 +6886,11 @@
     </Content>
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\LaptopIntro.jpg" />
+    <Content Include="Content\polytec.ico" />
+    <Content Include="Content\PolytecLogo - Copy.png" />
+    <Content Include="Content\PolytecLogo.png" />
+    <Content Include="Content\PolytecSquare.png" />
     <Content Include="Content\sweetalert\bootstrap-sweetalert.png" />
     <Content Include="Content\sweetalert\docs.css" />
     <Content Include="Content\sweetalert\sweet-alert.css" />
@@ -7440,12 +7461,12 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
     <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <Content Include="Views\Manage\ChangePassword.cshtml" />
-    <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\UserInfo\AddPhoneNumber.cshtml" />
+    <Content Include="Views\UserInfo\ChangePassword.cshtml" />
+    <Content Include="Views\UserInfo\Index.cshtml" />
+    <Content Include="Views\UserInfo\ManageLogins.cshtml" />
+    <Content Include="Views\UserInfo\SetPassword.cshtml" />
+    <Content Include="Views\UserInfo\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_LayoutOriginal.cshtml" />

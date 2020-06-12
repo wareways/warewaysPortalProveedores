@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Configuration;
+using System.Text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
 
 namespace Wareways.PortalProv.Controllers
 {
     public class HomeController : Controller
     {
         Infraestructura.PortalProvEntities _Db = new Infraestructura.PortalProvEntities();
+
+        
         public ActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -33,6 +39,18 @@ namespace Wareways.PortalProv.Controllers
 
             ViewBag.VB_Servidor = (_Servidor == ".") ? "Local" : "Productivo";
 
+            if (User.Identity.Name != "")
+            {
+                var _Estadisticas = _Db.SP_PPROV_STATS_FacturacionUltimoAnio(User.Identity.Name).ToList();
+                ViewBag.DataTotal = string.Join(",", _Estadisticas.Select(p => p.Total).ToArray());
+                ViewBag.DataCantidad = string.Join(",", _Estadisticas.Select(p => p.Cantidad).ToArray());
+                ViewBag.DataTitulo = string.Join(",", _Estadisticas.Select(p => @"'" +p.Anio.ToString() + "-" + p.mes.ToString()+ @"'").ToArray());
+
+                var _Indicadores = _Db.SP_PPROV_Indicadores_Usuario(User.Identity.Name).ToList();
+                ViewBag.IndicadoresTop = _Indicadores.Where(p=>p.Grupo == "HomeTop").OrderBy(p=>p.Orden).ToList();
+                ViewBag.IndicadoresBottom = _Indicadores.Where(p => p.Grupo == "HomeBottom").OrderBy(p => p.Orden).ToList();
+
+            }
 
 
             return View();
@@ -67,5 +85,12 @@ namespace Wareways.PortalProv.Controllers
 
             return View();
         }
+
+        
+
+        
+
+        
+
     }
 }

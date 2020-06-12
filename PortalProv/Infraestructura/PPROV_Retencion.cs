@@ -27,6 +27,7 @@ namespace Wareways.PortalProv.Infraestructura
         public string Retencion_Usuario { get; set; }
         public Nullable<decimal> Retencion_Monto { get; set; }
         public string Retencion_Moneda { get; set; }
+        public string Retencion_Pdf { get; set; }
     
         public virtual PPROV_RetencionTipo PPROV_RetencionTipo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

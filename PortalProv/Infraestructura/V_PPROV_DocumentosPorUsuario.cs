@@ -37,5 +37,6 @@ namespace Wareways.PortalProv.Infraestructura
         public string Doc_PdfFactura { get; set; }
         public string Doc_PdfOC { get; set; }
         public string Empresa_Name { get; set; }
+        public string SolicitanteOC { get; set; }
     }
 }

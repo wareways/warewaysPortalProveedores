@@ -12,16 +12,18 @@ using Wareways.PortalProv.Models;
 namespace Wareways.PortalProv.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class UserInfoController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
-        public ManageController()
+        Infraestructura.PortalProvEntities _Db = new Infraestructura.PortalProvEntities();
+
+        public UserInfoController()
         {
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public UserInfoController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -53,26 +55,25 @@ namespace Wareways.PortalProv.Controllers
 
         //
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        public async Task<ActionResult> Index(ManageMessageId? message,String _TabName)
         {
+            ViewBag.TabName = _TabName;
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                message == ManageMessageId.ChangePasswordSuccess ? "Cambio Contraseña ha sido grabado con exito."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                : message == ManageMessageId.ChangePasswordErrorNoValid ? "Error Cambio Contraseña, el password anterior no coincide o los password nuevos no son iguales"
+                : message == ManageMessageId.DatosActualizadosUsuario ? "Datos Actualizados Con Exito"
                 : "";
 
             var userId = User.Identity.GetUserId();
-            var model = new IndexViewModel
-            {
-                HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
+
+            ViewBag.PermisosCodigos = _Db.SP_PPROV_PermisosCodigosProv_Usuario(User.Identity.Name).ToList();
+
+            var model = _Db.AspNetUsers.Where(p => p.UserName == User.Identity.Name).First();
             return View(model);
         }
 
@@ -221,6 +222,23 @@ namespace Wareways.PortalProv.Controllers
             return View();
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateUserInfo(Infraestructura.AspNetUsers model)
+        {
+            try
+            {
+                var _Usuario = _Db.AspNetUsers.Where(p => p.UserName == User.Identity.Name).ToList();
+                _Usuario[0].Nombre = model.Nombre;
+                _Usuario[0].Puesto = model.Puesto;
+                _Usuario[0].PhoneNumber = model.PhoneNumber;
+                _Db.SaveChanges();
+            }
+            catch { }
+
+            return RedirectToAction("Index", new { message = ManageMessageId.DatosActualizadosUsuario, _TabName = "Actualizacion" });
+        }
+
         //
         // POST: /Manage/ChangePassword
         [HttpPost]
@@ -229,7 +247,7 @@ namespace Wareways.PortalProv.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return RedirectToAction("Index", new { message = ManageMessageId.ChangePasswordErrorNoValid, _TabName = "Password" });
             }
             var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
@@ -239,10 +257,11 @@ namespace Wareways.PortalProv.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+                return RedirectToAction("Index", new { message = ManageMessageId.ChangePasswordSuccess,  _TabName = "Password" });
             }
             AddErrors(result);
-            return View(model);
+
+            return  RedirectToAction("Index", new {  _TabName = "Password" });
         }
 
         //
@@ -382,7 +401,9 @@ namespace Wareways.PortalProv.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
-            Error
+            Error,
+            ChangePasswordErrorNoValid,
+            DatosActualizadosUsuario,
         }
 
 #endregion

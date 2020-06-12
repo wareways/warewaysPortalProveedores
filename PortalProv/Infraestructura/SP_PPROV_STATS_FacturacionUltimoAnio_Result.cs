@@ -10,14 +10,12 @@
 namespace Wareways.PortalProv.Infraestructura
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class PPROV_UsuarioProveedor
+    public partial class SP_PPROV_STATS_FacturacionUltimoAnio_Result
     {
-        public string UserId { get; set; }
-        public string CardCode { get; set; }
-        public int Empresa_Id { get; set; }
-    
-        public virtual AspNetUsers AspNetUsers { get; set; }
+        public Nullable<int> mes { get; set; }
+        public Nullable<int> Anio { get; set; }
+        public decimal Total { get; set; }
+        public int Cantidad { get; set; }
     }
 }

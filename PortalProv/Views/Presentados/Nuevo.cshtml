@@ -135,6 +135,11 @@
                                         @Html.EditorFor(model => model.Nuevo.Doc_NumeroOC, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese OC" } })
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Solicitante OC</label>
+                                        @Html.EditorFor(model => model.Nuevo.SolicitanteOC, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                    </div>
+
 
                                     <div class="form-group">
                                         <label>Observaciones</label>

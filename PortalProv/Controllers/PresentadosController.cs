@@ -1,8 +1,12 @@
-﻿using Microsoft.TeamFoundation.Server;
+﻿using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
+using Microsoft.Owin.Security.Provider;
+using Microsoft.TeamFoundation.Server;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Wareways.PortalProv.Infraestructura;
@@ -51,7 +55,7 @@ namespace Wareways.PortalProv.Controllers
             modelo.Usuario_Empresas = _Db.V_PPROV_Empresas.OrderBy(p => p.Empresa_Id).ToList();
             modelo.Usuario_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
 
-            modelo.Nuevo_CardCode = Obtener_CardCode_Usuario();
+            
             if (modelo.Nuevo_Pdf_Facturas == null) modelo.Nuevo_Pdf_Facturas = string.Format("FAC_{0}.pdf", Guid.NewGuid().ToString());
             if( modelo.Nuevo_Pdf_OC == null)   modelo.Nuevo_Pdf_OC = string.Format("OC_{0}.pdf", Guid.NewGuid().ToString());
             if (modelo.Nuevo == null)  modelo.Nuevo = new PPROV_Documento() {  Doc_EmpresaId = 1};
@@ -90,15 +94,67 @@ namespace Wareways.PortalProv.Controllers
             {
                 try
                 {
-                    var _ServerPath = Server.MapPath(@"~/Cargados/" + modelo.Nuevo_CardCode + "/");
-                    if (!System.IO.Directory.Exists(_ServerPath)) Directory.CreateDirectory(_ServerPath);
-
+                 
                     if (filefac.ContentLength > 0 && fileoc.ContentLength > 0)
                     {
-                        String _Fact_Path = Path.Combine(_ServerPath, modelo.Nuevo_Pdf_Facturas);
+                        // Validar que sea el mismo archivo
+                        if (filefac.FileName == fileoc.FileName)
+                        {
+                            ViewBag.Message = "No puede cargar el mismo documento, 2 veces en el sistema";
+                            ModelState.Clear();
+                            return View(modelo);
+                        }
+                        
+
+
+
+                        // Tratar Obtener Numero de Orden Compra
+                        String _NumeroOc = ObtenerOCfromDPF(ParsePdf(fileoc));
+                        // Obtener Datos de OC
+                        if ( _NumeroOc == "")
+                        {
+                            modelo.Nuevo_CardCode = Obtener_CardCode_Usuario_Primero();
+                        }
+                        else // Si Logro Detectar la Orden
+                        {
+                            var _DatosOrden = _Db.SP_PPROV_DatosOrdenCompra(Int32.Parse(_NumeroOc)).ToList();
+                            if ( _DatosOrden.Count == 1)
+                            {
+                                if ( Obtener_CardCode_AutorizadasPorUsuario().Contains(_DatosOrden[0].CardCode )   )
+                                {
+                                    modelo.Nuevo_CardCode = _DatosOrden[0].CardCode;
+                                    modelo.Nuevo.Doc_EmpresaId = _DatosOrden[0].BPLId;
+                                    modelo.Nuevo.Doc_MontoNeto = _DatosOrden[0].DocTotal;
+                                    modelo.Nuevo.Doc_NumeroOC = _DatosOrden[0].DocNum;
+                                    modelo.Nuevo.SolicitanteOC = _DatosOrden[0].UsuarioSolicitante;
+                                    modelo.Nuevo.Doc_Moneda = _DatosOrden[0].DocCur;
+                                } else
+
+                                {
+                                    ViewBag.Message = "La Orden de Compra no pertenece a su Usuario, Archivo Incorrecto";
+                                    ModelState.Clear();
+                                    return View(modelo);
+                                }
+
+                                
+                            } else
+                            {
+                                ViewBag.Message = "Numero de Orden de Compra no Encontrada o Cancelada";
+                                ModelState.Clear();
+                                return View(modelo);
+                            }
+                            
+                        }
+
+
+                        // Upload Files to Server
+                        var _ServerPath = Server.MapPath(@"~/Cargados/" + modelo.Nuevo_CardCode + "/");
+                        if (!System.IO.Directory.Exists(_ServerPath)) Directory.CreateDirectory(_ServerPath);
+
+                        String _Fact_Path = System.IO.Path.Combine(_ServerPath, modelo.Nuevo_Pdf_Facturas);
                         filefac.SaveAs(_Fact_Path);
 
-                        String _OC_Path = Path.Combine(_ServerPath, modelo.Nuevo_Pdf_OC);
+                        String _OC_Path = System.IO.Path.Combine(_ServerPath, modelo.Nuevo_Pdf_OC);
                         fileoc.SaveAs(_OC_Path);
                         modelo.ModoActivo = "Nuevo_Paso2";
 
@@ -140,11 +196,82 @@ namespace Wareways.PortalProv.Controllers
         }
 
 
-        private string Obtener_CardCode_Usuario()
+        private string Obtener_CardCode_Usuario_Primero()
         {
             return _Db.v_PPROV_Usuario_Proveedor.Where(p => p.UserName == User.Identity.Name).First().CardCode;
         }
+        private string[] Obtener_CardCode_AutorizadasPorUsuario()
+        {
+            return _Db.v_PPROV_Usuario_Proveedor.Where(p => p.UserName == User.Identity.Name).Select(p=>p.CardCode).ToArray();
+        }
 
+
+        public string ParsePdf(string fileName)
+        {
+
+            using (PdfReader reader = new PdfReader(fileName))
+            {
+                StringBuilder sb = new StringBuilder();
+
+                ITextExtractionStrategy strategy = new SimpleTextExtractionStrategy();
+                for (int page = 0; page < reader.NumberOfPages; page++)
+                {
+                    string text = PdfTextExtractor.GetTextFromPage(reader, page + 1, strategy);
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        sb.Append(Encoding.UTF8.GetString(ASCIIEncoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(text))));
+                    }
+                }
+
+                return sb.ToString();
+            }
+        }
+
+
+        private string ObtenerOCfromDPF(string v)
+        {
+            String _NumeroOC = "";
+            if (v.Contains("División envases Lacoplast") || v.Contains("POLIMEROS Y TECNOLOGIA, S.A.") || v.Contains("POLYTEC INTERNACIONAL, S.A."))
+            {
+                var SplitContenido = v.Split('\n');
+                for (int i = 0; i < 4; i++)
+                {
+                    if (SplitContenido[i].Contains("Orden de Servicio"))
+                    {
+                        return SplitContenido[i].Split(' ')[3];
+                    }
+                    if (SplitContenido[i].Contains("ORDEN DE COMPRA No."))
+                    {
+                        return SplitContenido[i + 1];
+                    }
+
+                }
+            }
+            return _NumeroOC;
+        }
+        public string ParsePdf(HttpPostedFileBase _UB_Ordenes)
+        {
+            byte[] pdfbytes = null;
+            BinaryReader rdr = new BinaryReader(_UB_Ordenes.InputStream);
+            pdfbytes = rdr.ReadBytes((int)_UB_Ordenes.ContentLength);
+
+            using (PdfReader reader = new PdfReader(pdfbytes))
+            {
+                StringBuilder sb = new StringBuilder();
+
+                ITextExtractionStrategy strategy = new SimpleTextExtractionStrategy();
+                for (int page = 0; page < reader.NumberOfPages; page++)
+                {
+                    string text = PdfTextExtractor.GetTextFromPage(reader, page + 1, strategy);
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        sb.Append(Encoding.UTF8.GetString(ASCIIEncoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(text))));
+                    }
+                }
+
+                return sb.ToString();
+            }
+        }
 
     }
 }

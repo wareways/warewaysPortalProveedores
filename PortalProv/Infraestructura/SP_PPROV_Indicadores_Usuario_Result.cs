@@ -10,14 +10,18 @@
 namespace Wareways.PortalProv.Infraestructura
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class PPROV_UsuarioProveedor
+    public partial class SP_PPROV_Indicadores_Usuario_Result
     {
-        public string UserId { get; set; }
-        public string CardCode { get; set; }
-        public int Empresa_Id { get; set; }
-    
-        public virtual AspNetUsers AspNetUsers { get; set; }
+        public int Orden { get; set; }
+        public string Fondo { get; set; }
+        public string IndicardorValor { get; set; }
+        public string IndicadorTexto { get; set; }
+        public string IndicadorTexto2 { get; set; }
+        public string Progreso { get; set; }
+        public string Icono { get; set; }
+        public string URL { get; set; }
+        public string Tipo { get; set; }
+        public string Grupo { get; set; }
     }
 }

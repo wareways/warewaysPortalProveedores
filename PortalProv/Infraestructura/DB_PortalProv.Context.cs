@@ -12,6 +12,8 @@ namespace Wareways.PortalProv.Infraestructura
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class PortalProvEntities : DbContext
     {
@@ -54,5 +56,41 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<v_PPROV_Usuario_Proveedor> v_PPROV_Usuario_Proveedor { get; set; }
         public virtual DbSet<V_PPROV_DocumentosPorUsuario> V_PPROV_DocumentosPorUsuario { get; set; }
         public virtual DbSet<V_PPROV_RetencionesPorUsuario> V_PPROV_RetencionesPorUsuario { get; set; }
+    
+        public virtual ObjectResult<SP_PPROV_STATS_FacturacionUltimoAnio_Result> SP_PPROV_STATS_FacturacionUltimoAnio(string userName)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_STATS_FacturacionUltimoAnio_Result>("SP_PPROV_STATS_FacturacionUltimoAnio", userNameParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_Indicadores_Usuario_Result> SP_PPROV_Indicadores_Usuario(string userName)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_Indicadores_Usuario_Result>("SP_PPROV_Indicadores_Usuario", userNameParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_DatosOrdenCompra_Result> SP_PPROV_DatosOrdenCompra(Nullable<int> docnum)
+        {
+            var docnumParameter = docnum.HasValue ?
+                new ObjectParameter("Docnum", docnum) :
+                new ObjectParameter("Docnum", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_DatosOrdenCompra_Result>("SP_PPROV_DatosOrdenCompra", docnumParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_PermisosCodigosProv_Usuario_Result> SP_PPROV_PermisosCodigosProv_Usuario(string username)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_PermisosCodigosProv_Usuario_Result>("SP_PPROV_PermisosCodigosProv_Usuario", usernameParameter);
+        }
     }
 }

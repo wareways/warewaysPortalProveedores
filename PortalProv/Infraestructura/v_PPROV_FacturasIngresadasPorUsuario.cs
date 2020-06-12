@@ -33,5 +33,7 @@ namespace Wareways.PortalProv.Infraestructura
         public Nullable<decimal> MontoTrans { get; set; }
         public string Empresa_Name { get; set; }
         public Nullable<int> U_NumContrase { get; set; }
+        public Nullable<System.DateTime> DocDate { get; set; }
+        public decimal Monto_Nota { get; set; }
     }
 }

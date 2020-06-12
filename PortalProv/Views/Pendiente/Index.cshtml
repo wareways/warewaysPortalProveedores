@@ -14,8 +14,9 @@
                     <tr>
                         <th>Empresa</th>
 
-
+                        <th>Interno</th>
                         <th>Factura </th>
+                        <th>Fecha </th>
                         <th>Monto</th>
                         <th>Moneda</th>
                         <th>Retenciones</th>
@@ -32,8 +33,9 @@
 
 
 
-
+                            <td>@item.DocNum</td>
                             <td>@item.U_FacSerie - @item.U_Facnum </td>
+                            <td>@item.DocDate</td>
                             <td>@item.Total.Value.ToString("#,###,##0.00")</td>
                             <td>@item.DocCur</td>
                             <td>@item.Retenciones.Value.ToString("#,###,##0.00")</td>
@@ -66,7 +68,7 @@
                 'autoWidth': false,
                 'showinfo': false,
                 "pageLength": 10,
-                "order": [[5, "desc"]],
+                "order": [[7, "desc"]],
                 //"columnDefs": [
                 //    { "width": "60%", "targets": 0 },
                 //    { "width": "20%", "targets": 1 },

@@ -10,14 +10,17 @@
 namespace Wareways.PortalProv.Infraestructura
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class PPROV_UsuarioProveedor
+    public partial class SP_PPROV_PermisosCodigosProv_Usuario_Result
     {
-        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string AliasName { get; set; }
+        public string Empresa_Name { get; set; }
+        public string Empresa_Nit { get; set; }
         public string CardCode { get; set; }
         public int Empresa_Id { get; set; }
-    
-        public virtual AspNetUsers AspNetUsers { get; set; }
+        public string CardName { get; set; }
+        public string Nit { get; set; }
+        public string EstadoCliente { get; set; }
     }
 }

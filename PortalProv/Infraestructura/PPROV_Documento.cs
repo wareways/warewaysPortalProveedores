@@ -42,6 +42,7 @@ namespace Wareways.PortalProv.Infraestructura
         public Nullable<System.Guid> Contrasena_Id { get; set; }
         public string Doc_PdfFactura { get; set; }
         public string Doc_PdfOC { get; set; }
+        public string SolicitanteOC { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }

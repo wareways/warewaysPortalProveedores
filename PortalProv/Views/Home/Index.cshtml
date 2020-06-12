@@ -10,154 +10,248 @@
             Inicio
             <small>Bienvenidos al Portal</small>
         </h1>
-
-
-        <div class="box box-default">
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-1 col-sm-1">
-
-                    </div>
-                    <div class="col-md-10 col-sm-10" style="text-align:center">
-                        
-                    </div>
-                    <div class="col-md-1 col-sm-1">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-
-        
-
-        @*<ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-            <li class="active">Here</li>
-        </ol>*@
     </section>
 }
-
-@*<div id="result">
-    
-</div>
-<button type="button" onclick="initGeolocation();">Show Position</button>*@
-
-@*<div class="row">
-        <div class="col-md-12">
-            <div class="box">
-                <div class="box-body">
-
-
-                        <div class="jumbotron">
-                            <h1>ASP.NET</h1>
-                            <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-                            <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+@if (User.Identity.Name == "")
+{
+    <div class="box box-danger">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div style="text-align:center">
+                            <h1 style="font-weight:bolder">Portal Proveedores</h1>
+                            <img src="~/Content/PolytecLogo.png" />
+                            <br />
+                            <hr />
+                            <img src="~/Content/LaptopIntro.jpg" width="100%" />
                         </div>
+                    </div>
 
-
-                </div>
-            </div>
-        </div>
-    </div>*@
-
-
-
-@*<div class="row">
-        <div class="col-md-12">
-            <div class="box box-solid box-primary">
-                <div class="box-header">
-                    Como Comenzar a Utilizar el portal
-                </div>
-                <div class="box-body">
-                    <p>
-                        Para poder utiizar el portal se debe de registrar en el sistema su cuenta, despues informar via correo a ventas@wareways.com, para poder darle de alta y habilitar a las compañias que tendra acceso.
-                    </p>
-                    <p>El Tiempo de Respuesta es de 24 horas maximo.</p>
-                </div>
-            </div>
-        </div>
-    </div>*@
-
-@*<div class="row">
-        <div class="col-md-12">
-            <div class="box">
-                <div class="box-body">
-                    <div class="row">
-
-                        <div class="col-md-4">
-                            <h2>Get more libraries</h2>
-                            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-                            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-                        </div>
-                        <div class="col-md-4">
-                            <h2>Web Hosting</h2>
-                            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-                            <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+                    <div class="col-md-6">
+                        <div style="text-align:center">
+                            <img src="~/Content/Beneficions del Portal Proveedores.jpg" width="100%" />
                         </div>
                     </div>
 
                 </div>
             </div>
+
         </div>
-    </div>*@
+    </div>
 
 
-@*<div class="mapouter">
-    <div class="gmap_canvas">
-        <iframe width="100%" 
-             height="400" id="gmap_canvas" src="https://maps.google.com/maps?q=14.530291%2C-90.5842807&t=&z=17&ie=UTF8&iwloc=&output=embed" 
-            frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
-         </iframe>
-         
-    <style>
-        .mapouter {
-            position: relative;
-            text-align: right;
-            height: 400px;
-            width: 100%;
-        }
+}
 
-        .gmap_canvas {
-            overflow: hidden;
-            background: none !important;
-            height: 400px;
-            width: 100%;
-        }
-        .place-card .place-card-medium{
-            display:none !important;
-        }
-    </style>
-</div>
-
-@section scripts
+@if (User.Identity.Name != "")
 {
+    <div class="row">
+        @foreach (var Item in (List<Wareways.PortalProv.Infraestructura.SP_PPROV_Indicadores_Usuario_Result>)ViewBag.IndicadoresTop)
+        {
+            if (Item.Tipo == "Indicador")
+            {
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box @Item.Fondo">
+                        <div class="inner">
+                            <h3>@Item.IndicardorValor</h3>
+                            <p>@Item.IndicadorTexto</p>
+                        </div>
+                        <div class="icon">
+                            <i class="@Item.Icono"></i>
+                        </div>
+                        <a href="@Item.URL" class="small-box-footer">Mas Información <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+            if (Item.Tipo == "Informativo")
+            {
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon @Item.Fondo"><i class="@Item.Icono"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">@Item.IndicadorTexto</span>
+                            <span class="info-box-number">@Item.IndicardorValor</span>
+                            <span class="info-box-text">@Item.IndicadorTexto2</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+            }
+            if (Item.Tipo == "Progreso")
+            {
+                <div class="info-box @Item.Fondo">
+                    <span class="info-box-icon"><i class="@Item.Icono"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">@Item.IndicadorTexto</span>
+                        <span class="info-box-number">@Item.IndicardorValor</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: @Item.Progreso%"></div>
+                        </div>
+                        <span class="progress-description">
+                            @Item.IndicadorTexto2
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            }
+
+        }
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Facturas Aceptadas Ultimos 12 Meses</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <canvas id="barChart" style="height: 230px; width: 787px;" height="230" width="787"></canvas>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        @foreach (var Item in (List<Wareways.PortalProv.Infraestructura.SP_PPROV_Indicadores_Usuario_Result>)ViewBag.IndicadoresBottom)
+        {
+            if (Item.Tipo == "Indicador")
+            {
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <!-- small box -->
+                    <div class="small-box @Item.Fondo">
+                        <div class="inner">
+                            <h3>@Item.IndicardorValor</h3>
+                            <p>@Item.IndicadorTexto</p>
+                        </div>
+                        <div class="icon">
+                            <i class="@Item.Icono"></i>
+                        </div>
+                        <a href="@Item.URL" class="small-box-footer">Mas Información <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+            if (Item.Tipo == "Informativo")
+            {
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon @Item.Fondo"><i class="@Item.Icono"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">@Item.IndicadorTexto</span>
+                            <span class="info-box-number">@Item.IndicardorValor</span>
+                            <span class="info-box-text">@Item.IndicadorTexto2</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+            }
+            if (Item.Tipo == "Progreso")
+            {
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box @Item.Fondo">
+                        <span class="info-box-icon"><i class="@Item.Icono"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">@Item.IndicadorTexto</span>
+                            <span class="info-box-number">@Item.IndicardorValor</span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: @Item.Progreso%"></div>
+                            </div>
+                            <span class="progress-description">
+                                @Item.IndicadorTexto2
+                            </span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                </div>
+            }
+
+        }
+    </div>
+
+}
+
+@section Scripts
+{
+    <script src="/admin-lte/bower_components/chart.js/Chart.js"></script>
     <script>
 
-        var options = {
-            enableHighAccuracy: false,
-            timeout: 5000,
-            maximumAge: 5000
-        };
+        $(function () {
+            /* ChartJS
+             * -------
+             * Here we will create a few charts using ChartJS
+             */
 
-        function initGeolocation() {
-            if (navigator && navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
-            } else {
-                console.log('Geolocation is not supported');
+            var areaChartData = {
+                labels: [@Html.Raw( @ViewBag.DataTitulo)],
+                datasets: [
+                    {
+                        label: 'Monto',
+                        fillColor: 'rgba(60,141,188,0.9)',
+                        strokeColor: 'rgba(210, 214, 222, 1)',
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: [@ViewBag.DataTotal]
+                    }
+                ]
             }
-        }
 
-        function errorCallback() { }
+            //-------------
+            //- BAR CHART -
+            //-------------
+            var barChartCanvas = $('#barChart').get(0).getContext('2d')
+            var barChart = new Chart(barChartCanvas)
+            var barChartData = areaChartData
 
-        function successCallback(position) {
-            var positionInfo = "Your current position is (" + "Latitude: " + position.coords.latitude + ", " + "Longitude: " + position.coords.longitude + "Exactitud: " + position.coords.accuracy +  ")";            
-            $("#gmap_canvas").attr("src", "https://maps.google.com/maps?q=" + position.coords.latitude + "%2C" + position.coords.longitude + "&t=&z=17&ie=UTF8&iwloc=&output=embed");
-            document.getElementById("result").innerHTML = positionInfo;
-            document.getElementById('gmap_canvas').contentWindow.location.reload(true);
-        }
+            var barChartOptions = {
+                //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+                scaleBeginAtZero: true,
+                //Boolean - Whether grid lines are shown across the chart
+                scaleShowGridLines: true,
+                //String - Colour of the grid lines
+                scaleGridLineColor: 'rgba(0,0,0,.05)',
+                //Number - Width of the grid lines
+                scaleGridLineWidth: 1,
+                //Boolean - Whether to show horizontal lines (except X axis)
+                scaleShowHorizontalLines: true,
+                //Boolean - Whether to show vertical lines (except Y axis)
+                scaleShowVerticalLines: true,
+                //Boolean - If there is a stroke on each bar
+                barShowStroke: true,
+                //Number - Pixel width of the bar stroke
+                barStrokeWidth: 2,
+                //Number - Spacing between each of the X value sets
+                barValueSpacing: 5,
+                //Number - Spacing between data sets within X values
+                barDatasetSpacing: 1,
+                //String - A legend template
+                legendTemplate: '<ul class="<%=name.toLowerCase()%>-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].fillColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>',
+                //Boolean - whether to make the chart responsive
+                responsive: true,
+                maintainAspectRatio: true
+            }
+
+            barChartOptions.datasetFill = false
+            barChart.Bar(barChartData, barChartOptions)
+        })
+
     </script>
-
-
-
-}*@
+}
