@@ -120,21 +120,21 @@ namespace Wareways.PortalProv.Controllers
                             var _DatosOrden = _Db.SP_PPROV_DatosOrdenCompra(Int32.Parse(_NumeroOc)).ToList();
                             if ( _DatosOrden.Count == 1)
                             {
-                                if ( Obtener_CardCode_AutorizadasPorUsuario().Contains(_DatosOrden[0].CardCode )   )
-                                {
+                                //if ( Obtener_CardCode_AutorizadasPorUsuario().Contains(_DatosOrden[0].CardCode )   )
+                                //{
                                     modelo.Nuevo_CardCode = _DatosOrden[0].CardCode;
                                     modelo.Nuevo.Doc_EmpresaId = _DatosOrden[0].BPLId;
                                     modelo.Nuevo.Doc_MontoNeto = _DatosOrden[0].DocTotal;
                                     modelo.Nuevo.Doc_NumeroOC = _DatosOrden[0].DocNum;
                                     modelo.Nuevo.SolicitanteOC = _DatosOrden[0].UsuarioSolicitante;
                                     modelo.Nuevo.Doc_Moneda = _DatosOrden[0].DocCur;
-                                } else
+                                //} else
 
-                                {
-                                    ViewBag.Message = "La Orden de Compra no pertenece a su Usuario, Archivo Incorrecto";
-                                    ModelState.Clear();
-                                    return View(modelo);
-                                }
+                                //{
+                                //    ViewBag.Message = "La Orden de Compra no pertenece a su Usuario, Archivo Incorrecto";
+                                //    ModelState.Clear();
+                                //    return View(modelo);
+                                //}
 
                                 
                             } else
@@ -198,7 +198,8 @@ namespace Wareways.PortalProv.Controllers
 
         private string Obtener_CardCode_Usuario_Primero()
         {
-            return _Db.v_PPROV_Usuario_Proveedor.Where(p => p.UserName == User.Identity.Name).First().CardCode;
+            var _Datos = _Db.v_PPROV_Usuario_Proveedor.Where(p => p.UserName == User.Identity.Name).First().CardCode;
+            return _Datos;
         }
         private string[] Obtener_CardCode_AutorizadasPorUsuario()
         {
