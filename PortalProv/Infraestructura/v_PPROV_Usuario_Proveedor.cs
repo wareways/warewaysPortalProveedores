@@ -29,6 +29,8 @@ namespace Wareways.PortalProv.Infraestructura
         public string Nombre { get; set; }
         public string Puesto { get; set; }
         public Nullable<bool> Sistema { get; set; }
+        public string Nit { get; set; }
+        public string RazonSocial { get; set; }
         public string CardCode { get; set; }
     }
 }

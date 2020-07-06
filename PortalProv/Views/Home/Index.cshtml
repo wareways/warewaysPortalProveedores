@@ -43,7 +43,7 @@
 
 }
 
-@if (User.Identity.Name != "")
+@if (User.Identity.Name != "" && User.IsInRole("Proveedor"))
 {
     <div class="row">
         @foreach (var Item in (List<Wareways.PortalProv.Infraestructura.SP_PPROV_Indicadores_Usuario_Result>)ViewBag.IndicadoresTop)
@@ -127,6 +127,150 @@
     </div>
     <div class="row">
         @foreach (var Item in (List<Wareways.PortalProv.Infraestructura.SP_PPROV_Indicadores_Usuario_Result>)ViewBag.IndicadoresBottom)
+        {
+            if (Item.Tipo == "Indicador")
+            {
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <!-- small box -->
+                    <div class="small-box @Item.Fondo">
+                        <div class="inner">
+                            <h3>@Item.IndicardorValor</h3>
+                            <p>@Item.IndicadorTexto</p>
+                        </div>
+                        <div class="icon">
+                            <i class="@Item.Icono"></i>
+                        </div>
+                        <a href="@Item.URL" class="small-box-footer">Mas Información <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+            if (Item.Tipo == "Informativo")
+            {
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon @Item.Fondo"><i class="@Item.Icono"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">@Item.IndicadorTexto</span>
+                            <span class="info-box-number">@Item.IndicardorValor</span>
+                            <span class="info-box-text">@Item.IndicadorTexto2</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+            }
+            if (Item.Tipo == "Progreso")
+            {
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box @Item.Fondo">
+                        <span class="info-box-icon"><i class="@Item.Icono"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">@Item.IndicadorTexto</span>
+                            <span class="info-box-number">@Item.IndicardorValor</span>
+
+                            <div class="progress">
+                                <div class="progress-bar" style="width: @Item.Progreso%"></div>
+                            </div>
+                            <span class="progress-description">
+                                @Item.IndicadorTexto2
+                            </span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                </div>
+            }
+
+        }
+    </div>
+
+}
+
+@if (User.Identity.Name != "" && User.IsInRole("Oficina"))
+{
+    <div class="row">
+        @foreach (var Item in (List<Wareways.PortalProv.Infraestructura.SP_PPROV_Indicadores_Oficina_Result>)ViewBag.IndicadoresTopOficina)
+        {
+            if (Item.Tipo == "Indicador")
+            {
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box @Item.Fondo">
+                        <div class="inner">
+                            <h3>@Item.IndicardorValor</h3>
+                            <p>@Item.IndicadorTexto</p>
+                        </div>
+                        <div class="icon">
+                            <i class="@Item.Icono"></i>
+                        </div>
+                        <a href="@Item.URL" class="small-box-footer">Mas Información <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            }
+            if (Item.Tipo == "Informativo")
+            {
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon @Item.Fondo"><i class="@Item.Icono"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">@Item.IndicadorTexto</span>
+                            <span class="info-box-number">@Item.IndicardorValor</span>
+                            <span class="info-box-text">@Item.IndicadorTexto2</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+            }
+            if (Item.Tipo == "Progreso")
+            {
+                <div class="info-box @Item.Fondo">
+                    <span class="info-box-icon"><i class="@Item.Icono"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">@Item.IndicadorTexto</span>
+                        <span class="info-box-number">@Item.IndicardorValor</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: @Item.Progreso%"></div>
+                        </div>
+                        <span class="progress-description">
+                            @Item.IndicadorTexto2
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            }
+
+        }
+    </div>
+    @*<div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Facturas Aceptadas Ultimos 12 Meses</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <canvas id="barChart" style="height: 230px; width: 787px;" height="230" width="787"></canvas>
+                    </div>
+                </div>
+                 /.box-body 
+            </div>
+        </div>
+
+    </div>*@
+    <div class="row">
+        @foreach (var Item in (List<Wareways.PortalProv.Infraestructura.SP_PPROV_Indicadores_Oficina_Result>)ViewBag.IndicadoresBottomOficina)
         {
             if (Item.Tipo == "Indicador")
             {

@@ -10,6 +10,7 @@ using System.Text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 
+
 namespace Wareways.PortalProv.Controllers
 {
     public class HomeController : Controller
@@ -50,8 +51,11 @@ namespace Wareways.PortalProv.Controllers
                 ViewBag.IndicadoresTop = _Indicadores.Where(p=>p.Grupo == "HomeTop").OrderBy(p=>p.Orden).ToList();
                 ViewBag.IndicadoresBottom = _Indicadores.Where(p => p.Grupo == "HomeBottom").OrderBy(p => p.Orden).ToList();
 
+                var _IndicadoresOficina = _Db.SP_PPROV_Indicadores_Oficina(User.Identity.Name).ToList();
+                ViewBag.IndicadoresTopOficina = _IndicadoresOficina.Where(p => p.Grupo == "HomeTop").OrderBy(p => p.Orden).ToList();
+                ViewBag.IndicadoresBottomOficina = _IndicadoresOficina.Where(p => p.Grupo == "HomeBottom").OrderBy(p => p.Orden).ToList();
             }
-
+           
 
             return View();
         }

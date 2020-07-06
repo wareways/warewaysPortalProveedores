@@ -17,16 +17,16 @@ namespace Wareways.PortalProv.Infraestructura
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public PPROV_Estado()
         {
-            this.PPROV_Nota = new HashSet<PPROV_Nota>();
             this.PPROV_Documento = new HashSet<PPROV_Documento>();
+            this.PPROV_Nota = new HashSet<PPROV_Nota>();
         }
     
         public string Doc_Estado { get; set; }
         public Nullable<int> Doc_Orden { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PPROV_Nota> PPROV_Nota { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPROV_Documento> PPROV_Documento { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PPROV_Nota> PPROV_Nota { get; set; }
     }
 }

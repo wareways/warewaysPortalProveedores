@@ -1,20 +1,46 @@
-﻿@model  Wareways.PortalProv.Models.PP.PagosModel
+﻿@model  Wareways.PortalProv.Models.PP.PagosOficinaModel
 
 <!DOCTYPE html>
 
 
 <div>
-    <div class="box box-default box-solid">
+    <div class="box box-primary box-solid">
         <div class="box-header with-border">
-            <h4 class="box-title"><span class="fa fa-road fa-2x"></span> Pendiente de Pago</h4>
+            <h4 class="box-title"><span class="fa fa-road fa-2x"></span> Pendiente de Pago (ADM)</h4>
         </div>
         <div class="box-body">
+
+            <div class="row">
+                <div class="col-md-12 ">
+                    @using (Html.BeginForm("Index", "admpendiente", FormMethod.Post, new { id = "myForm" }))
+                    {
+
+                        @Html.Label("Rango Fechas", htmlAttributes: new { @class = "control-label col-md-1" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.Fecha_Inicial, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.Fecha_Final, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+
+                        <div class="col-md-2">
+                            <button class="btn btn-success" type="submit" id="saveTeststeps">
+                                Filtrar &nbsp;
+                                <i class="fa fa-filter"></i>
+                            </button>
+
+                        </div>
+                    }
+                </div>
+            </div>
+
             <table class="table table-bordered table-condensed table-hover Datos">
                 <thead>
                     <tr>
                         <th>Empresa</th>
 
                         <th>Interno</th>
+                        <th>Proveedor</th>
                         <th>Factura </th>
                         <th>Fecha </th>
                         <th>Monto</th>
@@ -34,7 +60,7 @@
 
 
                             <td>@item.DocNum</td>
-                            
+                            <td>@item.CardCode @item.CardName</td>
                             <td>@item.U_FacSerie - @item.U_Facnum </td>
                             <td>@item.DocDate</td>
                             <td>@item.Total.Value.ToString("#,###,##0.00")</td>
@@ -69,7 +95,7 @@
                 'autoWidth': false,
                 'showinfo': false,
                 "pageLength": 10,
-                "order": [[7, "desc"]],
+                "order": [[8, "desc"]],
                 //"columnDefs": [
                 //    { "width": "60%", "targets": 0 },
                 //    { "width": "20%", "targets": 1 },

@@ -15,16 +15,16 @@ namespace Wareways.PortalProv.Infraestructura
     public partial class PPROV_Nota
     {
         public System.Guid Nota_Id { get; set; }
-        public Nullable<System.Guid> Doc_Id { get; set; }
-        public Nullable<System.DateTime> Nota_Fecha { get; set; }
+        public System.Guid Doc_Id { get; set; }
+        public System.DateTime Nota_Fecha { get; set; }
         public string Nota_Usuario { get; set; }
-        public byte[] Nota_Descripción { get; set; }
+        public string Nota_Descripción { get; set; }
         public string Doc_Estado { get; set; }
         public Nullable<bool> Revisada { get; set; }
         public string Revisada_Por { get; set; }
         public Nullable<System.DateTime> Revisada_Fecha { get; set; }
     
-        public virtual PPROV_Estado PPROV_Estado { get; set; }
         public virtual PPROV_Documento PPROV_Documento { get; set; }
+        public virtual PPROV_Estado PPROV_Estado { get; set; }
     }
 }

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Wareways.PortalProv.Infraestructura.PPROV_Nota>
+
+@{
+    Layout = "";
+}
+
+
+<table class="table table-bordered table-condensed table-hover">
+    <tr>
+        <th>
+            @Html.DisplayName("Fecha")
+        </th>
+        <th>
+            @Html.DisplayName("Proceso")
+        </th>
+        <th>
+            @Html.DisplayName("Comentario")
+        </th>
+
+       
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="text-align:left">
+                @Html.DisplayFor(modelItem => item.Nota_Fecha) 
+            </td>
+            <td style="text-align:left">
+                @Html.DisplayFor(modelItem => item.PPROV_Estado.Doc_Estado)
+            </td>
+            <td style="text-align:left">
+                @Html.DisplayFor(modelItem => item.Nota_Descripción)
+            </td>
+        </tr>
+    }
+
+</table>

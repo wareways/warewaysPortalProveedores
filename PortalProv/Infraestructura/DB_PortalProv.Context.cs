@@ -44,18 +44,23 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
         public virtual DbSet<PPROV_Contrasena> PPROV_Contrasena { get; set; }
         public virtual DbSet<PPROV_Estado> PPROV_Estado { get; set; }
-        public virtual DbSet<PPROV_Nota> PPROV_Nota { get; set; }
         public virtual DbSet<PPROV_Retencion> PPROV_Retencion { get; set; }
         public virtual DbSet<PPROV_RetencionTipo> PPROV_RetencionTipo { get; set; }
         public virtual DbSet<PPROV_TipoAdjunto> PPROV_TipoAdjunto { get; set; }
-        public virtual DbSet<PPROV_UsuarioProveedor> PPROV_UsuarioProveedor { get; set; }
         public virtual DbSet<PPROV_Documento> PPROV_Documento { get; set; }
         public virtual DbSet<v_PPROV_FacturasIngresadasPorUsuario> v_PPROV_FacturasIngresadasPorUsuario { get; set; }
         public virtual DbSet<V_PPROV_Contrasena_PorUsuario> V_PPROV_Contrasena_PorUsuario { get; set; }
         public virtual DbSet<V_PPROV_Empresas> V_PPROV_Empresas { get; set; }
-        public virtual DbSet<v_PPROV_Usuario_Proveedor> v_PPROV_Usuario_Proveedor { get; set; }
         public virtual DbSet<V_PPROV_DocumentosPorUsuario> V_PPROV_DocumentosPorUsuario { get; set; }
         public virtual DbSet<V_PPROV_RetencionesPorUsuario> V_PPROV_RetencionesPorUsuario { get; set; }
+        public virtual DbSet<V_PPROV_Contrasena_Oficina> V_PPROV_Contrasena_Oficina { get; set; }
+        public virtual DbSet<V_PPROV_Documentos_Oficina> V_PPROV_Documentos_Oficina { get; set; }
+        public virtual DbSet<v_PPROV_FacturasIngresadas_Oficina> v_PPROV_FacturasIngresadas_Oficina { get; set; }
+        public virtual DbSet<V_PPROV_Retenciones_Oficina> V_PPROV_Retenciones_Oficina { get; set; }
+        public virtual DbSet<V_PPROV_ResumenEstadoDocumento> V_PPROV_ResumenEstadoDocumento { get; set; }
+        public virtual DbSet<PPROV_Nota> PPROV_Nota { get; set; }
+        public virtual DbSet<PPROV_UsuarioProveedor> PPROV_UsuarioProveedor { get; set; }
+        public virtual DbSet<v_PPROV_Usuario_Proveedor> v_PPROV_Usuario_Proveedor { get; set; }
     
         public virtual ObjectResult<SP_PPROV_STATS_FacturacionUltimoAnio_Result> SP_PPROV_STATS_FacturacionUltimoAnio(string userName)
         {
@@ -91,6 +96,15 @@ namespace Wareways.PortalProv.Infraestructura
                 new ObjectParameter("Username", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_PermisosCodigosProv_Usuario_Result>("SP_PPROV_PermisosCodigosProv_Usuario", usernameParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_Indicadores_Oficina_Result> SP_PPROV_Indicadores_Oficina(string userName)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_Indicadores_Oficina_Result>("SP_PPROV_Indicadores_Oficina", userNameParameter);
         }
     }
 }

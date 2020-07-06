@@ -12,10 +12,10 @@ namespace Wareways.PortalProv.Infraestructura
     using System;
     using System.Collections.Generic;
     
-    public partial class V_PPROV_Contrasena_PorUsuario
+    public partial class V_PPROV_Contrasena_Oficina
     {
         public long RowNbr { get; set; }
-        public string UserName { get; set; }
+        public string Empresa_Name { get; set; }
         public System.Guid Contrasena_Id { get; set; }
         public int Contrasena_Numero { get; set; }
         public int Empresa_Id { get; set; }
@@ -24,7 +24,6 @@ namespace Wareways.PortalProv.Infraestructura
         public string Contrasena_Usuario { get; set; }
         public int Cantidad { get; set; }
         public decimal Monto { get; set; }
-        public string Empresa_Name { get; set; }
         public string Contrasena_Estado { get; set; }
     }
 }

@@ -355,6 +355,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdmContrasenaController.cs" />
+    <Compile Include="Controllers\admPagosController.cs" />
+    <Compile Include="Controllers\admPendienteController.cs" />
+    <Compile Include="Controllers\admpresentadosController.cs" />
+    <Compile Include="Controllers\admretencionesController.cs" />
     <Compile Include="Controllers\BIController.cs" />
     <Compile Include="Controllers\CatalogoController.cs" />
     <Compile Include="Controllers\ContrasenaController.cs" />
@@ -447,6 +452,9 @@
     <Compile Include="Infraestructura\SP_PPROV_DatosOrdenCompra_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_Indicadores_Oficina_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\SP_PPROV_Indicadores_Usuario_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
@@ -471,10 +479,16 @@
     <Compile Include="Infraestructura\V_GEN_UsuarioRoles_Diponibles.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\V_PPROV_Contrasena_Oficina.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\V_PPROV_Contrasena_PorUsuario.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\V_PPROV_DocumentosPorUsuario.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_Documentos_Oficina.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\V_PPROV_Empresas.cs">
@@ -483,7 +497,16 @@
     <Compile Include="Infraestructura\v_PPROV_FacturasIngresadasPorUsuario.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\v_PPROV_FacturasIngresadas_Oficina.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_ResumenEstadoDocumento.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\V_PPROV_RetencionesPorUsuario.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_Retenciones_Oficina.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\v_PPROV_Usuario_Proveedor.cs">
@@ -7495,6 +7518,12 @@
     <Content Include="Views\Pendiente\Index.cshtml" />
     <Content Include="Views\Contrasena\Index.cshtml" />
     <Content Include="Views\Presentados\Nuevo.cshtml" />
+    <Content Include="Views\AdmContrasena\Index.cshtml" />
+    <Content Include="Views\admPendiente\Index.cshtml" />
+    <Content Include="Views\admPagos\Index.cshtml" />
+    <Content Include="Views\admretenciones\Index.cshtml" />
+    <Content Include="Views\admpresentados\Index.cshtml" />
+    <Content Include="Views\Presentados\ObtenerMensajes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

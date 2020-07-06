@@ -1,0 +1,259 @@
+﻿@model  Wareways.PortalProv.Models.PP.PresentadosModelOficina
+
+<!DOCTYPE html>
+
+
+<div>
+    <div class="box box-primary box-solid">
+        <div class="box-header with-border">
+            <h4 class="box-title"> <span class="fa fa-inbox fa-2x"></span>&nbsp;  Documentos Presentados (ADM)</h4>
+            <div class="box-tools pull-right">
+
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="col-md-12">
+                <div class="btn-group pull-right">
+                    @foreach (var _Item in Model.L_Estados)
+                    {
+                        @Html.ActionLink(_Item.Doc_Estado + " ( " + _Item.Cantidad.ToString() + " )", "Index", new { FiltroEstado = _Item.Doc_Estado }, new { @class = (ViewBag.FiltroEstado != _Item.Doc_Estado) ? "btn btn-default btn-sm " : "btn btn-sm btn-primary " })
+                    }                    
+                </div>
+            </div>
+
+            <table class="table table-bordered table-condensed table-hover Datos">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Estado</th>
+                        <th>Tipo</th>
+                        <th>Proveedor</th>
+                        <th>Serie - Numero </th>
+
+                        <th>Fecha Emision</th>
+                        <th>Empresa</th>
+                        <th>Moneda</th>
+                        <th>Monto</th>
+                        <th>Cargado el</th>
+                        <th>Orden Compra</th>
+                        <th>Observacion</th>
+                        <th>Archivos</th>
+                        <th>Mensajes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.L_Documentos)
+                    {
+                    <tr>
+                        <td><a href="#" class="btn btn-sm btn-warning BtnOpenModalCambioEstado " data-id="@item.Doc_Id"> <span class="fa fa-share " ></span>  </a> </td>
+                        <td>  @Html.CheckBox("Sel") </td>
+                        <td>@item.Doc_Estado</td>
+
+                        <td>@item.Doc_TipoDocumento</td>
+                        <td>@item.Doc_CardCorde</td>
+
+                        <td>@item.Doc_Serie - @item.Doc_Numero</td>
+
+
+
+                        <td>@item.Doc_Fecha.Value.ToString("yyyy-MM-dd")</td>
+
+                        <td>@item.Empresa_Name</td>
+
+                        <td>@item.Doc_Moneda</td>
+
+                        <td>@item.Doc_MontoNeto.Value.ToString("#,###,##0.00")</td>
+
+                        <td>@item.Doc_FechaCarga.Value.ToString("yyyy-MM-dd HH:mm")</td>
+
+                        <td>@item.Doc_NumeroOC</td>
+
+                        <td>@item.Doc_Observaciones</td>
+
+                        <td>
+
+                            <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
+                            |
+                            <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
+
+                        </td>
+                        <td>
+                            @if (item.Msj_NoLeidos > 0)
+                            {
+                                <a href="#" class="btn btn-danger BtnOpenModalMensajes" title="OC" data-id="@item.Doc_Id"><span class="fa  fa-envelope-o "></span> &nbsp; <span class="badge bg-black"> @item.Msj_NoLeidos / @item.Msj_Total </span> </a>
+                            }
+                            else
+                            {
+                                <a href="#" class="btn btn-default BtnOpenModalMensajes" title="OC" data-id="@item.Doc_Id"><span class="fa fa-envelope-open "></span> &nbsp; <span class="badge bg-yellow"> @item.Msj_Total </span> </a>
+                            }
+
+
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabelTitle">Modal title</h4>
+            </div>
+
+            <div class="modal-body" id="ContenedorPDF">
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("CambioEstado", "admpresentados", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.Hidden("CambioEstado_Documento_Id")
+    <div class="modal fade" id="ModalCambioEstado" role="dialog">
+        <div class="modal-dialog err-pop" style="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-11">
+                        <h4 class="box-title"> Cambiar Estado </h4>
+                    </div>
+                    <div>
+                        <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="text-align:center;">
+                    <div class="form-horizontal">
+                        
+                        <div class="form-group">
+                            @Html.Label("Enviar a", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(p=>p.Nuevo_Estado_Seleccionado, 
+                                        Model.Nuevo_Estados_Asignar,                                     
+                                     new { @Class = "form-control ExcluirSoloLectura" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Comentario", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(p=>p.Nuevo_Estado_Comentario, new { htmlAttributes = new { @class = "form-control ExcluirSoloLectura" } })
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="pull-right">
+
+
+                            <button class="btn btn-success pull-right " type="submit" id="saveTeststeps">
+                                Grabar &nbsp;
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<div class="modal fade" id="ModalMostrarMensajes" role="dialog">
+    <div class="modal-dialog err-pop modal-lg" style="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="col-md-11">
+                    <h4 class="box-title"> Mensajes Documento </h4>
+                </div>
+                <div>
+                    <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+            </div>
+            <div class="modal-body" style="text-align:center;" id="ContenedorMensajes">
+
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myModal").on("show.bs.modal", function (e) {
+                var id = $(e.relatedTarget).data('nombre');
+                var titulo = $(e.relatedTarget).data('titulo');
+
+                $("#ContenedorPDF").html("<embed src='" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                $("#myModalLabelTitle").html(titulo);
+
+            });            
+        });
+
+        $(".BtnOpenModalCambioEstado").click(function () {
+            var _id = this.getAttribute("data-id");
+            $('#ModalCambioEstado').modal('show');
+            $("#CambioEstado_Documento_Id").val(_id);
+        })
+
+        $(".BtnOpenModalMensajes").click(function () {
+
+            var _id = this.getAttribute("data-id");
+
+            $.ajax({
+                url: "/presentados/ObtenerMensajes/" + _id,
+                cache: false,
+                type: "GET",
+                success: function (data) {
+                    $("#ContenedorMensajes").html(data);
+
+
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+            $('#ModalMostrarMensajes').modal('show');
+
+        })
+
+        $(function () {
+            $('.Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                "order": [[7, "desc"]],
+                //"columnDefs": [
+                //    { "width": "60%", "targets": 0 },
+                //    { "width": "20%", "targets": 1 },
+                //    { "width": "20%", "targets": 2 }
+                //],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+
+}

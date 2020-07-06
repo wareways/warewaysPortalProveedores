@@ -115,6 +115,7 @@ namespace Wareways.PortalProv.Controllers
                         {
                             modelo.Nuevo_CardCode = Obtener_CardCode_Usuario_Primero();
                         }
+                        
                         else // Si Logro Detectar la Orden
                         {
                             var _DatosOrden = _Db.SP_PPROV_DatosOrdenCompra(Int32.Parse(_NumeroOc)).ToList();
@@ -169,7 +170,7 @@ namespace Wareways.PortalProv.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.Message = "Carga de Archivos Fallida";
+                    ViewBag.Message = ex.Message;
 
                     ModelState.Clear();
 
@@ -180,6 +181,14 @@ namespace Wareways.PortalProv.Controllers
 
             ModelState.Clear();
             return View(modelo);
+        }
+
+        [Authorize]
+        public ActionResult ObtenerMensajes(Guid id)
+        {
+            var model = _Db.PPROV_Nota.Where(p => p.Doc_Id == id).OrderByDescending(p => p.Nota_Fecha).ToList();
+
+            return View(model);
         }
 
         private string ValidarDatos(PresentadosModel modelo)
@@ -198,8 +207,8 @@ namespace Wareways.PortalProv.Controllers
 
         private string Obtener_CardCode_Usuario_Primero()
         {
-            var _Datos = _Db.v_PPROV_Usuario_Proveedor.Where(p => p.UserName == User.Identity.Name).First().CardCode;
-            return _Datos;
+            var _Datos = _Db.v_PPROV_Usuario_Proveedor.AsNoTracking().Where(p => p.UserName == User.Identity.Name).ToList();
+            return _Datos[0].CardCode;
         }
         private string[] Obtener_CardCode_AutorizadasPorUsuario()
         {

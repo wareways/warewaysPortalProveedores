@@ -9,4 +9,9 @@ namespace Wareways.PortalProv.Models.PP
     {
         public List<Infraestructura.V_PPROV_Contrasena_PorUsuario> L_Documentos { get; set; }
     }
+
+    public class ContrasenaOficinaModel
+    {
+        public List<Infraestructura.V_PPROV_Contrasena_Oficina> L_Documentos { get; set; }
+    }
 }

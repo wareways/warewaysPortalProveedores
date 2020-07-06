@@ -12,11 +12,11 @@ namespace Wareways.PortalProv.Infraestructura
     using System;
     using System.Collections.Generic;
     
-    public partial class v_PPROV_FacturasIngresadasPorUsuario
+    public partial class v_PPROV_FacturasIngresadas_Oficina
     {
         public long RowNbr { get; set; }
-        public string UserName { get; set; }
         public Nullable<int> BPLId { get; set; }
+        public string Empresa_Name { get; set; }
         public string TrsfrRef { get; set; }
         public Nullable<System.DateTime> TrsfrDate { get; set; }
         public Nullable<decimal> TrsfrSum { get; set; }
@@ -25,16 +25,15 @@ namespace Wareways.PortalProv.Infraestructura
         public string U_FacSerie { get; set; }
         public string U_Facnum { get; set; }
         public Nullable<decimal> Total { get; set; }
+        public decimal Monto_Nota { get; set; }
+        public Nullable<decimal> MontoTrans { get; set; }
         public string DocCur { get; set; }
         public Nullable<decimal> Retenciones { get; set; }
         public Nullable<System.DateTime> Vencimiento { get; set; }
+        public Nullable<System.DateTime> DocDate { get; set; }
         public Nullable<int> DocNum { get; set; }
         public int DocEntry { get; set; }
-        public Nullable<decimal> MontoTrans { get; set; }
-        public string Empresa_Name { get; set; }
         public Nullable<int> U_NumContrase { get; set; }
-        public Nullable<System.DateTime> DocDate { get; set; }
-        public decimal Monto_Nota { get; set; }
         public string CardCode { get; set; }
         public string CardName { get; set; }
     }

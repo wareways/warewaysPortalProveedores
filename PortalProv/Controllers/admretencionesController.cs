@@ -7,25 +7,24 @@ using Wareways.PortalProv.Infraestructura;
 
 namespace Wareways.PortalProv.Controllers
 {
-    public class PendienteController : Controller
+    public class admretencionesController : Controller
     {
         PortalProvEntities _Db = new PortalProvEntities();
 
-        [Authorize]
+
+        [Authorize(Roles = "Oficina")]
         public ActionResult Index()
         {
-            var model = new Models.PP.PagosModel();
-            model.L_Documentos = ObtenerPagosPorusuario();
+            var model = new Models.PP.RetencionesOficinaModel();
+            model.L_Retenciones = ObtenerRetencionesPorusuario();
 
             return View(model);
         }
 
-      
-
-        private List<v_PPROV_FacturasIngresadasPorUsuario> ObtenerPagosPorusuario()
+        private List<V_PPROV_Retenciones_Oficina> ObtenerRetencionesPorusuario()
         {
             var _UserName = User.Identity.Name;
-            var _Datos = _Db.v_PPROV_FacturasIngresadasPorUsuario.Where(p => p.UserName == _UserName && p.TrsfrDate == null).ToList();
+            var _Datos = _Db.V_PPROV_Retenciones_Oficina.ToList();
 
             return _Datos;
         }

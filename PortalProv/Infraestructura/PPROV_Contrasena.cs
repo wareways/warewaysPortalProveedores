@@ -26,6 +26,7 @@ namespace Wareways.PortalProv.Infraestructura
         public System.DateTime Contrasena_Fecha { get; set; }
         public System.DateTime Contrasena_Fecha_Estimada { get; set; }
         public string Contrasena_Usuario { get; set; }
+        public string Contrasena_Estado { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPROV_Documento> PPROV_Documento { get; set; }

@@ -9,4 +9,8 @@ namespace Wareways.PortalProv.Models.PP
     {
         public List<Infraestructura.V_PPROV_RetencionesPorUsuario> L_Retenciones  { get; set; }
     }
+    public class RetencionesOficinaModel
+    {
+        public List<Infraestructura.V_PPROV_Retenciones_Oficina> L_Retenciones { get; set; }
+    }
 }

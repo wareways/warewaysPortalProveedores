@@ -13,7 +13,6 @@ namespace Wareways.PortalProv.Controllers
 
 
         [Authorize]
-        // GET: Retenciones
         public ActionResult Index()
         {
             var model = new Models.PP.RetencionesModel();
@@ -29,5 +28,6 @@ namespace Wareways.PortalProv.Controllers
 
             return _Datos;
         }
+
     }
 }
