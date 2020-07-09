@@ -10,16 +10,9 @@
 namespace Wareways.PortalProv.Infraestructura
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class PPROV_Contrasena
+    public partial class SP_REP_Contrasena_Encabezado_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PPROV_Contrasena()
-        {
-            this.PPROV_Documento = new HashSet<PPROV_Documento>();
-        }
-    
         public System.Guid Contrasena_Id { get; set; }
         public int Contrasena_Numero { get; set; }
         public int Empresa_Id { get; set; }
@@ -28,10 +21,15 @@ namespace Wareways.PortalProv.Infraestructura
         public string Contrasena_Usuario { get; set; }
         public string Contrasena_Estado { get; set; }
         public string Contrasena_CardCode { get; set; }
+        public long RowNbr { get; set; }
+        public string Empresa_Name { get; set; }
+        public string Nit_Empres { get; set; }
+        public string AliasName { get; set; }
+        public string CardCode { get; set; }
+        public string CardName { get; set; }
+        public string Nit_Proveedor { get; set; }
+        public int DiasCredito { get; set; }
         public string Contrasena_Moneda { get; set; }
-        public Nullable<int> Contrasena_EmpresaId { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PPROV_Documento> PPROV_Documento { get; set; }
+        public string Logo { get; set; }
     }
 }

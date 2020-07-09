@@ -1,0 +1,290 @@
+﻿@model Wareways.PortalProv.Models.PP.PPROV_ContrasenaModel
+
+@{
+    var _Proveedor = (Wareways.PortalProv.Infraestructura.V_PPROV_Proveedor)ViewBag.Proveedor;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="box box-primary box-solid">
+        <div class="box-header with-border">
+            <h4 class="box-title"> <span class="fa fa-check-square-o fa-2x"></span>&nbsp; Editar Contraseñas </h4>
+        </div>
+        <div class="box-body">
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Contrasena_Id)
+
+                <div class="form-group">
+                    @Html.Label("No. Contraseña", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Contrasena_Numero, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    </div>
+
+                    @Html.Label("Empresa", htmlAttributes: new { @class = "control-label col-md-1" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.Empresa_Id,
+                                                new SelectList(ViewBag.Listado_Empresas, "Empresa_Id", "AliasName"),
+                                                new { @Class = "form-control", @readonly = "readonly", @disabled = "disabled" })
+                    </div>
+                    @Html.Label("Emision", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Contrasena_Fecha, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.Label("Estado", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.Contrasena_Estado, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            <span class="input-group-addon" style="padding:unset; border: unset">
+                                @if (User.IsInRole("Contraseña Editor"))
+                                {
+                                    <a href="javascript:void(0);" class="btn  btn-warning" data-id='@(Model.Contrasena_Id+";CC_Cliente") ' id="BtnOpenModalEstado"> <span class="fa fa-edit"></span></a>
+                                }
+                            </span>
+                        </div>
+
+                    </div>
+
+                    @Html.Label("Proveedor", htmlAttributes: new { @class = "control-label col-md-1" })
+                    <div class="col-md-3">
+                        @Html.TextBox("Proveedor", _Proveedor.CardCode + " " + _Proveedor.CardName, new { @class = "form-control", @readonly = "readonly" })
+
+                    </div>
+
+                    @Html.Label("Fecha Estimada", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @if (Model.Contrasena_Estado == "Borrador")
+                        {
+                            @Html.EditorFor(model => model.Contrasena_Fecha_Estimada, new { htmlAttributes = new { @class = "form-control" } })
+                        }
+                        else
+                        {
+                            @Html.EditorFor(model => model.Contrasena_Fecha_Estimada, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        }
+
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-8">&nbsp;</div>
+                    @Html.Label("Creado Por", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Contrasena_Usuario, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="box-footer">
+            <div class="col-md-6">
+                <a href="@Url.Action("Index", "admContrasena")" class="btn btn-default ">
+                    <span class=" fa fa-backward" aria-hidden="true"></span>
+
+                    Regresar Lista
+                </a>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
+                    Grabar &nbsp;
+                    <i class="fa fa-save"></i>
+                </button>
+            </div>
+
+        </div>
+
+
+    </div>
+
+}
+
+<div class="box box-primary ">
+    <div class="box-header with-border">
+        <h4 class="box-title"> Documentos </h4>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <th>
+
+                        </th>
+                        <th>
+                            @Html.DisplayName("Serie")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Numero")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Fecha")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Orden")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Valor")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Moneda")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _Item in Model.ListaDocumentos)
+                    {
+                        <tr>
+                            <td>
+                            </td>
+                            <td>@_Item.Doc_Serie</td>
+                            <td>@_Item.Doc_Numero</td>
+                            <td>@_Item.Doc_Fecha.Value.ToString("yyyy-MM-dd")</td>
+                            <td>@_Item.Doc_NumeroOC</td>
+                            <td>@String.Format("{0:n}", _Item.Doc_MontoNeto)</td>
+                            <td>@_Item.Doc_Moneda</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr style="background-color:lightgray">
+                        <td><b>Tolal Documentos: @Model.ListaDocumentos.Count</b> </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>  <b>@Html.DisplayName("TOTAL")</b></td>
+                        <td> <b> @String.Format("{0:n}", Model.ListaDocumentos.Select(p => p.Doc_MontoNeto).Sum()) </b></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="box box-primary ">
+    <div class="box-header with-border">
+        <h4 class="box-title"> Retenciones </h4>
+    </div>
+    <div class="box-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <th>
+
+                        </th>
+                        <th>
+                            @Html.DisplayName("Numero")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Tipo")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Fecha")
+                        </th>
+
+                        <th>
+                            @Html.DisplayName("Valor")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Moneda")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var _Item in Model.ListaRetenciones)
+                    {
+                        <tr>
+                            <td>
+                            </td>
+                            <td>@_Item.Retencion_Numero</td>
+                            <td>@_Item.Retencion_Tipo</td>
+                            <td>@_Item.Retencion_Fecha.Value.ToString("yyyy-MM-dd")</td>
+                            <td>@String.Format("{0:n}", _Item.Retencion_Monto)</td>
+                            <td>@_Item.Retencion_Moneda</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr style="background-color:lightgray">
+                        <td><b>Tolal Documentos: @Model.ListaRetenciones.Count</b> </td>
+                        <td></td>
+                        <td></td>
+
+                        <td>  <b>@Html.DisplayName("TOTAL")</b></td>
+                        <td> <b> @String.Format("{0:n}", Model.ListaRetenciones.Select(p => p.Retencion_Monto).Sum()) </b></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("AsignarEstado", "admcontrasena", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.Contrasena_Id)
+    <div class="modal fade" id="ModalEstado" role="dialog">
+        <div class="modal-dialog err-pop" style="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-11">
+                        <h4 class="box-title"> Asignación de Estado</h4>
+                    </div>
+                    <div>
+                        <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="text-align:center;">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("Contraseña", htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.CambioEstado,
+                                  (SelectList)ViewBag.ListaEstado,
+                                  new { @Class = "form-control" })
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="pull-right">
+
+
+                            <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
+                                Grabar &nbsp;
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    <script>
+        $("#BtnOpenModalEstado").click(function () {
+            $('#ModalEstado').modal('show');
+        })
+
+
+    </script>
+
+}

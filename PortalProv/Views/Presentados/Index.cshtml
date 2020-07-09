@@ -112,7 +112,7 @@
                         <h4 class="box-title"> Mensajes Documento </h4>
                     </div>
                     <div>
-                        <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button id="DivClose" type="button" class="close closereload" data-dismiss="modal">&times;</button>
                     </div>
 
                 </div>
@@ -163,6 +163,10 @@
                 });
                 $('#ModalMostrarMensajes').modal('show');
                 
+            })
+
+            $('.closereload').click( function () {
+                location.reload();
             })
 
         });

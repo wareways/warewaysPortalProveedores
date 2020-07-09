@@ -10,11 +10,9 @@
 namespace Wareways.PortalProv.Infraestructura
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class V_PPROV_Documentos_Oficina
+    public partial class SP_REP_Contrasena_Detalle_Result
     {
-        public long RowNbr { get; set; }
         public System.Guid Doc_Id { get; set; }
         public string Doc_CardCorde { get; set; }
         public string Doc_Estado { get; set; }
@@ -36,10 +34,5 @@ namespace Wareways.PortalProv.Infraestructura
         public string Doc_PdfFactura { get; set; }
         public string Doc_PdfOC { get; set; }
         public string SolicitanteOC { get; set; }
-        public string Empresa_Name { get; set; }
-        public int Msj_Total { get; set; }
-        public int Msj_NoLeidos { get; set; }
-        public Nullable<bool> seleccionado { get; set; }
-        public string UserName { get; set; }
     }
 }

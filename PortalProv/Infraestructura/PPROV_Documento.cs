@@ -46,11 +46,11 @@ namespace Wareways.PortalProv.Infraestructura
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
-        public virtual PPROV_Contrasena PPROV_Contrasena { get; set; }
         public virtual PPROV_Estado PPROV_Estado { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPROV_Retencion> PPROV_Retencion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPROV_Nota> PPROV_Nota { get; set; }
+        public virtual PPROV_Contrasena PPROV_Contrasena { get; set; }
     }
 }

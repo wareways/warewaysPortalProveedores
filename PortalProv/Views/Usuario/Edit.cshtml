@@ -1,7 +1,9 @@
 ﻿@model Wareways.PortalProv.Infraestructura.AspNetUsers
 
-
-
+@{
+    var l_ADM_EmpresasOficina = (List<Wareways.PortalProv.Infraestructura.SP_PPROV_ADM_EmpresasOficina_Result>)ViewBag.OficinaEmpesasPermiso;
+    var l_PermisosUsuarioCodigosProv = (List<Wareways.PortalProv.Infraestructura.SP_PPROV_PermisosCodigosProv_Usuario_Result>)ViewBag.PermisosUsuarioCodigosProv;
+}
 
 
 
@@ -93,7 +95,7 @@
                     </div>
                 </div>
 
-              
+
 
             </div>
 
@@ -128,16 +130,108 @@
     </div>
 
 
-    
+
 
 }
+<div class="row">
+    <div class="col-md-4">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h4 class="box-title">Permisos Oficina</h4>
+            </div>
+            <div class="box-body">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var _Item in l_ADM_EmpresasOficina)
+                        {
+                            <tr>
+                                <td>@_Item.Empresa_Name</td>
+                                <td>
+                                    @if (_Item.Activo == 0)
+                                    {
+                                        <a href="@Url.Action("AgregarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-success"> Asignar <span class="fa fa-plus-circle"></span></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("QuitarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-danger"> Quitar <span class="fa fa-minus-circle"></span></a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h4 class="box-title">Permisos Proveedores</h4>
+            </div>
+            <div class="box-body">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var _Item in l_PermisosUsuarioCodigosProv)
+                        {
+                            <tr>
+                                <td>@_Item.Empresa_Name</td>
+                                <td>@_Item.CardCode</td>
+                                <td>@_Item.CardName</td>
+                                <td>
+                                    <a href="@Url.Action("QuitarCodProv",new { EmpresaId = _Item.Empresa_Id,Id = Model.Id , CardCode = _Item.CardCode })" class="btn btn-danger"> Quitar <span class="fa fa-minus-circle"></span></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+
+                            @using (Html.BeginForm("AgregaCodProv", "Usuario", FormMethod.Post))
+                            {
+                            @Html.HiddenFor(p => p.Id);
+                            <td>
+                                @Html.DropDownList("EmpresaId", new SelectList(ViewBag.Empresas,"Empresa_Id","Empresa_Name","1"),
+                                    new { @Class = "form-control ExcluirSoloLectura" })
+                            </td>
+                            <td colspan="2">
+                                @Html.TextBox("CardCode", "", htmlAttributes: new { @class = "form-control" })
+                            </td>
+                            <td>
+                                <button class="btn btn-success pull-right " type="submit" id="saveTeststeps">
+                                    Insertar &nbsp;
+                                    <i class="fa fa-save"></i>
+                                </button>
+                            </td>
+                            }
+
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 @using (Html.BeginForm("AsignarRuta", "Usuario", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-    @Html.Hidden("puserId",Model.Id)
+    @Html.Hidden("puserId", Model.Id)
     <div class="modal fade" id="ModalasignarRuta" role="dialog">
         <div class="modal-dialog err-pop" style="">
             <div class="modal-content">
@@ -151,12 +245,12 @@
 
                 </div>
                 <div class="modal-body" style="text-align:center;">
-                    <div class="form-horizontal">                        
-                       
+                    <div class="form-horizontal">
+
                         <div class="form-group">
                             @Html.Label("Primaria", htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-10 " style="text-align:left">
-                                @Html.CheckBox("primaria",false)
+                                @Html.CheckBox("primaria", false)
                             </div>
                         </div>
                         <br />
@@ -183,10 +277,10 @@
 
 @section scripts
 {
-   
 
 
-    
+
+
 
     <script>
         $(document).ready(function () {
@@ -194,7 +288,7 @@
                 $('#ModalasignarRuta').modal('show');
             })
         });
-        
+
 
     </script>
 }

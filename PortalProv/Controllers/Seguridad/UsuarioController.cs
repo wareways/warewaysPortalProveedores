@@ -23,7 +23,7 @@ namespace Wareways.PortalProv.Controllers.Seguridad
         private ApplicationUserManager _userManager;
         Servicios.Export _ServExport = new Servicios.Export();
 
-        // GET: Usuario
+        [Authorize(Roles = "Administradores")]
         public ActionResult Index()
         {
             // Verificacion de Permisos
@@ -33,6 +33,36 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             return View(_Lista);
         }
 
+        [Authorize(Roles = "Administradores")]
+        [HttpPost]
+        public ActionResult AgregaCodProv(int EmpresaId, string Id, string CardCode)
+        {
+            try {
+                _Db.PPROV_UsuarioProveedor.Add(new Infraestructura.PPROV_UsuarioProveedor { UserId = Id, CardCode = CardCode, Empresa_Id = EmpresaId });
+                _Db.SaveChanges();
+            } catch { }
+            
+
+            return RedirectToAction("Edit",new { id = Id });
+        }
+
+        [Authorize(Roles = "Administradores")]
+        public ActionResult QuitarCodProv(int EmpresaId, string Id, string CardCode)
+        {
+            try
+            {
+                var _borrar = _Db.PPROV_UsuarioProveedor.Where(p => p.Empresa_Id == EmpresaId && p.CardCode == CardCode && p.UserId == Id).ToList();
+                _Db.PPROV_UsuarioProveedor.RemoveRange(_borrar);
+                _Db.SaveChanges();
+            }
+            catch { }
+
+
+            return RedirectToAction("Edit", new { id = Id });
+        }
+
+
+        [Authorize(Roles = "Administradores")]
         public ActionResult Edit(string id)
         {
             // Verificacion de Permisos
@@ -47,8 +77,10 @@ namespace Wareways.PortalProv.Controllers.Seguridad
 
             ViewBag.RolesAsignados = _Db.V_GEN_UsuarioRoles.AsNoTracking().Where(P => P.UserId == aspNetUsers.Id).ToList();
             ViewBag.RolesDisponibles = _Db.V_GEN_UsuarioRoles_Diponibles.AsNoTracking().Where(P => P.UserId == aspNetUsers.Id).ToList();
+            ViewBag.OficinaEmpesasPermiso = _Db.SP_PPROV_ADM_EmpresasOficina(aspNetUsers.UserName).ToList();
+            ViewBag.PermisosUsuarioCodigosProv = _Db.SP_PPROV_PermisosCodigosProv_Usuario(aspNetUsers.UserName).ToList();
+            ViewBag.Empresas = _Db.V_PPROV_Empresas.ToList();
 
-            
 
             if (aspNetUsers == null)
             {
@@ -59,6 +91,7 @@ namespace Wareways.PortalProv.Controllers.Seguridad
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administradores")]
         public ActionResult Edit(Infraestructura.AspNetUsers _Modelo)
         {
             if (!Servicios.ServicioSeguridad.ValidaPermisos(this.ControllerContext.RequestContext.RouteData.Values, User.Identity.Name)) return RedirectToAction("Permisos", "Home");
@@ -80,13 +113,36 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             return View(_Modelo);
         }
 
-      
-       
+        [Authorize(Roles = "Administradores")]
+        public ActionResult AgregarEmpresaOficina (Int32 EmpresaId ,String  UserId )
+        {
+            try {
+                _Db.PPROV_UsuarioEmpresa.Add(new Infraestructura.PPROV_UsuarioEmpresa { EmpresaId = EmpresaId, UserId = UserId });
+                _Db.SaveChanges();
 
-        
+            } catch { }
+            return RedirectToAction("Edit", new { id = UserId });
+        }
+
+        [Authorize(Roles = "Administradores")]
+        public ActionResult QuitarEmpresaOficina(Int32 EmpresaId, String UserId)
+        {
+            try
+            {
+                var _Quitar = _Db.PPROV_UsuarioEmpresa.Where(p => p.UserId == UserId && p.EmpresaId == EmpresaId).ToList();
+                _Db.PPROV_UsuarioEmpresa.RemoveRange(_Quitar);
+                _Db.SaveChanges();
+            }
+            catch { }
+            return RedirectToAction("Edit", new { id = UserId });
+        }
+
+
+
 
 
         [Authorize]
+        [Authorize(Roles = "Administradores")]
         public ActionResult AddRole(String _roleid, String _Username)
         {
             // Verificacion de Permisos
@@ -102,6 +158,7 @@ namespace Wareways.PortalProv.Controllers.Seguridad
         }
 
         [Authorize]
+        [Authorize(Roles = "Administradores")]
         public ActionResult Delete(string id)
         {
             // Verificacion de Permisos

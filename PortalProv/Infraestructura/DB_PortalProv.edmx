@@ -151,6 +151,9 @@
           <Property Name="Contrasena_Fecha_Estimada" Type="datetime" Nullable="false" />
           <Property Name="Contrasena_Usuario" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="Contrasena_Estado" Type="varchar" MaxLength="64" />
+          <Property Name="Contrasena_CardCode" Type="varchar" MaxLength="64" />
+          <Property Name="Contrasena_Moneda" Type="varchar" MaxLength="16" />
+          <Property Name="Contrasena_EmpresaId" Type="int" />
         </EntityType>
         <EntityType Name="PPROV_Documento">
           <Key>
@@ -214,6 +217,7 @@
           <Property Name="Manual_FacNumero" Type="int" />
           <Property Name="Manual_Fac_Serie" Type="varchar" MaxLength="32" />
           <Property Name="Manual_Empresa" Type="int" />
+          <Property Name="Retencion_CardCode" Type="nvarchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="PPROV_RetencionFactura">
           <Key>
@@ -241,6 +245,14 @@
           <Property Name="Agrega_Prov" Type="bit" Nullable="false" />
           <Property Name="Agregar_Empresa" Type="bit" Nullable="false" />
           <Property Name="Requerido_Prov" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PPROV_UsuarioEmpresa">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="EmpresaId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="EmpresaId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PPROV_UsuarioProveedor">
           <Key>
@@ -370,8 +382,10 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Contrasena_Oficina' does no
           <Property Name="Contrasena_Fecha_Estimada" Type="datetime" Nullable="false" />
           <Property Name="Contrasena_Usuario" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="Contrasena_Estado" Type="varchar" MaxLength="64" />
+          <Property Name="Contrasena_CardCode" Type="varchar" MaxLength="64" />
           <Property Name="Cantidad" Type="int" Nullable="false" />
           <Property Name="Monto" Type="decimal" Precision="38" Scale="6" Nullable="false" />
+          <Property Name="Contrasena_Moneda" Type="varchar" MaxLength="16" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Contrasena_PorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -401,6 +415,8 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Contrasena_PorUsuario' does
           <Property Name="Contrasena_Estado" Type="varchar" MaxLength="64" />
           <Property Name="Cantidad" Type="int" Nullable="false" />
           <Property Name="Monto" Type="decimal" Precision="38" Scale="6" Nullable="false" />
+          <Property Name="Contrasena_CardCode" Type="varchar" MaxLength="64" />
+          <Property Name="Contrasena_Moneda" Type="varchar" MaxLength="16" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Documentos_Oficina' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -411,6 +427,7 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Documentos_Oficina' does no
             <PropertyRef Name="Empresa_Name" />
             <PropertyRef Name="Msj_Total" />
             <PropertyRef Name="Msj_NoLeidos" />
+            <PropertyRef Name="UserName" />
           </Key>
           <Property Name="RowNbr" Type="bigint" Nullable="false" />
           <Property Name="Doc_Id" Type="uniqueidentifier" Nullable="false" />
@@ -437,6 +454,8 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Documentos_Oficina' does no
           <Property Name="Empresa_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Msj_Total" Type="int" Nullable="false" />
           <Property Name="Msj_NoLeidos" Type="int" Nullable="false" />
+          <Property Name="seleccionado" Type="bit" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_DocumentosPorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -481,14 +500,22 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Empresas' does not have a p
         <EntityType Name="V_PPROV_Empresas">
           <Key>
             <PropertyRef Name="RowNbr" />
-            
-            
+            <PropertyRef Name="Empresa_Id" />
+            <PropertyRef Name="Empresa_Name" />
+            <PropertyRef Name="Logo" />
+            <PropertyRef Name="Correo" />
+            <PropertyRef Name="Telefonos" />
+            <PropertyRef Name="Direccion" />
           </Key>
           <Property Name="RowNbr" Type="bigint" Nullable="false" />
           <Property Name="Empresa_Id" Type="int" Nullable="false" />
           <Property Name="Empresa_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Nit" Type="nvarchar" MaxLength="100" />
           <Property Name="AliasName" Type="ntext" />
+          <Property Name="Logo" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="34" Nullable="false" />
+          <Property Name="Telefonos" Type="varchar" MaxLength="29" Nullable="false" />
+          <Property Name="Direccion" Type="varchar" MaxLength="63" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.v_PPROV_FacturasIngresadas_Oficina' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -522,6 +549,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_FacturasIngresadas_Oficina'
           <Property Name="DocNum" Type="int" />
           <Property Name="DocEntry" Type="int" Nullable="false" />
           <Property Name="U_NumContrase" Type="int" />
+          <Property Name="Seleccionado" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.v_PPROV_FacturasIngresadasPorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -557,6 +585,19 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_FacturasIngresadasPorUsuari
           <Property Name="DocNum" Type="int" />
           <Property Name="DocEntry" Type="int" Nullable="false" />
           <Property Name="U_NumContrase" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Proveedor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_PPROV_Proveedor">
+          <Key>
+            <PropertyRef Name="CardCode" />
+            <PropertyRef Name="Nit" />
+            
+          </Key>
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="CardName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Nit" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="DiasCredito" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_ResumenEstadoDocumento' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -864,6 +905,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="SP_PPROV_ADM_EmpresasOficina" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="SP_PPROV_DatosOrdenCompra" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Docnum" Type="int" Mode="In" />
         </Function>
@@ -878,6 +922,12 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
         </Function>
         <Function Name="SP_PPROV_STATS_FacturacionUltimoAnio" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="SP_REP_Contrasena_Detalle" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Contrasena_Id" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="SP_REP_Contrasena_Encabezado" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Contrasena_Id" Type="uniqueidentifier" Mode="In" />
         </Function>
         <EntityContainer Name="PortalProvModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -900,6 +950,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySet Name="PPROV_RetencionFactura" EntityType="Self.PPROV_RetencionFactura" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPROV_RetencionTipo" EntityType="Self.PPROV_RetencionTipo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPROV_TipoAdjunto" EntityType="Self.PPROV_TipoAdjunto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPROV_UsuarioEmpresa" EntityType="Self.PPROV_UsuarioEmpresa" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPROV_UsuarioProveedor" EntityType="Self.PPROV_UsuarioProveedor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="V_GEN_MenuDisplay" EntityType="Self.V_GEN_MenuDisplay" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -969,8 +1020,10 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_Contrasena_Oficina].[Contrasena_Fecha_Estimada] AS [Contrasena_Fecha_Estimada], 
     [V_PPROV_Contrasena_Oficina].[Contrasena_Usuario] AS [Contrasena_Usuario], 
     [V_PPROV_Contrasena_Oficina].[Contrasena_Estado] AS [Contrasena_Estado], 
+    [V_PPROV_Contrasena_Oficina].[Contrasena_CardCode] AS [Contrasena_CardCode], 
     [V_PPROV_Contrasena_Oficina].[Cantidad] AS [Cantidad], 
-    [V_PPROV_Contrasena_Oficina].[Monto] AS [Monto]
+    [V_PPROV_Contrasena_Oficina].[Monto] AS [Monto], 
+    [V_PPROV_Contrasena_Oficina].[Contrasena_Moneda] AS [Contrasena_Moneda]
     FROM [dbo].[V_PPROV_Contrasena_Oficina] AS [V_PPROV_Contrasena_Oficina]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_Contrasena_PorUsuario" EntityType="Self.V_PPROV_Contrasena_PorUsuario" store:Type="Views" store:Schema="dbo">
@@ -986,7 +1039,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_Contrasena_PorUsuario].[Contrasena_Usuario] AS [Contrasena_Usuario], 
     [V_PPROV_Contrasena_PorUsuario].[Contrasena_Estado] AS [Contrasena_Estado], 
     [V_PPROV_Contrasena_PorUsuario].[Cantidad] AS [Cantidad], 
-    [V_PPROV_Contrasena_PorUsuario].[Monto] AS [Monto]
+    [V_PPROV_Contrasena_PorUsuario].[Monto] AS [Monto], 
+    [V_PPROV_Contrasena_PorUsuario].[Contrasena_CardCode] AS [Contrasena_CardCode], 
+    [V_PPROV_Contrasena_PorUsuario].[Contrasena_Moneda] AS [Contrasena_Moneda]
     FROM [dbo].[V_PPROV_Contrasena_PorUsuario] AS [V_PPROV_Contrasena_PorUsuario]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_Documentos_Oficina" EntityType="Self.V_PPROV_Documentos_Oficina" store:Type="Views" store:Schema="dbo">
@@ -1015,7 +1070,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_Documentos_Oficina].[SolicitanteOC] AS [SolicitanteOC], 
     [V_PPROV_Documentos_Oficina].[Empresa_Name] AS [Empresa_Name], 
     [V_PPROV_Documentos_Oficina].[Msj_Total] AS [Msj_Total], 
-    [V_PPROV_Documentos_Oficina].[Msj_NoLeidos] AS [Msj_NoLeidos]
+    [V_PPROV_Documentos_Oficina].[Msj_NoLeidos] AS [Msj_NoLeidos], 
+    [V_PPROV_Documentos_Oficina].[seleccionado] AS [seleccionado], 
+    [V_PPROV_Documentos_Oficina].[UserName] AS [UserName]
     FROM [dbo].[V_PPROV_Documentos_Oficina] AS [V_PPROV_Documentos_Oficina]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_DocumentosPorUsuario" EntityType="Self.V_PPROV_DocumentosPorUsuario" store:Type="Views" store:Schema="dbo">
@@ -1054,7 +1111,11 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_Empresas].[Empresa_Id] AS [Empresa_Id], 
     [V_PPROV_Empresas].[Empresa_Name] AS [Empresa_Name], 
     [V_PPROV_Empresas].[Nit] AS [Nit], 
-    [V_PPROV_Empresas].[AliasName] AS [AliasName]
+    [V_PPROV_Empresas].[AliasName] AS [AliasName], 
+    [V_PPROV_Empresas].[Logo] AS [Logo], 
+    [V_PPROV_Empresas].[Correo] AS [Correo], 
+    [V_PPROV_Empresas].[Telefonos] AS [Telefonos], 
+    [V_PPROV_Empresas].[Direccion] AS [Direccion]
     FROM [dbo].[V_PPROV_Empresas] AS [V_PPROV_Empresas]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v_PPROV_FacturasIngresadas_Oficina" EntityType="Self.v_PPROV_FacturasIngresadas_Oficina" store:Type="Views" store:Schema="dbo">
@@ -1080,7 +1141,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [v_PPROV_FacturasIngresadas_Oficina].[DocDate] AS [DocDate], 
     [v_PPROV_FacturasIngresadas_Oficina].[DocNum] AS [DocNum], 
     [v_PPROV_FacturasIngresadas_Oficina].[DocEntry] AS [DocEntry], 
-    [v_PPROV_FacturasIngresadas_Oficina].[U_NumContrase] AS [U_NumContrase]
+    [v_PPROV_FacturasIngresadas_Oficina].[U_NumContrase] AS [U_NumContrase], 
+    [v_PPROV_FacturasIngresadas_Oficina].[Seleccionado] AS [Seleccionado]
     FROM [dbo].[v_PPROV_FacturasIngresadas_Oficina] AS [v_PPROV_FacturasIngresadas_Oficina]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v_PPROV_FacturasIngresadasPorUsuario" EntityType="Self.v_PPROV_FacturasIngresadasPorUsuario" store:Type="Views" store:Schema="dbo">
@@ -1109,6 +1171,14 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [v_PPROV_FacturasIngresadasPorUsuario].[DocEntry] AS [DocEntry], 
     [v_PPROV_FacturasIngresadasPorUsuario].[U_NumContrase] AS [U_NumContrase]
     FROM [dbo].[v_PPROV_FacturasIngresadasPorUsuario] AS [v_PPROV_FacturasIngresadasPorUsuario]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_PPROV_Proveedor" EntityType="Self.V_PPROV_Proveedor" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_PPROV_Proveedor].[CardCode] AS [CardCode], 
+    [V_PPROV_Proveedor].[CardName] AS [CardName], 
+    [V_PPROV_Proveedor].[Nit] AS [Nit], 
+    [V_PPROV_Proveedor].[DiasCredito] AS [DiasCredito]
+    FROM [dbo].[V_PPROV_Proveedor] AS [V_PPROV_Proveedor]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_ResumenEstadoDocumento" EntityType="Self.V_PPROV_ResumenEstadoDocumento" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -1307,7 +1377,6 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
             <End Role="GEN_Menu" EntitySet="GEN_Menu" />
           </AssociationSet>
           <EntitySet Name="PPROV_Adjuntos" EntityType="PortalProvModel.PPROV_Adjuntos" />
-          <EntitySet Name="PPROV_Contrasena" EntityType="PortalProvModel.PPROV_Contrasena" />
           <EntitySet Name="PPROV_Estado" EntityType="PortalProvModel.PPROV_Estado" />
           <EntitySet Name="PPROV_Retencion" EntityType="PortalProvModel.PPROV_Retencion" />
           <EntitySet Name="PPROV_RetencionTipo" EntityType="PortalProvModel.PPROV_RetencionTipo" />
@@ -1325,10 +1394,6 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
             <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
             <End Role="PPROV_Adjuntos" EntitySet="PPROV_Adjuntos" />
           </AssociationSet>
-          <AssociationSet Name="FK_PPROV_Documento_PPROV_Contrasena" Association="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena">
-            <End Role="PPROV_Contrasena" EntitySet="PPROV_Contrasena" />
-            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
-          </AssociationSet>
           <AssociationSet Name="FK_PPROV_Documento_PPROV_Estado" Association="PortalProvModel.FK_PPROV_Documento_PPROV_Estado">
             <End Role="PPROV_Estado" EntitySet="PPROV_Estado" />
             <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
@@ -1339,7 +1404,6 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           </AssociationSet>
           <EntitySet Name="v_PPROV_FacturasIngresadasPorUsuario" EntityType="PortalProvModel.v_PPROV_FacturasIngresadasPorUsuario" />
           <EntitySet Name="V_PPROV_Contrasena_PorUsuario" EntityType="PortalProvModel.V_PPROV_Contrasena_PorUsuario" />
-          <EntitySet Name="V_PPROV_Empresas" EntityType="PortalProvModel.V_PPROV_Empresas" />
           <EntitySet Name="V_PPROV_DocumentosPorUsuario" EntityType="PortalProvModel.V_PPROV_DocumentosPorUsuario" />
           <EntitySet Name="V_PPROV_RetencionesPorUsuario" EntityType="PortalProvModel.V_PPROV_RetencionesPorUsuario" />
           <FunctionImport Name="SP_PPROV_STATS_FacturacionUltimoAnio" ReturnType="Collection(PortalProvModel.SP_PPROV_STATS_FacturacionUltimoAnio_Result)">
@@ -1375,7 +1439,24 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           </AssociationSet>
           <EntitySet Name="v_PPROV_Usuario_Proveedor" EntityType="PortalProvModel.v_PPROV_Usuario_Proveedor" />
           <FunctionImport Name="SP_PPROV_Indicadores_Oficina" ReturnType="Collection(PortalProvModel.SP_PPROV_Indicadores_Oficina_Result)">
-            <Parameter Name="UserName" Mode="In" Type="String" />
+          <Parameter Name="UserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="V_PPROV_Proveedor" EntityType="PortalProvModel.V_PPROV_Proveedor" />
+          <FunctionImport Name="SP_REP_Contrasena_Detalle" ReturnType="Collection(PortalProvModel.SP_REP_Contrasena_Detalle_Result)">
+          <Parameter Name="Contrasena_Id" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="SP_REP_Contrasena_Encabezado" ReturnType="Collection(PortalProvModel.SP_REP_Contrasena_Encabezado_Result)">
+          <Parameter Name="Contrasena_Id" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <EntitySet Name="PPROV_Contrasena" EntityType="PortalProvModel.PPROV_Contrasena" />
+          <EntitySet Name="PPROV_UsuarioEmpresa" EntityType="PortalProvModel.PPROV_UsuarioEmpresa" />
+          <AssociationSet Name="FK_PPROV_Documento_PPROV_Contrasena" Association="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena">
+            <End Role="PPROV_Contrasena" EntitySet="PPROV_Contrasena" />
+            <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
+          </AssociationSet>
+          <EntitySet Name="V_PPROV_Empresas" EntityType="PortalProvModel.V_PPROV_Empresas" />
+          <FunctionImport Name="SP_PPROV_ADM_EmpresasOficina" ReturnType="Collection(PortalProvModel.SP_PPROV_ADM_EmpresasOficina_Result)">
+            <Parameter Name="Username" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="GEN_Configuracion">
@@ -1621,19 +1702,6 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <NavigationProperty Name="PPROV_TipoAdjunto" Relationship="PortalProvModel.FK_PPROV_Adjuntos_PPROV_TipoAdjunto" FromRole="PPROV_Adjuntos" ToRole="PPROV_TipoAdjunto" />
           <NavigationProperty Name="PPROV_Documento" Relationship="PortalProvModel.FK_PPROV_Adjuntos_PPROV_Documento" FromRole="PPROV_Adjuntos" ToRole="PPROV_Documento" />
         </EntityType>
-        <EntityType Name="PPROV_Contrasena">
-          <Key>
-            <PropertyRef Name="Contrasena_Id" />
-          </Key>
-          <Property Name="Contrasena_Id" Type="Guid" Nullable="false" />
-          <Property Name="Contrasena_Numero" Type="Int32" Nullable="false" />
-          <Property Name="Empresa_Id" Type="Int32" Nullable="false" />
-          <Property Name="Contrasena_Fecha" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Contrasena_Fecha_Estimada" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Contrasena_Usuario" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="PPROV_Documento" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Contrasena" ToRole="PPROV_Documento" />
-          <Property Name="Contrasena_Estado" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="PPROV_Estado">
           <Key>
             <PropertyRef Name="Doc_Estado" />
@@ -1660,6 +1728,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Manual_FacNumero" Type="Int32" />
           <Property Name="Manual_Fac_Serie" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
           <Property Name="Manual_Empresa" Type="Int32" />
+          <Property Name="Retencion_CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PPROV_RetencionTipo">
           <Key>
@@ -1729,13 +1798,13 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Doc_NumeroEntrega" Type="Int32" />
           <Property Name="Contrasena_Id" Type="Guid" />
           <NavigationProperty Name="PPROV_Adjuntos" Relationship="PortalProvModel.FK_PPROV_Adjuntos_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Adjuntos" />
-          <NavigationProperty Name="PPROV_Contrasena" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Documento" ToRole="PPROV_Contrasena" />
           <NavigationProperty Name="PPROV_Estado" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Estado" FromRole="PPROV_Documento" ToRole="PPROV_Estado" />
           <NavigationProperty Name="PPROV_Retencion" Relationship="PortalProvModel.PPROV_RetencionFactura" FromRole="PPROV_Documento" ToRole="PPROV_Retencion" />
           <Property Name="Doc_PdfFactura" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
           <Property Name="Doc_PdfOC" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
           <Property Name="SolicitanteOC" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="PPROV_Nota" Relationship="PortalProvModel.FK_PPROV_Nota_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Nota" />
+          <NavigationProperty Name="PPROV_Contrasena" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Documento" ToRole="PPROV_Contrasena" />
         </EntityType>
         <Association Name="FK_PPROV_Adjuntos_PPROV_Documento">
           <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="1" />
@@ -1746,18 +1815,6 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
             </Principal>
             <Dependent Role="PPROV_Adjuntos">
               <PropertyRef Name="Doc_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PPROV_Documento_PPROV_Contrasena">
-          <End Type="PortalProvModel.PPROV_Contrasena" Role="PPROV_Contrasena" Multiplicity="0..1" />
-          <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PPROV_Contrasena">
-              <PropertyRef Name="Contrasena_Id" />
-            </Principal>
-            <Dependent Role="PPROV_Documento">
-              <PropertyRef Name="Contrasena_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1836,16 +1893,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Monto" Type="Decimal" Nullable="false" Precision="38" Scale="6" />
           <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Contrasena_Estado" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="V_PPROV_Empresas">
-          <Key>
-            <PropertyRef Name="RowNbr" />
-          </Key>
-          <Property Name="RowNbr" Type="Int64" Nullable="false" />
-          <Property Name="Empresa_Id" Type="Int32" Nullable="false" />
-          <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Nit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="AliasName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Contrasena_CardCode" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="V_PPROV_DocumentosPorUsuario">
           <Key>
@@ -1970,6 +2019,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Cantidad" Type="Int32" Nullable="false" />
           <Property Name="Monto" Type="Decimal" Nullable="false" Precision="38" Scale="6" />
           <Property Name="Contrasena_Estado" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena_CardCode" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="V_PPROV_Documentos_Oficina">
           <Key>
@@ -1978,6 +2029,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
             <PropertyRef Name="Empresa_Name" />
             <PropertyRef Name="Msj_Total" />
             <PropertyRef Name="Msj_NoLeidos" />
+            <PropertyRef Name="UserName" />
           </Key>
           <Property Name="RowNbr" Type="Int64" Nullable="false" />
           <Property Name="Doc_Id" Type="Guid" Nullable="false" />
@@ -2004,6 +2056,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Msj_Total" Type="Int32" Nullable="false" />
           <Property Name="Msj_NoLeidos" Type="Int32" Nullable="false" />
+          <Property Name="seleccionado" Type="Boolean" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="v_PPROV_FacturasIngresadas_Oficina">
           <Key>
@@ -2035,6 +2089,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="U_NumContrase" Type="Int32" />
           <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="CardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Seleccionado" Type="Boolean" />
         </EntityType>
         <EntityType Name="V_PPROV_Retenciones_Oficina">
           <Key>
@@ -2172,6 +2227,120 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Type="String" Name="URL" Nullable="false" MaxLength="11" />
           <Property Type="String" Name="Tipo" Nullable="false" MaxLength="9" />
           <Property Type="String" Name="Grupo" Nullable="false" MaxLength="7" />
+        </ComplexType>
+        <EntityType Name="V_PPROV_Proveedor">
+          <Key>
+            <PropertyRef Name="CardCode" />
+            <PropertyRef Name="Nit" />
+          </Key>
+          <Property Name="CardCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Nit" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DiasCredito" Type="Int32" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="SP_REP_Contrasena_Detalle_Result">
+          <Property Type="Guid" Name="Doc_Id" Nullable="false" />
+          <Property Type="String" Name="Doc_CardCorde" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Doc_Estado" Nullable="true" MaxLength="32" />
+          <Property Type="String" Name="Doc_Numero" Nullable="true" MaxLength="32" />
+          <Property Type="String" Name="Doc_Serie" Nullable="true" MaxLength="32" />
+          <Property Type="DateTime" Name="Doc_Fecha" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Doc_EmpresaId" Nullable="true" />
+          <Property Type="Decimal" Name="Doc_MontoNeto" Nullable="true" Precision="18" Scale="6" />
+          <Property Type="String" Name="Doc_Moneda" Nullable="true" MaxLength="16" />
+          <Property Type="String" Name="Doc_Autorizacion" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="Doc_Observaciones" Nullable="true" />
+          <Property Type="String" Name="Doc_TipoDocumento" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="Doc_UsuarioCarga" Nullable="true" MaxLength="64" />
+          <Property Type="DateTime" Name="Doc_FechaCarga" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="Doc_NumeroOC" Nullable="true" />
+          <Property Type="Int32" Name="Doc_NumeroFactProv" Nullable="true" />
+          <Property Type="Int32" Name="Doc_NumeroEntrega" Nullable="true" />
+          <Property Type="Guid" Name="Contrasena_Id" Nullable="true" />
+          <Property Type="String" Name="Doc_PdfFactura" Nullable="true" MaxLength="1024" />
+          <Property Type="String" Name="Doc_PdfOC" Nullable="true" MaxLength="1024" />
+          <Property Type="String" Name="SolicitanteOC" Nullable="true" MaxLength="64" />
+        </ComplexType>
+        <ComplexType Name="SP_REP_Contrasena_Encabezado_Result">
+          <Property Type="Guid" Name="Contrasena_Id" Nullable="false" />
+          <Property Type="Int32" Name="Contrasena_Numero" Nullable="false" />
+          <Property Type="Int32" Name="Empresa_Id" Nullable="false" />
+          <Property Type="DateTime" Name="Contrasena_Fecha" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="Contrasena_Fecha_Estimada" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Contrasena_Usuario" Nullable="false" MaxLength="64" />
+          <Property Type="String" Name="Contrasena_Estado" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="Contrasena_CardCode" Nullable="true" MaxLength="64" />
+          <Property Type="Int64" Name="RowNbr" Nullable="false" />
+          <Property Type="String" Name="Empresa_Name" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Nit_Empres" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="AliasName" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="CardCode" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="CardName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Nit_Proveedor" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="DiasCredito" Nullable="false" />
+          <Property Type="String" Name="Contrasena_Moneda" Nullable="true" MaxLength="16" />
+          <Property Type="String" Name="Logo" Nullable="false" MaxLength="27" />
+        </ComplexType>
+        <EntityType Name="PPROV_Contrasena">
+          <Key>
+            <PropertyRef Name="Contrasena_Id" />
+          </Key>
+          <Property Name="Contrasena_Id" Type="Guid" Nullable="false" />
+          <Property Name="Contrasena_Numero" Type="Int32" Nullable="false" />
+          <Property Name="Empresa_Id" Type="Int32" Nullable="false" />
+          <Property Name="Contrasena_Fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Contrasena_Fecha_Estimada" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Contrasena_Usuario" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena_Estado" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena_CardCode" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena_EmpresaId" Type="Int32" />
+          <NavigationProperty Name="PPROV_Documento" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Contrasena" ToRole="PPROV_Documento" />
+        </EntityType>
+        <EntityType Name="PPROV_UsuarioEmpresa">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="EmpresaId" />
+          </Key>
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="EmpresaId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PPROV_Documento_PPROV_Contrasena">
+          <End Type="PortalProvModel.PPROV_Contrasena" Role="PPROV_Contrasena" Multiplicity="0..1" />
+          <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPROV_Contrasena">
+              <PropertyRef Name="Contrasena_Id" />
+            </Principal>
+            <Dependent Role="PPROV_Documento">
+              <PropertyRef Name="Contrasena_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="V_PPROV_Empresas">
+          <Key>
+            <PropertyRef Name="RowNbr" />
+            <PropertyRef Name="Empresa_Id" />
+            <PropertyRef Name="Empresa_Name" />
+            <PropertyRef Name="Logo" />
+            <PropertyRef Name="Correo" />
+            <PropertyRef Name="Telefonos" />
+            <PropertyRef Name="Direccion" />
+          </Key>
+          <Property Name="RowNbr" Type="Int64" Nullable="false" />
+          <Property Name="Empresa_Id" Type="Int32" Nullable="false" />
+          <Property Name="Empresa_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Nit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AliasName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Logo" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="Correo" Type="String" Nullable="false" MaxLength="34" FixedLength="false" Unicode="false" />
+          <Property Name="Telefonos" Type="String" Nullable="false" MaxLength="29" FixedLength="false" Unicode="false" />
+          <Property Name="Direccion" Type="String" Nullable="false" MaxLength="63" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="SP_PPROV_ADM_EmpresasOficina_Result">
+          <Property Type="Int32" Name="Empresa_Id" Nullable="false" />
+          <Property Type="String" Name="Empresa_Name" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Activo" Nullable="false" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2389,19 +2558,6 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PPROV_Contrasena">
-            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Contrasena">
-              <MappingFragment StoreEntitySet="PPROV_Contrasena">
-                <ScalarProperty Name="Contrasena_Estado" ColumnName="Contrasena_Estado" />
-                <ScalarProperty Name="Contrasena_Usuario" ColumnName="Contrasena_Usuario" />
-                <ScalarProperty Name="Contrasena_Fecha_Estimada" ColumnName="Contrasena_Fecha_Estimada" />
-                <ScalarProperty Name="Contrasena_Fecha" ColumnName="Contrasena_Fecha" />
-                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
-                <ScalarProperty Name="Contrasena_Numero" ColumnName="Contrasena_Numero" />
-                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PPROV_Estado">
             <EntityTypeMapping TypeName="PortalProvModel.PPROV_Estado">
               <MappingFragment StoreEntitySet="PPROV_Estado">
@@ -2413,6 +2569,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="PPROV_Retencion">
             <EntityTypeMapping TypeName="PortalProvModel.PPROV_Retencion">
               <MappingFragment StoreEntitySet="PPROV_Retencion">
+                <ScalarProperty Name="Retencion_CardCode" ColumnName="Retencion_CardCode" />
                 <ScalarProperty Name="Manual_Empresa" ColumnName="Manual_Empresa" />
                 <ScalarProperty Name="Manual_Fac_Serie" ColumnName="Manual_Fac_Serie" />
                 <ScalarProperty Name="Manual_FacNumero" ColumnName="Manual_FacNumero" />
@@ -2515,6 +2672,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="V_PPROV_Contrasena_PorUsuario">
             <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Contrasena_PorUsuario">
               <MappingFragment StoreEntitySet="V_PPROV_Contrasena_PorUsuario">
+                <ScalarProperty Name="Contrasena_Moneda" ColumnName="Contrasena_Moneda" />
+                <ScalarProperty Name="Contrasena_CardCode" ColumnName="Contrasena_CardCode" />
                 <ScalarProperty Name="Contrasena_Estado" ColumnName="Contrasena_Estado" />
                 <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
                 <ScalarProperty Name="Monto" ColumnName="Monto" />
@@ -2526,17 +2685,6 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
                 <ScalarProperty Name="Contrasena_Numero" ColumnName="Contrasena_Numero" />
                 <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="V_PPROV_Empresas">
-            <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Empresas">
-              <MappingFragment StoreEntitySet="V_PPROV_Empresas">
-                <ScalarProperty Name="AliasName" ColumnName="AliasName" />
-                <ScalarProperty Name="Nit" ColumnName="Nit" />
-                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
-                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
                 <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2652,6 +2800,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="V_PPROV_Contrasena_Oficina">
             <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Contrasena_Oficina">
               <MappingFragment StoreEntitySet="V_PPROV_Contrasena_Oficina">
+                <ScalarProperty Name="Contrasena_Moneda" ColumnName="Contrasena_Moneda" />
+                <ScalarProperty Name="Contrasena_CardCode" ColumnName="Contrasena_CardCode" />
                 <ScalarProperty Name="Contrasena_Estado" ColumnName="Contrasena_Estado" />
                 <ScalarProperty Name="Monto" ColumnName="Monto" />
                 <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
@@ -2669,6 +2819,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="V_PPROV_Documentos_Oficina">
             <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Documentos_Oficina">
               <MappingFragment StoreEntitySet="V_PPROV_Documentos_Oficina">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="seleccionado" ColumnName="seleccionado" />
                 <ScalarProperty Name="Msj_NoLeidos" ColumnName="Msj_NoLeidos" />
                 <ScalarProperty Name="Msj_Total" ColumnName="Msj_Total" />
                 <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
@@ -2700,6 +2852,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="v_PPROV_FacturasIngresadas_Oficina">
             <EntityTypeMapping TypeName="PortalProvModel.v_PPROV_FacturasIngresadas_Oficina">
               <MappingFragment StoreEntitySet="v_PPROV_FacturasIngresadas_Oficina">
+                <ScalarProperty Name="Seleccionado" ColumnName="Seleccionado" />
                 <ScalarProperty Name="CardName" ColumnName="CardName" />
                 <ScalarProperty Name="CardCode" ColumnName="CardCode" />
                 <ScalarProperty Name="U_NumContrase" ColumnName="U_NumContrase" />
@@ -2816,6 +2969,115 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
                 <ScalarProperty Name="URL" ColumnName="URL" />
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
                 <ScalarProperty Name="Grupo" ColumnName="Grupo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="V_PPROV_Proveedor">
+            <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Proveedor">
+              <MappingFragment StoreEntitySet="V_PPROV_Proveedor">
+                <ScalarProperty Name="DiasCredito" ColumnName="DiasCredito" />
+                <ScalarProperty Name="Nit" ColumnName="Nit" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_REP_Contrasena_Detalle" FunctionName="PortalProvModel.Store.SP_REP_Contrasena_Detalle">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PortalProvModel.SP_REP_Contrasena_Detalle_Result">
+                <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
+                <ScalarProperty Name="Doc_CardCorde" ColumnName="Doc_CardCorde" />
+                <ScalarProperty Name="Doc_Estado" ColumnName="Doc_Estado" />
+                <ScalarProperty Name="Doc_Numero" ColumnName="Doc_Numero" />
+                <ScalarProperty Name="Doc_Serie" ColumnName="Doc_Serie" />
+                <ScalarProperty Name="Doc_Fecha" ColumnName="Doc_Fecha" />
+                <ScalarProperty Name="Doc_EmpresaId" ColumnName="Doc_EmpresaId" />
+                <ScalarProperty Name="Doc_MontoNeto" ColumnName="Doc_MontoNeto" />
+                <ScalarProperty Name="Doc_Moneda" ColumnName="Doc_Moneda" />
+                <ScalarProperty Name="Doc_Autorizacion" ColumnName="Doc_Autorizacion" />
+                <ScalarProperty Name="Doc_Observaciones" ColumnName="Doc_Observaciones" />
+                <ScalarProperty Name="Doc_TipoDocumento" ColumnName="Doc_TipoDocumento" />
+                <ScalarProperty Name="Doc_UsuarioCarga" ColumnName="Doc_UsuarioCarga" />
+                <ScalarProperty Name="Doc_FechaCarga" ColumnName="Doc_FechaCarga" />
+                <ScalarProperty Name="Doc_NumeroOC" ColumnName="Doc_NumeroOC" />
+                <ScalarProperty Name="Doc_NumeroFactProv" ColumnName="Doc_NumeroFactProv" />
+                <ScalarProperty Name="Doc_NumeroEntrega" ColumnName="Doc_NumeroEntrega" />
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+                <ScalarProperty Name="Doc_PdfFactura" ColumnName="Doc_PdfFactura" />
+                <ScalarProperty Name="Doc_PdfOC" ColumnName="Doc_PdfOC" />
+                <ScalarProperty Name="SolicitanteOC" ColumnName="SolicitanteOC" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_REP_Contrasena_Encabezado" FunctionName="PortalProvModel.Store.SP_REP_Contrasena_Encabezado">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PortalProvModel.SP_REP_Contrasena_Encabezado_Result">
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+                <ScalarProperty Name="Contrasena_Numero" ColumnName="Contrasena_Numero" />
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="Contrasena_Fecha" ColumnName="Contrasena_Fecha" />
+                <ScalarProperty Name="Contrasena_Fecha_Estimada" ColumnName="Contrasena_Fecha_Estimada" />
+                <ScalarProperty Name="Contrasena_Usuario" ColumnName="Contrasena_Usuario" />
+                <ScalarProperty Name="Contrasena_Estado" ColumnName="Contrasena_Estado" />
+                <ScalarProperty Name="Contrasena_CardCode" ColumnName="Contrasena_CardCode" />
+                <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
+                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
+                <ScalarProperty Name="Nit_Empres" ColumnName="Nit_Empres" />
+                <ScalarProperty Name="AliasName" ColumnName="AliasName" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="Nit_Proveedor" ColumnName="Nit_Proveedor" />
+                <ScalarProperty Name="DiasCredito" ColumnName="DiasCredito" />
+                <ScalarProperty Name="Contrasena_Moneda" ColumnName="Contrasena_Moneda" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="PPROV_Contrasena">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_Contrasena">
+              <MappingFragment StoreEntitySet="PPROV_Contrasena">
+                <ScalarProperty Name="Contrasena_EmpresaId" ColumnName="Contrasena_EmpresaId" />
+                <ScalarProperty Name="Contrasena_Moneda" ColumnName="Contrasena_Moneda" />
+                <ScalarProperty Name="Contrasena_CardCode" ColumnName="Contrasena_CardCode" />
+                <ScalarProperty Name="Contrasena_Estado" ColumnName="Contrasena_Estado" />
+                <ScalarProperty Name="Contrasena_Usuario" ColumnName="Contrasena_Usuario" />
+                <ScalarProperty Name="Contrasena_Fecha_Estimada" ColumnName="Contrasena_Fecha_Estimada" />
+                <ScalarProperty Name="Contrasena_Fecha" ColumnName="Contrasena_Fecha" />
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="Contrasena_Numero" ColumnName="Contrasena_Numero" />
+                <ScalarProperty Name="Contrasena_Id" ColumnName="Contrasena_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPROV_UsuarioEmpresa">
+            <EntityTypeMapping TypeName="PortalProvModel.PPROV_UsuarioEmpresa">
+              <MappingFragment StoreEntitySet="PPROV_UsuarioEmpresa">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_PPROV_Empresas">
+            <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Empresas">
+              <MappingFragment StoreEntitySet="V_PPROV_Empresas">
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Telefonos" ColumnName="Telefonos" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="AliasName" ColumnName="AliasName" />
+                <ScalarProperty Name="Nit" ColumnName="Nit" />
+                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="RowNbr" ColumnName="RowNbr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_PPROV_ADM_EmpresasOficina" FunctionName="PortalProvModel.Store.SP_PPROV_ADM_EmpresasOficina">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PortalProvModel.SP_PPROV_ADM_EmpresasOficina_Result">
+                <ScalarProperty Name="Empresa_Id" ColumnName="Empresa_Id" />
+                <ScalarProperty Name="Empresa_Name" ColumnName="Empresa_Name" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

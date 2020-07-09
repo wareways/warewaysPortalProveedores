@@ -16,7 +16,9 @@
         <th>
             @Html.DisplayName("Comentario")
         </th>
-
+        <th>
+            @Html.DisplayName("Revisado Por")
+        </th>
        
     </tr>
 
@@ -31,6 +33,10 @@
             </td>
             <td style="text-align:left">
                 @Html.DisplayFor(modelItem => item.Nota_Descripción)
+            </td>
+
+            <td style="text-align:left">
+                @Html.DisplayFor(modelItem => item.Revisada_Por) <br /> @Html.DisplayFor(modelItem => item.Revisada_Fecha)
             </td>
         </tr>
     }

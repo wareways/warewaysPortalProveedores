@@ -24,6 +24,9 @@ namespace Wareways.PortalProv.Models.PP
     {
         public List<Infraestructura.V_PPROV_ResumenEstadoDocumento> L_Estados { get; set; }
         public List<Infraestructura.V_PPROV_Documentos_Oficina> L_Documentos { get; set; }
+
+        public List<Infraestructura.PPROV_Documento> L_Retenciones { get;set;}
+
         public SelectList Nuevo_Estados_Asignar { get; set; }
         public string Nuevo_Estado_Seleccionado { get; set; }
         public string Nuevo_Estado_Comentario { get; set; }

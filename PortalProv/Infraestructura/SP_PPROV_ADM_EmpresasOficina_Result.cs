@@ -10,18 +10,11 @@
 namespace Wareways.PortalProv.Infraestructura
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class V_PPROV_Empresas
+    public partial class SP_PPROV_ADM_EmpresasOficina_Result
     {
-        public long RowNbr { get; set; }
         public int Empresa_Id { get; set; }
         public string Empresa_Name { get; set; }
-        public string Nit { get; set; }
-        public string AliasName { get; set; }
-        public string Logo { get; set; }
-        public string Correo { get; set; }
-        public string Telefonos { get; set; }
-        public string Direccion { get; set; }
+        public int Activo { get; set; }
     }
 }

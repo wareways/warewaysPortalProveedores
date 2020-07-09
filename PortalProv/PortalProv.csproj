@@ -397,6 +397,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DB_PortalProv.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\FlexManDb.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FlexManDb.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\FlexManDb.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FlexManDb.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\FlexManDb.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FlexManDb.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\GEN_Audit.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
@@ -422,6 +437,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\Componentes\HtmlExtensionsTextBox.cs" />
+    <Compile Include="Infraestructura\NotificacionesCola.cs">
+      <DependentUpon>FlexManDb.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\PPROV_Adjuntos.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
@@ -446,7 +464,13 @@
     <Compile Include="Infraestructura\PPROV_TipoAdjunto.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\PPROV_UsuarioEmpresa.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\PPROV_UsuarioProveedor.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_ADM_EmpresasOficina_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\SP_PPROV_DatosOrdenCompra_Result.cs">
@@ -462,6 +486,12 @@
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\SP_PPROV_STATS_FacturacionUltimoAnio_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_REP_Contrasena_Detalle_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_REP_Contrasena_Encabezado_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\V_GEN_MenuDisplay.cs">
@@ -500,6 +530,9 @@
     <Compile Include="Infraestructura\v_PPROV_FacturasIngresadas_Oficina.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\V_PPROV_Proveedor.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\V_PPROV_ResumenEstadoDocumento.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
@@ -533,6 +566,13 @@
     <Compile Include="Infraestructura\Servicios\Enum.cs" />
     <Compile Include="Infraestructura\Servicios\Export.cs" />
     <Compile Include="Infraestructura\Servicios\ServicioSeguridad.cs" />
+    <Compile Include="Reports\Contrasenas.aspx.cs">
+      <DependentUpon>Contrasenas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reports\Contrasenas.aspx.designer.cs">
+      <DependentUpon>Contrasenas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -6910,6 +6950,7 @@
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\LaptopIntro.jpg" />
+    <Content Include="Content\Logo_Lacoplast.JPG" />
     <Content Include="Content\polytec.ico" />
     <Content Include="Content\PolytecLogo - Copy.png" />
     <Content Include="Content\PolytecLogo.png" />
@@ -6934,6 +6975,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Infraestructura\Correos\Retencion.html" />
+    <Content Include="Infraestructura\Correos\Rechazo.html" />
+    <Content Include="Infraestructura\Correos\Contrasena.html" />
     <Content Include="Infraestructura\DB_PortalProv.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>DB_PortalProv.edmx</DependentUpon>
@@ -6944,6 +6988,17 @@
       <DependentUpon>DB_PortalProv.edmx</DependentUpon>
       <LastGenOutput>DB_PortalProv.cs</LastGenOutput>
     </Content>
+    <Content Include="Infraestructura\FlexManDb.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FlexManDb.edmx</DependentUpon>
+      <LastGenOutput>FlexManDb.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Infraestructura\FlexManDb.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FlexManDb.edmx</DependentUpon>
+      <LastGenOutput>FlexManDb.cs</LastGenOutput>
+    </Content>
+    <Content Include="Reports\Contrasenas.aspx" />
     <Content Include="Views\Shared\ReportBoucher.aspx" />
     <Content Include="Views\Shared\TestPrint.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -7439,6 +7494,13 @@
     <Content Include="Infraestructura\DB_PortalProv.edmx.diagram">
       <DependentUpon>DB_PortalProv.edmx</DependentUpon>
     </Content>
+    <EntityDeploy Include="Infraestructura\FlexManDb.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>FlexManDb.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Infraestructura\FlexManDb.edmx.diagram">
+      <DependentUpon>FlexManDb.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Pruebas CorpoRyD.pubxml" />
@@ -7524,12 +7586,13 @@
     <Content Include="Views\admretenciones\Index.cshtml" />
     <Content Include="Views\admpresentados\Index.cshtml" />
     <Content Include="Views\Presentados\ObtenerMensajes.cshtml" />
+    <Content Include="Views\AdmContrasena\Edit.cshtml" />
+    <Content Include="Views\admretenciones\Nuevo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Cargados\" />
     <Folder Include="Content\font\" />
-    <Folder Include="Reports\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -7550,6 +7613,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="admin-lte\bower_components\moment\moment.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Infraestructura\Reportes\Contrasena.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

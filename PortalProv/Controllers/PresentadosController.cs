@@ -187,6 +187,17 @@ namespace Wareways.PortalProv.Controllers
         public ActionResult ObtenerMensajes(Guid id)
         {
             var model = _Db.PPROV_Nota.Where(p => p.Doc_Id == id).OrderByDescending(p => p.Nota_Fecha).ToList();
+            if( User.IsInRole("Proveedor") )
+            {
+                foreach ( var _item in model)
+                {
+                    _item.Revisada = true;
+                    _item.Revisada_Fecha = DateTime.Now;
+                    _item.Revisada_Por = User.Identity.Name;
+                }
+                _Db.SaveChanges();
+            }
+
 
             return View(model);
         }

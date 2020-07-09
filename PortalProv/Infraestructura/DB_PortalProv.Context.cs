@@ -42,7 +42,6 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
-        public virtual DbSet<PPROV_Contrasena> PPROV_Contrasena { get; set; }
         public virtual DbSet<PPROV_Estado> PPROV_Estado { get; set; }
         public virtual DbSet<PPROV_Retencion> PPROV_Retencion { get; set; }
         public virtual DbSet<PPROV_RetencionTipo> PPROV_RetencionTipo { get; set; }
@@ -50,7 +49,6 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<PPROV_Documento> PPROV_Documento { get; set; }
         public virtual DbSet<v_PPROV_FacturasIngresadasPorUsuario> v_PPROV_FacturasIngresadasPorUsuario { get; set; }
         public virtual DbSet<V_PPROV_Contrasena_PorUsuario> V_PPROV_Contrasena_PorUsuario { get; set; }
-        public virtual DbSet<V_PPROV_Empresas> V_PPROV_Empresas { get; set; }
         public virtual DbSet<V_PPROV_DocumentosPorUsuario> V_PPROV_DocumentosPorUsuario { get; set; }
         public virtual DbSet<V_PPROV_RetencionesPorUsuario> V_PPROV_RetencionesPorUsuario { get; set; }
         public virtual DbSet<V_PPROV_Contrasena_Oficina> V_PPROV_Contrasena_Oficina { get; set; }
@@ -61,6 +59,10 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<PPROV_Nota> PPROV_Nota { get; set; }
         public virtual DbSet<PPROV_UsuarioProveedor> PPROV_UsuarioProveedor { get; set; }
         public virtual DbSet<v_PPROV_Usuario_Proveedor> v_PPROV_Usuario_Proveedor { get; set; }
+        public virtual DbSet<V_PPROV_Proveedor> V_PPROV_Proveedor { get; set; }
+        public virtual DbSet<PPROV_Contrasena> PPROV_Contrasena { get; set; }
+        public virtual DbSet<PPROV_UsuarioEmpresa> PPROV_UsuarioEmpresa { get; set; }
+        public virtual DbSet<V_PPROV_Empresas> V_PPROV_Empresas { get; set; }
     
         public virtual ObjectResult<SP_PPROV_STATS_FacturacionUltimoAnio_Result> SP_PPROV_STATS_FacturacionUltimoAnio(string userName)
         {
@@ -105,6 +107,33 @@ namespace Wareways.PortalProv.Infraestructura
                 new ObjectParameter("UserName", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_Indicadores_Oficina_Result>("SP_PPROV_Indicadores_Oficina", userNameParameter);
+        }
+    
+        public virtual ObjectResult<SP_REP_Contrasena_Detalle_Result> SP_REP_Contrasena_Detalle(Nullable<System.Guid> contrasena_Id)
+        {
+            var contrasena_IdParameter = contrasena_Id.HasValue ?
+                new ObjectParameter("Contrasena_Id", contrasena_Id) :
+                new ObjectParameter("Contrasena_Id", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_REP_Contrasena_Detalle_Result>("SP_REP_Contrasena_Detalle", contrasena_IdParameter);
+        }
+    
+        public virtual ObjectResult<SP_REP_Contrasena_Encabezado_Result> SP_REP_Contrasena_Encabezado(Nullable<System.Guid> contrasena_Id)
+        {
+            var contrasena_IdParameter = contrasena_Id.HasValue ?
+                new ObjectParameter("Contrasena_Id", contrasena_Id) :
+                new ObjectParameter("Contrasena_Id", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_REP_Contrasena_Encabezado_Result>("SP_REP_Contrasena_Encabezado", contrasena_IdParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_ADM_EmpresasOficina_Result> SP_PPROV_ADM_EmpresasOficina(string username)
+        {
+            var usernameParameter = username != null ?
+                new ObjectParameter("Username", username) :
+                new ObjectParameter("Username", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_ADM_EmpresasOficina_Result>("SP_PPROV_ADM_EmpresasOficina", usernameParameter);
         }
     }
 }

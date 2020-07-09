@@ -1,0 +1,98 @@
+﻿@model Wareways.PortalProv.Models.PP.RetencionesOficinaNuevo
+
+<!DOCTYPE html>
+
+
+@using (Html.BeginForm("Nuevo","admretenciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(p=>p._DocId)
+    @Html.AntiForgeryToken()
+    <div class="box box-primary box-solid">
+        <div class="box-header with-border">
+            <h4 class="box-title"><span class="fa fa-file fa-2x"></span> Nueva Retención</h4>
+        </div>
+        <div class="box-body">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    @Html.Label("No. Retencion", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Retencion_Numero, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    @Html.Label("Fecha", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Retencion_Fecha, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+                    @Html.Label("Monto", htmlAttributes: new { @class = "control-label col-md-1" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Retencion_Monto, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-1">                        
+                        @Html.DropDownListFor(m => m.Retencion_Moneda,
+                                                       new SelectList(Model.Lista_Moneda, "Valor", "Nombre"),
+                                                       new { @Class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Proveedor", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Retencion_CardCode, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    @Html.Label("Tipo", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.DropDownListFor(p => p.Retencion_Tipo, new SelectList(Model.Lista_TiposRet, "Retencion_Tipo", "Retencion_Nombre"), new { @Class = "form-control ExcluirSoloLectura" })
+                    </div>
+                    <div class="col-md-4">
+                        <div class="box box-default box-solid">
+                            <div class="box-header with-border">
+                                <h2 class="box-title">Retención</h2>
+                            </div>
+                            <div class="box-body">
+                                <label for="filefac" class="btn btn-success">Seleccionar Arhivo PDF</label>
+                                @Html.TextBox("filefac", "", new { type = "file", @title = "Seleccione PDF", @style = "visibility:hidden;" })
+                                <label id="filefac_sel"></label>
+                                <p class="help-block">Solo se pueden subir archivos PDF</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            @if (@ViewBag.Message != null)
+            {
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i> Alerta !</h4>
+                    @ViewBag.Message
+                </div>
+            }
+            <div class="col-md-6">
+                <a href="@Url.Action("Index", "admRetenciones")" class="btn btn-default ">
+                    <span class=" fa fa-backward" aria-hidden="true"></span>
+
+                    Regresar Lista
+                </a>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
+                    Subir &nbsp;
+                    <i class="fa fa-upload"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        
+        $("#filefac").change(function () {
+            var filename = this.files[0].name
+            $("#filefac_sel").text(filename);
+        });
+    </script>
+}
