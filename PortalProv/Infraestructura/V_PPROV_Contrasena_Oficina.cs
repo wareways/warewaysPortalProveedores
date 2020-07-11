@@ -27,5 +27,6 @@ namespace Wareways.PortalProv.Infraestructura
         public string Contrasena_Estado { get; set; }
         public string Contrasena_CardCode { get; set; }
         public string Contrasena_Moneda { get; set; }
+        public string UserName { get; set; }
     }
 }

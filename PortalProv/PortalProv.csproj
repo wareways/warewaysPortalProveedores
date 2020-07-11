@@ -7588,6 +7588,7 @@
     <Content Include="Views\Presentados\ObtenerMensajes.cshtml" />
     <Content Include="Views\AdmContrasena\Edit.cshtml" />
     <Content Include="Views\admretenciones\Nuevo.cshtml" />
+    <Content Include="Views\admpresentados\LinksRetencionesDocto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

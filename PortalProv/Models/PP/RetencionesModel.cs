@@ -38,5 +38,7 @@ namespace Wareways.PortalProv.Models.PP
         public string Manual_Fac_Serie { get; set; }
         public int Manual_Empresa { get; set; }
         public string Retencion_CardCode { get; set; }
+
+        public string Modo_Activo { get; set; }
     }
 }

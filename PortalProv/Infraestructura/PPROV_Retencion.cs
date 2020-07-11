@@ -32,6 +32,8 @@ namespace Wareways.PortalProv.Infraestructura
         public string Manual_Fac_Serie { get; set; }
         public Nullable<int> Manual_Empresa { get; set; }
         public string Retencion_CardCode { get; set; }
+        public Nullable<int> Retencion_EmpresaId { get; set; }
+        public int Interno { get; set; }
     
         public virtual PPROV_RetencionTipo PPROV_RetencionTipo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

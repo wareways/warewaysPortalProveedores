@@ -12,73 +12,80 @@
             </div>
         </div>
         <div class="box-body">
-            <table class="table table-bordered table-condensed table-hover Datos">
-                <thead>
-                    <tr>
-                        <th>Estado</th>
-                        <th>Tipo</th>
-                        <th>Serie - Numero </th>
+            <div class="table-responsive">
 
-                        <th>Fecha Emision</th>
-                        <th>Empresa</th>
-                        <th>Moneda</th>
-                        <th>Monto</th>
-                        <th>Cargado el</th>
-                        <th>Orden Compra</th>
-                        <th>Observacion</th>
-                        <th>Archivos</th>
-                        <th>Mensajes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.L_Documentos)
-                    {
+
+                <table class="table table-bordered table-condensed table-hover Datos">
+                    <thead>
                         <tr>
-                            <td>@item.Doc_Estado</td>
+                            <th>Estado</th>
+                            <th>Tipo</th>
+                            <th>Serie - Numero </th>
 
-                            <td>@item.Doc_TipoDocumento</td>
-
-                            <td>@item.Doc_Serie - @item.Doc_Numero</td>
-
-
-
-                            <td>@item.Doc_Fecha.Value.ToString("yyyy-MM-dd")</td>
-
-                            <td>@item.Empresa_Name</td>
-
-                            <td>@item.Doc_Moneda</td>
-
-                            <td>@item.Doc_MontoNeto.Value.ToString("#,###,##0.00")</td>
-
-                            <td>@item.Doc_FechaCarga.Value.ToString("yyyy-MM-dd HH:mm")</td>
-
-                            <td>@item.Doc_NumeroOC</td>
-
-                            <td>@item.Doc_Observaciones</td>
-
-                            <td>
-
-                                <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
-                                |
-                                <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
-
-                            </td>
-                            <td>
-                                @if (item.Msj_NoLeidos > 0)
-                                {
-                                    <a href="#" class="btn btn-danger BtnOpenModalMensajes" title="OC" data-id="@item.Doc_Id"><span class="fa  fa-envelope-o " ></span> &nbsp; <span class="badge bg-black"> @item.Msj_NoLeidos / @item.Msj_Total </span> </a>
-                                }
-                                else
-                                {
-                                    <a href="#" class="btn btn-default BtnOpenModalMensajes" title="OC" data-id="@item.Doc_Id"><span class="fa fa-envelope-open " ></span> &nbsp; <span class="badge bg-yellow"> @item.Msj_Total </span> </a>
-                                }
-
-
-                            </td>
+                            <th>Fecha Emision</th>
+                            <th>Empresa</th>
+                            <th>Moneda</th>
+                            <th>Monto</th>
+                            <th>Cargado el</th>
+                            <th>Orden Compra</th>
+                            <th>Observacion</th>
+                            <th>Archivos</th>
+                            <th>Mensajes</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.L_Documentos)
+                        {
+                            <tr>
+                                <td>@item.Doc_Estado</td>
+
+                                <td>@item.Doc_TipoDocumento</td>
+
+                                <td>@item.Doc_Serie - @item.Doc_Numero</td>
+
+
+
+                                <td>@item.Doc_Fecha.Value.ToString("yyyy-MM-dd")</td>
+
+                                <td>@item.Empresa_Name</td>
+
+                                <td>@item.Doc_Moneda</td>
+
+                                <td>@item.Doc_MontoNeto.Value.ToString("#,###,##0.00")</td>
+
+                                <td>@item.Doc_FechaCarga.Value.ToString("yyyy-MM-dd HH:mm")</td>
+
+                                <td>@item.Doc_NumeroOC</td>
+
+                                <td>@item.Doc_Observaciones</td>
+
+                                <td>
+
+                                    <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
+                                    |
+                                    <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
+                                    <br />
+                                    @{
+                                        Html.RenderAction("LinksRetencionesDocto", "admpresentados", new { id = item.Doc_Id });
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Msj_NoLeidos > 0)
+                                    {
+                                        <a href="#" class="btn btn-danger BtnOpenModalMensajes" title="OC" data-id="@item.Doc_Id"><span class="fa  fa-envelope-o "></span> &nbsp; <span class="badge bg-black"> @item.Msj_NoLeidos / @item.Msj_Total </span> </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-default BtnOpenModalMensajes" title="OC" data-id="@item.Doc_Id"><span class="fa fa-envelope-open "></span> &nbsp; <span class="badge bg-yellow"> @item.Msj_Total </span> </a>
+                                    }
+
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="box-footer">
             <a href="@Url.Action("Nuevo","Presentados")" class="btn btn-success" style="color:white">Nuevo Documento  &nbsp; <span class="fa fa-plus-circle"></span> </a>

@@ -33,19 +33,22 @@ namespace Wareways.PortalProv.Servicios
 
         internal static void RegistraVariablesSession(List<Infraestructura.V_GEN_MenuDisplay> _MenusPermitidos, string _Email)
         {
-            
-            var _Usuario = _Db.AspNetUsers.AsNoTracking().Where(p => p.UserName == _Email).ToList().First();
+            try
+            {
+                var _Usuario = _Db.AspNetUsers.AsNoTracking().Where(p => p.UserName == _Email).ToList().First();
 
-            var _Roles = (from l in _Db.V_GEN_UsuarioRoles where l.Active == true && l.UserId == _Usuario.Id select l).ToList();
+                var _Roles = (from l in _Db.V_GEN_UsuarioRoles where l.Active == true && l.UserId == _Usuario.Id select l).ToList();
 
-            HttpContext.Current.Session["MenuList"] = _MenusPermitidos;
-            HttpContext.Current.Session["UserName"] = _Usuario.UserName;
-            HttpContext.Current.Session["UsuariosRoles"] = _Roles;
+                HttpContext.Current.Session["MenuList"] = _MenusPermitidos;
+                HttpContext.Current.Session["UserName"] = _Usuario.UserName;
+                HttpContext.Current.Session["UsuariosRoles"] = _Roles;
 
 
-            String _Servidor = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString.Split(';')[0].Split('=')[1];
-            HttpContext.Current.Session["ConexionDB"] = (_Servidor == ".") ? "Local" : "Productivo";
-            HttpContext.Current.Session["ScreenColor"] = (_Servidor == ".") ? "skin-yellow" : "skin-blue";
+                String _Servidor = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString.Split(';')[0].Split('=')[1];
+                HttpContext.Current.Session["ConexionDB"] = (_Servidor == ".") ? "Local" : "Productivo";
+                HttpContext.Current.Session["ScreenColor"] = (_Servidor == ".") ? "skin-yellow" : "skin-blue";
+            }
+            catch { }
         }
     }
 }

@@ -70,44 +70,4 @@
 
 }
 
-<div class="box box-default">
-    <div class="box-header">
-        <h4 class="box-title">Listado de Menus</h4>
-    </div>
 
-
-    <div class="box-body">
-        <div class="table-responsive">
-            <div class="table-responsive">
-                <table class="table table-bordered table-condensed">
-                    <tbody>
-                        @foreach (var _Item in (List<Wareways.PortalProv.Infraestructura.V_RolesDelMenu>)ViewBag.ListaMenus)
-                        {
-                            <tr>
-                                <td>@_Item.Menu_Nombre &nbsp;   <span class="@( (@_Item.Activo== 1) ? "fa fa-check-circle" : "") bg-success"></span>  </td>
-                                <td>@_Item.Menu_Url   </td>
-
-                                <td>
-                                    @if (_Item.Activo == 1)
-                                    {
-                                        <a href='@Url.Action("Permisos","ConfMenu",new { MenuId = _Item.Menu_Id, RoleId = _Item.Id , Accion = "Delete"})' class="btn btn-danger">
-                                            <span class="glyphicon glyphicon-remove">   </span> Eliminar Permiso
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a href='@Url.Action("Permisos","ConfMenu",new { MenuId = _Item.Menu_Id, RoleId = _Item.Id , Accion = "Add"})' class="btn btn-success">
-                                            <span class="glyphicon glyphicon-plus">   </span> Asignar Permiso
-                                        </a>
-                                    }
-
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-</div>

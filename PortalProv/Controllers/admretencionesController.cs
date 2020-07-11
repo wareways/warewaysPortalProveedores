@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Wareways.PortalProv.Infraestructura;
+using Wareways.PortalProv.Models.PP;
 
 namespace Wareways.PortalProv.Controllers
 {
@@ -31,51 +32,97 @@ namespace Wareways.PortalProv.Controllers
             if (Doc_Id != null) model.Retencion_CardCode = _Db.PPROV_Documento.Find(Doc_Id).Doc_CardCorde;
             model.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
             model.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
+            model.Modo_Activo = "Paso1";
 
             return View(model);
         }
 
         [HttpPost]
         [Authorize(Roles = "Oficina")]
-        public ActionResult Nuevo(Models.PP.RetencionesOficinaNuevo modelo, HttpPostedFileBase filefac, FormCollection collection)
+        public ActionResult Nuevo(Models.PP.RetencionesOficinaNuevo model, HttpPostedFileBase filefac, FormCollection collection, string submit_Step1, string submit_Step2)
         {
-            modelo.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
-            modelo.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
-            if (modelo.Nuevo_Pdf_Name == null) modelo.Nuevo_Pdf_Name = string.Format("RET_{0}.pdf", Guid.NewGuid().ToString());
+            model.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
+            model.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
+            ViewBag.Usuario_Empresas = _Db.SP_PPROV_ADM_EmpresasOficina(User.Identity.Name).Select(p => new { p.Empresa_Id, p.Empresa_Name }).Distinct().ToList();
+
             try
             {
-                if (filefac.ContentLength > 0)
+                if (model.Modo_Activo == "Paso2")
                 {
-                    // Upload Files to Server
-                    var _ServerPath = Server.MapPath(@"~/Cargados/" + modelo.Retencion_CardCode + "/");
-                    if (!System.IO.Directory.Exists(_ServerPath)) Directory.CreateDirectory(_ServerPath);
-
-                    String _Fact_Path = System.IO.Path.Combine(_ServerPath, modelo.Nuevo_Pdf_Name);
-                    filefac.SaveAs(_Fact_Path);
-
-                    var _Nuevo = new PPROV_Retencion
+                    
+                    if (ValidacionRetencion(model))
                     {
-                        Retencion_Fecha = modelo.Retencion_Fecha,
-                        Retencion_Id = Guid.NewGuid(),
-                        Retencion_Moneda = modelo.Retencion_Moneda,
-                        Retencion_Monto = modelo.Retencion_Monto,
-                        Retencion_Numero = modelo.Retencion_Numero,
-                        Retencion_Pdf = String.Format("/cargados/{0}/{1}", modelo.Retencion_CardCode, modelo.Nuevo_Pdf_Name),
-                        Retencion_Tipo = modelo.Retencion_Tipo,
-                        Retencion_Usuario = User.Identity.Name,
-                        Retencion_CardCode = modelo.Retencion_CardCode
-                    };
-                    _Db.PPROV_Retencion.Add(_Nuevo);
-                    _Db.SaveChanges();
-                    _Nuevo.PPROV_Documento.Add(_Db.PPROV_Documento.Find(modelo._DocId));
-                    _Db.SaveChanges();
+                        var _DocRef = _Db.PPROV_Documento.Find(model._DocId);
 
+                        var _Nuevo = new PPROV_Retencion
+                        {
+                            Retencion_Fecha = model.Retencion_Fecha,
+                            Retencion_Id = Guid.NewGuid(),
+                            Retencion_Moneda = model.Retencion_Moneda,
+                            Retencion_Monto = model.Retencion_Monto,
+                            Retencion_Numero = model.Retencion_Numero,
+                            Retencion_Pdf = model.Retencion_Pdf,
+                            Retencion_Tipo = model.Retencion_Tipo,
+                            Retencion_Usuario = User.Identity.Name,
+                            Retencion_CardCode = model.Retencion_CardCode,
+                            
+                        };
+                        if (model._DocId == null)
+                        {
+                            _Nuevo.Retencion_EmpresaId = model.Manual_Empresa;
+                            _Nuevo.Manual_Empresa = model.Manual_Empresa;
+                            _Nuevo.Manual_FacNumero = model.Manual_FacNumero;
+                            _Nuevo.Manual_Fac_Serie = model.Manual_Fac_Serie;
+                        } else
+                        {
+                            _Nuevo.Retencion_EmpresaId = _DocRef.Doc_EmpresaId;
+                        }
+
+
+                        _Db.PPROV_Retencion.Add(_Nuevo);
+                        _Db.SaveChanges();
+                        _Nuevo.PPROV_Documento.Add(_DocRef);
+                        _Db.SaveChanges();
+
+                        if (model._DocId != null)
+                        {
+                            return RedirectToAction("");
+                        }
+                        return RedirectToAction("index");
+                    }
                 }
-                else
+
+
+                if (model.Modo_Activo == "Paso1")
                 {
-                    ViewBag.Message = "Debe de Cargar el PDF del la retencion";
-                }
+                    if (model.Nuevo_Pdf_Name == null) model.Nuevo_Pdf_Name = string.Format("RET_{0}.pdf", Guid.NewGuid().ToString());
+                    if (filefac.ContentLength > 0)
+                    {
+                        // Upload Files to Server
+                        var _ServerPath = Server.MapPath(@"~/Cargados/" + model.Retencion_CardCode + "/");
+                        if (!System.IO.Directory.Exists(_ServerPath)) Directory.CreateDirectory(_ServerPath);
 
+                        String _Fact_Path = System.IO.Path.Combine(_ServerPath, model.Nuevo_Pdf_Name);
+                        filefac.SaveAs(_Fact_Path);
+                        model.Modo_Activo = "Paso2";
+                        model.Retencion_Fecha = DateTime.Now;
+                        model.Retencion_Pdf = @"/Cargados/" + model.Retencion_CardCode + "/" + model.Nuevo_Pdf_Name;
+                        ModelState.Clear();
+
+                        if (model._DocId != null)
+                        {
+                            var _DocRef = _Db.PPROV_Documento.Find(model._DocId);
+                            model.Retencion_CardCode = _DocRef.Doc_CardCorde;
+                        }
+                        
+
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Debe de Cargar el PDF del la retencion";
+                    }
+                }
+                
             }
             catch (Exception ex)
             {
@@ -83,11 +130,17 @@ namespace Wareways.PortalProv.Controllers
 
                 ModelState.Clear();
 
-                return View(modelo);
+                return View(model);
             }
 
+            return View(model);
 
-            return RedirectToAction("Index", "admpresentados", new { FiltroEstado = "Retenciones" });
+        }
+
+
+        private bool ValidacionRetencion(RetencionesOficinaNuevo model)
+        {
+            return true;
         }
 
         public ActionResult TestRetencion(Guid id)
@@ -116,9 +169,9 @@ namespace Wareways.PortalProv.Controllers
             body = body.Replace("***NombreProveedor***", _Proveedor[0].CardCode + " " + _Proveedor[0].CardName);
             body = body.Replace("***CodigoRetencion***", _Retencion.Retencion_Numero);
             body = body.Replace("***Moneda***", _Retencion.Retencion_Moneda);
-            
 
-            
+
+
 
             var _Contenido_Valor = "<tr><td style='color:#933f24; padding:10px 0px; background-color: #f7a084;'>***ContenidovValor***</td></tr>";
             var _FilaInfoFac = "";
@@ -159,7 +212,7 @@ namespace Wareways.PortalProv.Controllers
         private List<V_PPROV_Retenciones_Oficina> ObtenerRetencionesPorusuario()
         {
             var _UserName = User.Identity.Name;
-            var _Datos = _Db.V_PPROV_Retenciones_Oficina.ToList();
+            var _Datos = _Db.V_PPROV_Retenciones_Oficina.Where(p => p.UserName == _UserName).ToList();
 
             return _Datos;
         }

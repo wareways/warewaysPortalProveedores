@@ -51,8 +51,12 @@ namespace Wareways.PortalProv.Controllers
         [HttpPost]
         public ActionResult Nuevo( Models.PP.PresentadosModel modelo, HttpPostedFileBase filefac, HttpPostedFileBase fileoc, FormCollection collection)
         {
+
             // Cargar Catalogos
-            modelo.Usuario_Empresas = _Db.V_PPROV_Empresas.OrderBy(p => p.Empresa_Id).ToList();
+            ViewBag.Usuario_Empresas = _Db.SP_PPROV_PermisosCodigosProv_Usuario(User.Identity.Name).Select(p => new { p.Empresa_Id, p.AliasName }).Distinct().ToList();
+            
+
+
             modelo.Usuario_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
 
             
@@ -129,6 +133,7 @@ namespace Wareways.PortalProv.Controllers
                                     modelo.Nuevo.Doc_NumeroOC = _DatosOrden[0].DocNum;
                                     modelo.Nuevo.SolicitanteOC = _DatosOrden[0].UsuarioSolicitante;
                                     modelo.Nuevo.Doc_Moneda = _DatosOrden[0].DocCur;
+                                  
                                 //} else
 
                                 //{

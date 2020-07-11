@@ -29,5 +29,7 @@ namespace Wareways.PortalProv.Infraestructura
         public string Retencion_Pdf { get; set; }
         public string Retencion_Nombre { get; set; }
         public string Empresa_Name { get; set; }
+        public string UserName { get; set; }
+        public int Interno { get; set; }
     }
 }

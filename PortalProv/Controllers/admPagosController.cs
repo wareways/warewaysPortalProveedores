@@ -25,7 +25,9 @@ namespace Wareways.PortalProv.Controllers
         private List<v_PPROV_FacturasIngresadas_Oficina> ObtenerPagosPorusuario(DateTime? FechaInicial , DateTime? FechaFinal)
         {
             var _UserName = User.Identity.Name;
-            var _Datos = _Db.v_PPROV_FacturasIngresadas_Oficina.Where(p => p.TrsfrDate != null && p.TrsfrDate >= FechaInicial && p.TrsfrDate <= FechaFinal).ToList();
+            var _Datos = _Db.v_PPROV_FacturasIngresadas_Oficina.Where(p => p.TrsfrDate != null 
+                            && p.TrsfrDate >= FechaInicial && p.TrsfrDate <= FechaFinal
+                            && p.UserName == _UserName).ToList();
 
             return _Datos;
         }

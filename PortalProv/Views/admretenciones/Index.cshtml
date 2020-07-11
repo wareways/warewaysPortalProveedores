@@ -13,7 +13,9 @@
                 <thead>
                     <tr>
                         <th></th>
+                        <th>Interno</th>
                         <th>Tipo</th>
+
                         <th>Numero</th>
                         <th>Proveedor</th>
                         <th>Fecha</th>
@@ -34,6 +36,7 @@
                                 <a href="#" data-toggle="modal" data-titulo="Retenciones" data-nombre="@item.Retencion_Pdf" data-target="#myModal" target="_blank" class="btn btn-default " title="Retencion"><span class="fa fa-file-pdf-o" style="color:blue"></span></a>
 
                             </td>
+                            <td>@item.Interno</td>
                             <td>@item.Retencion_Nombre</td>
 
                             <td>@item.Retencion_Numero</td>
@@ -64,7 +67,7 @@
             </table>
         </div>
         <div class="box-footer">
-            <a href="@Url.Action("New","admretenciones")" class="btn btn-primary" style="color:white">Nuevo Retención  &nbsp; <span class="fa fa-plus-circle"></span> </a>
+            <a href="@Url.Action("Nuevo","admretenciones")" class="btn btn-primary" style="color:white">Nuevo Retención  &nbsp; <span class="fa fa-plus-circle"></span> </a>
         </div>
     </div>
 </div>
@@ -113,6 +116,14 @@
                 'autoWidth': false,
                 'showinfo': false,
                 "pageLength": 10,
+                "order": [[1, "desc"]],
+                "columnDefs": [
+                    {
+                        "targets": [1],
+                        "visible": false,
+                        "searchable": false
+                    }
+                ],
                 //"columnDefs": [
                 //    { "width": "60%", "targets": 0 },
                 //    { "width": "20%", "targets": 1 },

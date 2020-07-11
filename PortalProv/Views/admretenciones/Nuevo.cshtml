@@ -3,47 +3,31 @@
 <!DOCTYPE html>
 
 
-@using (Html.BeginForm("Nuevo","admretenciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Nuevo", "admretenciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    @Html.HiddenFor(p=>p._DocId)
+    @Html.HiddenFor(p => p._DocId)
+    @Html.HiddenFor(p => p.Modo_Activo)
+    @Html.HiddenFor(p => p.Nuevo_Pdf_Name)
+    @Html.HiddenFor(p => p.Retencion_Pdf)
     @Html.AntiForgeryToken()
-    <div class="box box-primary box-solid">
-        <div class="box-header with-border">
-            <h4 class="box-title"><span class="fa fa-file fa-2x"></span> Nueva Retención</h4>
+
+    if (@ViewBag.Message != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-ban"></i> Alerta !</h4>
+            @ViewBag.Message
         </div>
-        <div class="box-body">
-            <div class="form-horizontal">
-
-                <div class="form-group">
-                    @Html.Label("No. Retencion", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-2">
-                        @Html.EditorFor(model => model.Retencion_Numero, new { htmlAttributes = new { @class = "form-control" } })
+    }
+    <div class="row">
+        <div class="col-md-6">
+            @if (Model.Modo_Activo == "Paso1")
+            {
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h4 class="box-title"><span class="fa fa-file fa-2x"></span> Paso 1 Carga Archivo</h4>
                     </div>
-                    @Html.Label("Fecha", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-2">
-                        @Html.EditorFor(model => model.Retencion_Fecha, new { htmlAttributes = new { @class = "form-control" } })
-                    </div>
-
-                    @Html.Label("Monto", htmlAttributes: new { @class = "control-label col-md-1" })
-                    <div class="col-md-2">
-                        @Html.EditorFor(model => model.Retencion_Monto, new { htmlAttributes = new { @class = "form-control" } })
-                    </div>
-                    <div class="col-md-1">                        
-                        @Html.DropDownListFor(m => m.Retencion_Moneda,
-                                                       new SelectList(Model.Lista_Moneda, "Valor", "Nombre"),
-                                                       new { @Class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.Label("Proveedor", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-2">
-                        @Html.EditorFor(model => model.Retencion_CardCode, new { htmlAttributes = new { @class = "form-control" } })
-                    </div>
-                    @Html.Label("Tipo", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-2">
-                        @Html.DropDownListFor(p => p.Retencion_Tipo, new SelectList(Model.Lista_TiposRet, "Retencion_Tipo", "Retencion_Nombre"), new { @Class = "form-control ExcluirSoloLectura" })
-                    </div>
-                    <div class="col-md-4">
+                    <div class="box-body">
                         <div class="box box-default box-solid">
                             <div class="box-header with-border">
                                 <h2 class="box-title">Retención</h2>
@@ -54,42 +38,141 @@
                                 <label id="filefac_sel"></label>
                                 <p class="help-block">Solo se pueden subir archivos PDF</p>
                             </div>
+                            <div class="box-footer">
+                                <button class="btn btn-success pull-right" type="submit" name="submit_Step1" value="submit_Step1">
+                                    Subir &nbsp;
+                                    <i class="fa fa-upload"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="box-footer">
-            @if (@ViewBag.Message != null)
+            }
+            @if (Model.Modo_Activo == "Paso2")
             {
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-ban"></i> Alerta !</h4>
-                    @ViewBag.Message
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h4 class="box-title"><span class="fa fa-file fa-2x"></span> Paso 1 Archivo Cargado</h4>
+                    </div>
+                    <div class="box-body">
+                        <embed src="@Model.Retencion_Pdf" type="application/pdf" style="width:90%; height:50vw;" id="uipdfembfac" />
+                    </div>
+                </div>
+
+            }
+
+        </div>
+        <div class="col-md-6">
+            @if (Model.Modo_Activo == "Paso2")
+            {
+                <div class="box box-primary box-solid">
+                    <div class="box-header with-border">
+                        <h4 class="box-title"><span class="fa fa-file fa-2x"></span> Nueva Retención</h4>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-horizontal">
+
+                            <div class="form-group">
+                                @Html.Label("No. Retencion", htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Retencion_Numero, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Fecha", htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Retencion_Fecha, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Monto", htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-5">
+                                    @Html.EditorFor(model => model.Retencion_Monto, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.DropDownListFor(m => m.Retencion_Moneda,
+                                                                   new SelectList(Model.Lista_Moneda, "Valor", "Nombre"),
+                                                                   new { @Class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Tipo", htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(p => p.Retencion_Tipo, new SelectList(Model.Lista_TiposRet, "Retencion_Tipo", "Retencion_Nombre"), new { @Class = "form-control ExcluirSoloLectura" })
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Proveedor", htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @if (Model._DocId == null)
+                                    {
+                                        @Html.EditorFor(model => model.Retencion_CardCode, new { htmlAttributes = new { @class = "form-control" } })
+                                    }
+                                    else
+                                    {
+                                        @Html.EditorFor(model => model.Retencion_CardCode, new { htmlAttributes = new { @class = "form-control",@readonly = "readonly" } })
+                                    }
+
+                                </div>
+                            </div>
+                            @if (Model._DocId == null)
+                            {
+                                <div class="form-group">
+                                    @Html.Label("Empresa", htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(p => p.Manual_Empresa, new SelectList(ViewBag.Usuario_Empresas, "Empresa_Id", "Empresa_Name"), new { @Class = "form-control ExcluirSoloLectura" })
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Numero", htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.Manual_FacNumero, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Serie", htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.Manual_Fac_Serie, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="box-footer">
+
+                        <div class="col-md-6">
+                            <a href="@Url.Action("Index", "admRetenciones")" class="btn btn-default ">
+                                <span class=" fa fa-backward" aria-hidden="true"></span>
+
+                                Regresar Lista
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-success pull-right" type="submit" name="submit_Step2" value="submit_Step2">
+                                Subir &nbsp;
+                                <i class="fa fa-upload"></i>
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
             }
-            <div class="col-md-6">
-                <a href="@Url.Action("Index", "admRetenciones")" class="btn btn-default ">
-                    <span class=" fa fa-backward" aria-hidden="true"></span>
-
-                    Regresar Lista
-                </a>
-            </div>
-            <div class="col-md-6">
-                <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
-                    Subir &nbsp;
-                    <i class="fa fa-upload"></i>
-                </button>
-            </div>
 
         </div>
     </div>
+
 }
 
 @section scripts
 {
     <script>
-        
+
         $("#filefac").change(function () {
             var filename = this.files[0].name
             $("#filefac_sel").text(filename);

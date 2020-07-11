@@ -41,5 +41,6 @@ namespace Wareways.PortalProv.Infraestructura
         public int Msj_NoLeidos { get; set; }
         public Nullable<bool> seleccionado { get; set; }
         public string UserName { get; set; }
+        public Nullable<int> Contrasena_Numero { get; set; }
     }
 }

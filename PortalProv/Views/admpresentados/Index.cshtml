@@ -43,7 +43,7 @@
                         <tr>
                             <th></th>
                             <th></th>
-                            <th>Estado</th>
+                            <th>Estado</th>                            
                             <th>Tipo</th>
                             <th>Proveedor</th>
                             <th>Serie - Numero </th>
@@ -55,6 +55,7 @@
                             <th>Cargado el</th>
                             <th>Orden Compra</th>
                             <th>Observacion</th>
+                            <th>Contraseña</th>
                             <th>Archivos</th>
                             <th>Mensajes</th>
                         </tr>
@@ -77,10 +78,11 @@
                                     {
                                         <a href="@Url.Action("Nuevo","admretenciones",new { Doc_id = item.Doc_Id } )" class="btn btn-sm btn-primary BtnOpenModalAgregaRetencion "  title="Agregar Retenciones"> <span class="fa fa-plus-square-o "></span>  </a>
                                     }
-                                    @if (ViewBag.FiltroEstado == "Contraseña")
+                                    @if (ViewBag.FiltroEstado == "Contraseña" && item.Contrasena_Numero == null)
                                     {
                                         @Html.CheckBox("Selec_Item") @Html.Hidden("Selec_Code", item.Doc_Id) @Html.Hidden("Selec_Prov", item.Doc_CardCorde) @Html.Hidden("Selec_Empresa", item.Doc_EmpresaId)
                                     }
+
                                 </td>
                                 <td>@item.Doc_Estado</td>
 
@@ -104,14 +106,17 @@
                                 <td>@item.Doc_NumeroOC</td>
 
                                 <td>@item.Doc_Observaciones</td>
-
+                                <td>@item.Contrasena_Numero</td>
                                 <td>
 
                                     <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
                                     |
                                     <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
-
                                     
+                                    @{
+                                        Html.RenderAction("LinksRetencionesDocto", new { id = item.Doc_Id });
+                                    }
+
                                 </td>
                                 <td>
                                     @if (item.Msj_NoLeidos > 0)

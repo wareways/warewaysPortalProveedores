@@ -84,7 +84,7 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Empresa</label>
                                         @Html.DropDownListFor(m => m.Nuevo.Doc_EmpresaId,
-                                                new SelectList(Model.Usuario_Empresas, "Empresa_Id", "AliasName"),
+                                                new SelectList(ViewBag.Usuario_Empresas, "Empresa_Id", "AliasName"),
                                                 new { @Class = "form-control" })
                                     </div>
                                     <div class="form-group">
@@ -131,7 +131,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">No. Orden Compra / Servicio</label>
+                                        <label for="exampleInputEmail1">No. Orden Compra o Servicio</label>
                                         @Html.EditorFor(model => model.Nuevo.Doc_NumeroOC, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese OC" } })
                                     </div>
 

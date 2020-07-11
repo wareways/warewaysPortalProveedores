@@ -58,6 +58,16 @@ namespace Wareways.PortalProv.Controllers
             return View(model);
         }
 
+        [HttpGet]        
+        public ActionResult LinksRetencionesDocto(Guid id)
+        {
+            var modelo = _Db.PPROV_Documento.Find(id).PPROV_Retencion.ToList();
+
+            return View(modelo);
+            
+        }
+
+
         [HttpPost]
         [Authorize(Roles = "Oficina")]
         public ActionResult CambioEstado(Guid CambioEstado_Documento_Id,string Nuevo_Estado_Seleccionado, string Nuevo_Estado_Comentario)
@@ -81,6 +91,7 @@ namespace Wareways.PortalProv.Controllers
                 _NuevaNota.Nota_Usuario = User.Identity.Name;
                 _Db.PPROV_Nota.Add(_NuevaNota);
                 _Db.SaveChanges();
+                if (Nuevo_Estado_Seleccionado == "Rechazado") MandarCorreo_Rechazo(_NuevaNota.Doc_Id);
             }
             
 
@@ -135,11 +146,12 @@ namespace Wareways.PortalProv.Controllers
             body = body.Replace("***FilaInfoOrden***", _FilaInfoOrden);
             body = body.Replace("***FilaInfoMonto***", _FilaInfoMonto);
 
+
             _Db_Flex.NotificacionesCola.Add(new NotificacionesCola
             {
                 Para = "jherrera@wareways.com",
                 Copia = "julioherreraguate@gmail.com",
-                Asunto = "Documento Rezadado",
+                Asunto = "Portal Proveedores - Documento Rechadado, Mensaje enviado el "+ DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") ,
                 Cuerpo = body,
                 EnviadoFecha = null,
                 EnviarHasta = DateTime.Now,

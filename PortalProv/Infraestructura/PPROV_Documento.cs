@@ -18,8 +18,8 @@ namespace Wareways.PortalProv.Infraestructura
         public PPROV_Documento()
         {
             this.PPROV_Adjuntos = new HashSet<PPROV_Adjuntos>();
-            this.PPROV_Retencion = new HashSet<PPROV_Retencion>();
             this.PPROV_Nota = new HashSet<PPROV_Nota>();
+            this.PPROV_Retencion = new HashSet<PPROV_Retencion>();
         }
     
         public System.Guid Doc_Id { get; set; }
@@ -48,9 +48,9 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual ICollection<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
         public virtual PPROV_Estado PPROV_Estado { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PPROV_Retencion> PPROV_Retencion { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPROV_Nota> PPROV_Nota { get; set; }
         public virtual PPROV_Contrasena PPROV_Contrasena { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PPROV_Retencion> PPROV_Retencion { get; set; }
     }
 }

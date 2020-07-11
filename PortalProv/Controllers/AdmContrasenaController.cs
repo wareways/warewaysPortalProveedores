@@ -73,7 +73,7 @@ namespace Wareways.PortalProv.Controllers
             {
                 Para = "jherrera@wareways.com",
                 Copia = "julioherreraguate@gmail.com",
-                Asunto = "Contraseña Generada",
+                Asunto = "Portal Proveedores - Contraseña Generada - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
                 Cuerpo = body,
                 EnviadoFecha = null,
                 EnviarHasta = DateTime.Now,
@@ -117,6 +117,8 @@ namespace Wareways.PortalProv.Controllers
 
             if (_Lista.Count > 0)
             {
+                var _Doc = _Db.PPROV_Documento.Find(_Lista[0].Doc_Id);
+
                 var _contraseña = new Infraestructura.PPROV_Contrasena();
                 _contraseña.Empresa_Id = (int)_Lista.Select(p => p.Doc_EmpresaId).First();
                 _contraseña.Contrasena_Estado = "Borrador";
@@ -125,8 +127,10 @@ namespace Wareways.PortalProv.Controllers
                 _contraseña.Contrasena_Numero = ObtenerCorrelativoContrasena(_contraseña.Empresa_Id);
                 _contraseña.Contrasena_Usuario = User.Identity.Name;
                 _contraseña.Contrasena_Fecha_Estimada = ObtenerFechaVencimiento(_Lista[0].Doc_CardCorde, _contraseña.Contrasena_Fecha);
-                _contraseña.Contrasena_CardCode = _Lista[0].Doc_CardCorde;
-                _contraseña.Contrasena_Moneda = _Lista[0].Doc_Moneda;
+                _contraseña.Contrasena_CardCode = _Doc.Doc_CardCorde;
+                _contraseña.Contrasena_Moneda = _Doc.Doc_Moneda;
+                _contraseña.Contrasena_EmpresaId = _Doc.Doc_EmpresaId;
+
 
                 _Db.PPROV_Contrasena.Add(_contraseña);
                 _Db.SaveChanges();
@@ -143,13 +147,14 @@ namespace Wareways.PortalProv.Controllers
             }
 
 
-            return RedirectToAction("Index", "admpresentados", new { FiltroEstado = "Revision" });
+            return RedirectToAction("Index", "admcontrasena");
         }
 
         [Authorize(Roles = "Oficina")]
         public ActionResult AsignarEstado(Guid Contrasena_Id, string CambioEstado)
         {
             var _Contraseña = _Db.PPROV_Contrasena.Find(Contrasena_Id);
+            var _AnterioEstado = _Contraseña.Contrasena_Estado;
             _Contraseña.Contrasena_Estado = CambioEstado;
             _Db.SaveChanges();
             foreach(var _Document in _Contraseña.PPROV_Documento)
@@ -157,9 +162,13 @@ namespace Wareways.PortalProv.Controllers
                 _Document.Doc_Estado = (_Document.Doc_Estado == "Contraseña") ? "Retenciones" : _Document.Doc_Estado;
                 _Db.SaveChanges();
             }
+            if (_AnterioEstado == "Borrador" && _Contraseña.Contrasena_Estado == "Activa") MandarCorreo_Contrasena(_Contraseña.Contrasena_Id);
 
             return RedirectToAction("Edit", new { id = Contrasena_Id });
         }
+
+       
+
 
         [Authorize(Roles = "Oficina")]
         public ActionResult Edit(Guid id)
@@ -197,6 +206,17 @@ namespace Wareways.PortalProv.Controllers
 
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Oficina")]
+        public ActionResult Edit(PPROV_ContrasenaModel model)
+        {
+            var _Contrasena = _Db.PPROV_Contrasena.Find(model.Contrasena_Id);
+            _Contrasena.Contrasena_Fecha_Estimada = model.Contrasena_Fecha_Estimada;
+            _Db.SaveChanges();
+
+            return RedirectToAction("Edit", "admcontrasena", new { id = model.Contrasena_Id });
+        }
+
         private DateTime ObtenerFechaVencimiento(string cardCode, DateTime fechaInicio)
         {
             Int32 _RetornaDias = 30;
@@ -224,7 +244,7 @@ namespace Wareways.PortalProv.Controllers
         private List<V_PPROV_Contrasena_Oficina> ObtenerDocumentosPorUsuario()
         {
             var _UserName = User.Identity.Name;
-            var _Datos = _Db.V_PPROV_Contrasena_Oficina.ToList();
+            var _Datos = _Db.V_PPROV_Contrasena_Oficina.Where(p=>p.UserName == _UserName).ToList();
 
             return _Datos;
         }

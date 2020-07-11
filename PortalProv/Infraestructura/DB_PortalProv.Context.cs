@@ -43,7 +43,6 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
         public virtual DbSet<PPROV_Estado> PPROV_Estado { get; set; }
-        public virtual DbSet<PPROV_Retencion> PPROV_Retencion { get; set; }
         public virtual DbSet<PPROV_RetencionTipo> PPROV_RetencionTipo { get; set; }
         public virtual DbSet<PPROV_TipoAdjunto> PPROV_TipoAdjunto { get; set; }
         public virtual DbSet<PPROV_Documento> PPROV_Documento { get; set; }
@@ -60,9 +59,10 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<PPROV_UsuarioProveedor> PPROV_UsuarioProveedor { get; set; }
         public virtual DbSet<v_PPROV_Usuario_Proveedor> v_PPROV_Usuario_Proveedor { get; set; }
         public virtual DbSet<V_PPROV_Proveedor> V_PPROV_Proveedor { get; set; }
-        public virtual DbSet<PPROV_Contrasena> PPROV_Contrasena { get; set; }
         public virtual DbSet<PPROV_UsuarioEmpresa> PPROV_UsuarioEmpresa { get; set; }
         public virtual DbSet<V_PPROV_Empresas> V_PPROV_Empresas { get; set; }
+        public virtual DbSet<PPROV_Contrasena> PPROV_Contrasena { get; set; }
+        public virtual DbSet<PPROV_Retencion> PPROV_Retencion { get; set; }
     
         public virtual ObjectResult<SP_PPROV_STATS_FacturacionUltimoAnio_Result> SP_PPROV_STATS_FacturacionUltimoAnio(string userName)
         {
@@ -100,15 +100,6 @@ namespace Wareways.PortalProv.Infraestructura
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_PermisosCodigosProv_Usuario_Result>("SP_PPROV_PermisosCodigosProv_Usuario", usernameParameter);
         }
     
-        public virtual ObjectResult<SP_PPROV_Indicadores_Oficina_Result> SP_PPROV_Indicadores_Oficina(string userName)
-        {
-            var userNameParameter = userName != null ?
-                new ObjectParameter("UserName", userName) :
-                new ObjectParameter("UserName", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_Indicadores_Oficina_Result>("SP_PPROV_Indicadores_Oficina", userNameParameter);
-        }
-    
         public virtual ObjectResult<SP_REP_Contrasena_Detalle_Result> SP_REP_Contrasena_Detalle(Nullable<System.Guid> contrasena_Id)
         {
             var contrasena_IdParameter = contrasena_Id.HasValue ?
@@ -134,6 +125,15 @@ namespace Wareways.PortalProv.Infraestructura
                 new ObjectParameter("Username", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_ADM_EmpresasOficina_Result>("SP_PPROV_ADM_EmpresasOficina", usernameParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_Indicadores_Oficina_Result> SP_PPROV_Indicadores_Oficina(string userName)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_Indicadores_Oficina_Result>("SP_PPROV_Indicadores_Oficina", userNameParameter);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Wareways.PortalProv.Infraestructura
     {
         public int Orden { get; set; }
         public string Fondo { get; set; }
-        public string IndicardorValor { get; set; }
+        public string IndicarValor { get; set; }
         public string IndicadorTexto { get; set; }
         public string IndicadorTexto2 { get; set; }
         public string Progreso { get; set; }

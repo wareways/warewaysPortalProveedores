@@ -37,5 +37,6 @@ namespace Wareways.PortalProv.Infraestructura
         public string CardCode { get; set; }
         public string CardName { get; set; }
         public Nullable<bool> Seleccionado { get; set; }
+        public string UserName { get; set; }
     }
 }

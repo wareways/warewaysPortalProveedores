@@ -1,0 +1,12 @@
+﻿@model List<Wareways.PortalProv.Infraestructura.PPROV_Retencion>
+
+@{
+    Layout = "";
+}
+
+@foreach(var item in Model)
+{
+    <a href="#" data-toggle="modal" data-titulo="Retenciones" data-nombre="@item.Retencion_Pdf" data-target="#myModal" target="_blank" class="btn btn-default " title="Retencion"><span class="fa fa-file-pdf-o" style="color:blue"></span></a>
+}
+
+
