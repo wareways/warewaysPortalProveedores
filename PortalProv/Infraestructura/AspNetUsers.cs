@@ -40,6 +40,16 @@ namespace Wareways.PortalProv.Infraestructura
         public Nullable<bool> Sistema { get; set; }
         public string Nit { get; set; }
         public string RazonSocial { get; set; }
+        public Nullable<System.DateTime> EnviadoNotNuevo { get; set; }
+        public string PassTemp { get; set; }
+        public string Tipo { get; set; }
+        public Nullable<bool> SoloLectura { get; set; }
+        public Nullable<bool> Pagos { get; set; }
+        public Nullable<bool> Retenciones { get; set; }
+        public Nullable<bool> Pendientes { get; set; }
+        public Nullable<bool> Contrasena { get; set; }
+        public Nullable<bool> Presentados { get; set; }
+        public string Padre_Id { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }

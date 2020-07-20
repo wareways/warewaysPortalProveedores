@@ -10,7 +10,7 @@ using Wareways.PortalProv.Models;
 using System.Net;
 using System.IO;
 using System.Web.UI;
-
+using System.Text;
 
 namespace Wareways.PortalProv.Controllers.Seguridad
 {
@@ -33,12 +33,18 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             return View(_Lista);
         }
 
+       
+
+       
+
+        
+
         [Authorize(Roles = "Administradores")]
         [HttpPost]
         public ActionResult AgregaCodProv(int EmpresaId, string Id, string CardCode)
         {
             try {
-                _Db.PPROV_UsuarioProveedor.Add(new Infraestructura.PPROV_UsuarioProveedor { UserId = Id, CardCode = CardCode, Empresa_Id = EmpresaId });
+                _Db.PPROV_UsuarioProveedor.Add(new Infraestructura.PPROV_UsuarioProveedor { UserId = Id, CardCode = CardCode.Split(' ')[0], Empresa_Id = EmpresaId });
                 _Db.SaveChanges();
             } catch { }
             
@@ -80,6 +86,8 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             ViewBag.OficinaEmpesasPermiso = _Db.SP_PPROV_ADM_EmpresasOficina(aspNetUsers.UserName).ToList();
             ViewBag.PermisosUsuarioCodigosProv = _Db.SP_PPROV_PermisosCodigosProv_Usuario(aspNetUsers.UserName).ToList();
             ViewBag.Empresas = _Db.V_PPROV_Empresas.ToList();
+            
+            
 
 
             if (aspNetUsers == null)
@@ -87,6 +95,16 @@ namespace Wareways.PortalProv.Controllers.Seguridad
                 return HttpNotFound();
             }
             return View(aspNetUsers);
+        }
+
+        [HttpPost]
+        public JsonResult ObtenerPorveedores(string Prefix)
+        {
+
+            var _Datos = (from c in _Db.V_PPROV_Proveedor
+                             where c.CardCode.Contains(Prefix) || c.CardName.Contains(Prefix)
+                             select new { Name =c.CardCode + " "+ c.CardName, Id = c.CardCode});
+            return Json(_Datos, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -105,10 +123,12 @@ namespace Wareways.PortalProv.Controllers.Seguridad
                 _AspNetUser.Nombre = _Modelo.Nombre;
                 _AspNetUser.PhoneNumber = _Modelo.PhoneNumber;
                 _AspNetUser.Puesto = _Modelo.Puesto;
+                _AspNetUser.RazonSocial = _Modelo.RazonSocial;
+                _AspNetUser.Nit = _Modelo.Nit;
 
                 _Db.SaveChanges();
-
-                return RedirectToAction("Index");
+                TempData["MensajeSuccess"] = "Datos Grabados Con Exito";
+                return RedirectToAction("Edit",new { id = _Modelo.Id });
             }
             return View(_Modelo);
         }
@@ -137,8 +157,37 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             return RedirectToAction("Edit", new { id = UserId });
         }
 
+       
 
 
+        [Authorize]
+        [Authorize(Roles = "Administradores")]
+        public async Task<ActionResult> CorreoConfirmacion(String UserId)
+        {                       
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader(Server.MapPath("~/Infraestructura/Correos/ConfirmacionCorreo.html")))
+            {
+                body = reader.ReadToEnd();
+            }
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(UserId);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = UserId, code = code }, protocol: Request.Url.Scheme);
+
+            var oUsuario = _Db.AspNetUsers.Find(UserId);
+
+            body = body.Replace("***UsuarioNombre***", oUsuario.Nombre +  " / " + oUsuario.RazonSocial );
+            body = body.Replace("***UserName***", oUsuario.UserName);
+            body = body.Replace("***PassTemp***", oUsuario.PassTemp);
+
+            body = body.Replace("***EmpresaNombre***", "");
+
+            body = body.Replace("***UrlLink***", callbackUrl);
+            body = body.Replace("***EmpresaLogo***", "http://proveedores.polytec.com.gt/Content/PolytecLogo.png");
+
+            await UserManager.SendEmailAsync(UserId, "Portal Proveedores - Confirmacion Correo - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                                             , body);
+            TempData["MensajeWarning"] = "Correo de Usuario Nuevo Enviado...";
+            return RedirectToAction("Edit", new { id = UserId });
+        }
 
 
         [Authorize]

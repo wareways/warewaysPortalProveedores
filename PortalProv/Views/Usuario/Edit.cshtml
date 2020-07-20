@@ -3,9 +3,67 @@
 @{
     var l_ADM_EmpresasOficina = (List<Wareways.PortalProv.Infraestructura.SP_PPROV_ADM_EmpresasOficina_Result>)ViewBag.OficinaEmpesasPermiso;
     var l_PermisosUsuarioCodigosProv = (List<Wareways.PortalProv.Infraestructura.SP_PPROV_PermisosCodigosProv_Usuario_Result>)ViewBag.PermisosUsuarioCodigosProv;
+    var _RolesAsignado = (List<Wareways.PortalProv.Infraestructura.V_GEN_UsuarioRoles>)ViewBag.RolesAsignados;
 }
 
+@section Header
+{
+    <style>
+        .ui-autocomplete {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            float: left;
+            min-width: 160px;
+            padding: 5px 0;
+            margin: 2px 0 0;
+            list-style: none;
+            font-size: 14px;
+            text-align: left;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+            background-clip: padding-box;
+        }
 
+            .ui-autocomplete > li > div {
+                display: block;
+                padding: 3px 20px;
+                clear: both;
+                font-weight: normal;
+                line-height: 1.42857143;
+                color: #333333;
+                white-space: nowrap;
+            }
+
+        .ui-state-hover,
+        .ui-state-active,
+        .ui-state-focus {
+            text-decoration: none;
+            color: #262626;
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+
+        .ui-helper-hidden-accessible {
+            border: 0;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
+
+    </style>
+
+}
 
 @using (Html.BeginForm())
 {
@@ -24,34 +82,54 @@
                 <div class="form-group">
 
                     @Html.Label("Codigo Usuario", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
+                    <div class="col-md-2">
                         @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
                     </div>
                 </div>
 
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+
+                    @Html.Label("Correo", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2"></div>
+                    @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
+                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
                     @Html.LabelFor(model => model.Puesto, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
+                    <div class="col-md-2">
                         @Html.EditorFor(model => model.Puesto, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Puesto, "", new { @class = "text-danger" })
                     </div>
                 </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RazonSocial, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.RazonSocial, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.RazonSocial, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.LabelFor(model => model.Nit, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Nit, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nit, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
                 <div class="form-group">
-                    @Html.Label("Correo", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                    </div>
+
                 </div>
 
                 <div class="form-group">
@@ -87,13 +165,7 @@
                 </div>
 
 
-                <div class="form-group">
-                    @Html.Label("Telefono", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
-                    </div>
-                </div>
+               
 
 
 
@@ -112,7 +184,13 @@
                 </a>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-2">
+                <a href="@Url.Action("CorreoConfirmacion", "Usuario",new { UserId = Model.Id })" class="btn btn-warning">
+                    Correo Confirmación
+                    <span class="fa fa-user-secret" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="col-md-2">
                 <a href="@Url.Action("ChangePassword", "Usuario",new { _UserName = Model.UserName })" class="btn btn-default">
                     Cambiar Contraseña
                     <span class="fa fa-user-secret" aria-hidden="true"></span>
@@ -120,7 +198,7 @@
             </div>
             <div class="col-md-4">
                 <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
-                    Grabar y Salir &nbsp;
+                    Grabar  &nbsp;
                     <i class="fa fa-save"></i>
                 </button>
             </div>
@@ -135,93 +213,100 @@
 }
 <div class="row">
     <div class="col-md-4">
-        <div class="box box-info">
-            <div class="box-header with-border">
-                <h4 class="box-title">Permisos Oficina</h4>
-            </div>
-            <div class="box-body">
-                <table class="table table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            <th>Empresa</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var _Item in l_ADM_EmpresasOficina)
-                        {
-                            <tr>
-                                <td>@_Item.Empresa_Name</td>
-                                <td>
-                                    @if (_Item.Activo == 0)
-                                    {
-                                        <a href="@Url.Action("AgregarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-success"> Asignar <span class="fa fa-plus-circle"></span></a>
-                                    }
-                                    else
-                                    {
-                                        <a href="@Url.Action("QuitarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-danger"> Quitar <span class="fa fa-minus-circle"></span></a>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
 
+        @if (_RolesAsignado.Where(p => p.Name == "Oficina").Count() == 1)
+        {
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Permisos Oficina</h4>
+                </div>
+                <div class="box-body">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _Item in l_ADM_EmpresasOficina)
+                            {
+                                <tr>
+                                    <td>@_Item.Empresa_Name</td>
+                                    <td>
+                                        @if (_Item.Activo == 0)
+                                        {
+                                            <a href="@Url.Action("AgregarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-success"> Asignar <span class="fa fa-plus-circle"></span></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("QuitarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-danger confirmswal" data-mensajeswal="De Eliminar este Permiso" > Quitar <span class="fa fa-minus-circle"></span></a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
             </div>
-        </div>
+        }
     </div>
     <div class="col-md-8">
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h4 class="box-title">Permisos Proveedores</h4>
-            </div>
-            <div class="box-body">
-                <table class="table table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            <th>Empresa</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var _Item in l_PermisosUsuarioCodigosProv)
-                        {
+        @if (_RolesAsignado.Where(p => p.Name == "Proveedor").Count() == 1)
+        {
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Permisos Proveedores</h4>
+                </div>
+                <div class="box-body">
+                    <table class="table table-condensed table-hover">
+                        <thead>
                             <tr>
-                                <td>@_Item.Empresa_Name</td>
-                                <td>@_Item.CardCode</td>
-                                <td>@_Item.CardName</td>
-                                <td>
-                                    <a href="@Url.Action("QuitarCodProv",new { EmpresaId = _Item.Empresa_Id,Id = Model.Id , CardCode = _Item.CardCode })" class="btn btn-danger"> Quitar <span class="fa fa-minus-circle"></span></a>
-                                </td>
+                                <th>Empresa</th>
+                                <th></th>
                             </tr>
-                        }
-                    </tbody>
-                    <tfoot>
-                        <tr>
-
-                            @using (Html.BeginForm("AgregaCodProv", "Usuario", FormMethod.Post))
+                        </thead>
+                        <tbody>
+                            @foreach (var _Item in l_PermisosUsuarioCodigosProv)
                             {
-                            @Html.HiddenFor(p => p.Id);
-                            <td>
-                                @Html.DropDownList("EmpresaId", new SelectList(ViewBag.Empresas,"Empresa_Id","Empresa_Name","1"),
-                                    new { @Class = "form-control ExcluirSoloLectura" })
-                            </td>
-                            <td colspan="2">
-                                @Html.TextBox("CardCode", "", htmlAttributes: new { @class = "form-control" })
-                            </td>
-                            <td>
-                                <button class="btn btn-success pull-right " type="submit" id="saveTeststeps">
-                                    Insertar &nbsp;
-                                    <i class="fa fa-save"></i>
-                                </button>
-                            </td>
+                                <tr>
+                                    <td>@_Item.Empresa_Name</td>
+                                    <td>@_Item.CardCode</td>
+                                    <td>@_Item.CardName</td>
+                                    <td>
+                                        <a href="@Url.Action("QuitarCodProv",new { EmpresaId = _Item.Empresa_Id,Id = Model.Id , CardCode = _Item.CardCode })" class="btn btn-danger confirmswal" data-mensajeswal="De Eliminar este Permiso"> Quitar <span class="fa fa-minus-circle"></span></a>
+                                    </td>
+                                </tr>
                             }
+                        </tbody>
+                        <tfoot>
+                            <tr>
 
-                        </tr>
-                    </tfoot>
-                </table>
+                                @using (Html.BeginForm("AgregaCodProv", "Usuario", FormMethod.Post))
+                                {
+                                    @Html.HiddenFor(p => p.Id);
+                                    <td>
+                                        @Html.DropDownList("EmpresaId", new SelectList(ViewBag.Empresas, "Empresa_Id", "Empresa_Name", "1"),
+                                            new { @Class = "form-control ExcluirSoloLectura" })
+                                    </td>
+                                    <td colspan="2">
+                                        @Html.TextBox("CardCode", "", htmlAttributes: new { @class = "form-control" })
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-success pull-right " type="submit" id="saveTeststeps">
+                                            Insertar &nbsp;
+                                            <i class="fa fa-save"></i>
+                                        </button>
+                                    </td>
+                                }
+
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </div>
 
@@ -277,21 +362,47 @@
 
 @section scripts
 {
-
-
-
-
-
+    <script src="~/admin-lte/bower_components/jquery-ui/jquery-ui.min.js"></script>
     <script>
+
+
         $(document).ready(function () {
             $(".BtnOpenAsignarRuta").click(function () {
                 $('#ModalasignarRuta').modal('show');
             })
+
+
+            $("#CardCode").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Usuario/ObtenerPorveedores",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.Name, value: item.value };
+                            }))
+
+                        }
+                    })
+                },               
+                messages: {
+                    noResults: "",
+                    results: function (count) {
+                        return count + (count > 1 ? ' results' : ' result ') + ' found';
+                    }
+                }
+            });
         });
 
 
     </script>
+
+
+  
 }
+
 
 
 

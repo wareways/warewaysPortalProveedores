@@ -85,14 +85,26 @@
             </div>
         </div>
         <div class="box-footer">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <a href="@Url.Action("Index", "admContrasena")" class="btn btn-default ">
                     <span class=" fa fa-backward" aria-hidden="true"></span>
 
                     Regresar Lista
                 </a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
+                @if (Model.Contrasena_Estado == "Borrador")
+                {
+                    <a href="@Url.Action("Eliminar", "admContrasena", new { Contrasena_id = Model.Contrasena_Id })" class="btn btn-danger " onclick="return confirm('Esta Seguro de Eliminar este Documento');">
+                        <span class=" fa fa-remove" aria-hidden="true"></span>
+                        Eliminar Contraseña
+                    </a>
+
+
+                }
+
+            </div>
+            <div class="col-md-4">
                 <button class="btn btn-success pull-right" type="submit" id="saveTeststeps">
                     Grabar &nbsp;
                     <i class="fa fa-save"></i>

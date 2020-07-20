@@ -32,7 +32,11 @@
                     {
                         <tr>
                             <td>
-                                <a href="#" data-toggle="modal" data-titulo="Contraseña" data-nombre="@item.Contrasena_Id" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:darkgreen"></span></a>
+                                @if (item.Contrasena_Estado == "Activa")
+                                {
+                                    <a href="#" data-toggle="modal" data-titulo="Contraseña" data-nombre="@item.Contrasena_Id" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:darkgreen"></span></a>
+                                }
+
                             </td>
 
                             <td>@item.Empresa_Name</td>
@@ -93,7 +97,7 @@
                 var id = $(e.relatedTarget).data('nombre');
                 var titulo = $(e.relatedTarget).data('titulo');
 
-                $("#ContenedorPDF").html("<embed src='/Reports/Contrasenas.aspx?id=" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                $("#ContenedorPDF").html("<embed src='/Reportes/Contrasenas.aspx?id=" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
                 $("#myModalLabelTitle").html(titulo);
 
             });

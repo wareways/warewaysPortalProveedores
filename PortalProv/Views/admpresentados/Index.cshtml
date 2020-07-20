@@ -112,7 +112,7 @@
                                     <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
                                     |
                                     <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
-                                    
+                                    <br />
                                     @{
                                         Html.RenderAction("LinksRetencionesDocto", new { id = item.Doc_Id });
                                     }

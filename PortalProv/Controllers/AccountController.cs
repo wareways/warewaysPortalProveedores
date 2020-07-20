@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -147,37 +149,51 @@ namespace Wareways.PortalProv.Controllers
         [Authorize]
         public ActionResult Register()
         {
-            
-
-            return View();
+            var model = new RegisterViewModel();
+            var password = CreatePassword(8) + "0.";
+            model.ConfirmPassword = password;
+            model.Password = password;
+            return View(model);
         }
 
-        //
-        // POST: /Account/Register
+        public string CreatePassword(int length)
+        {
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.!";
+            StringBuilder res = new StringBuilder();
+            Random rnd = new Random();
+            while (0 < length--)
+            {
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
+            return res.ToString();
+        }
+
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Administradores")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Nombre = model.Nombre, Puesto = model.Puesto, PhoneNumber = model.Telefono };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Nombre = model.Nombre,
+                    Nit = model.Nit
+                                                 ,
+                    Puesto = model.Puesto,
+                    PhoneNumber = model.Telefono,
+                    RazonSocial = model.RazonSocial,
+                    PassTemp = model.Password
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
-
-                
-
 
                 if (result.Succeeded)
                 {
-                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    var _UserInfo = _Db.AspNetUsers.Where(p => p.UserName == model.Email).First();
 
-                    return RedirectToAction("Index", "Usuario");
+                    return RedirectToAction("Edit", "Usuario", new { id = _UserInfo.Id });
                 }
                 AddErrors(result);
             }
@@ -217,18 +233,36 @@ namespace Wareways.PortalProv.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
-                }
+                //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                //{
+                //    // Don't reveal that the user does not exist or is not confirmed
+                //    return View("ForgotPasswordConfirmation");
+                //}
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+
+                if (user == null)
+                {
+                    return RedirectToAction("ForgotPasswordInvalid", "Account");
+                } else
+                {
+                    string body = string.Empty;
+                    using (StreamReader reader = new StreamReader(Server.MapPath("~/Infraestructura/Correos/RecuperaContrasena.html")))
+                    {
+                        body = reader.ReadToEnd();
+                    }                                     
+                    string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+
+                    body = body.Replace("***UrlLink***", callbackUrl);
+                    body = body.Replace("***EmpresaLogo***", "http://proveedores.polytec.com.gt/Content/PolytecLogo.png");
+                
+                    await UserManager.SendEmailAsync(user.Id, "Portal Proveedores - Recuperacion de Correo - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
+                                                     , body);
+                    return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                }
+                
             }
 
             // If we got this far, something failed, redisplay form
@@ -239,6 +273,12 @@ namespace Wareways.PortalProv.Controllers
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotPasswordInvalid()
         {
             return View();
         }

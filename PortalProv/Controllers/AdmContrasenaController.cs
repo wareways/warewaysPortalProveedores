@@ -90,6 +90,26 @@ namespace Wareways.PortalProv.Controllers
 
         }
 
+
+        [Authorize(Roles = "Oficina")]
+        public ActionResult Eliminar(Guid Contrasena_id)
+        {
+            var _Contrasena = _Db.PPROV_Contrasena.Find(Contrasena_id);
+            foreach(var _item in _Contrasena.PPROV_Documento)
+            {
+                _item.Doc_Estado = "Contraseña";
+                _item.Contrasena_Id = null;
+            }
+            _Db.SaveChanges();
+
+            _Db.PPROV_Contrasena.Remove(_Contrasena);
+            _Db.SaveChanges();
+
+
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "Oficina")]
         public ActionResult CreaContrasena(FormCollection collection, PresentadosModelOficina modelo)
         {
             var _Select_Item = collection["Selec_Item"].Replace("true,false", "true");

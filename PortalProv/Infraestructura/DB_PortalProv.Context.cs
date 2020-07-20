@@ -135,5 +135,14 @@ namespace Wareways.PortalProv.Infraestructura
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_Indicadores_Oficina_Result>("SP_PPROV_Indicadores_Oficina", userNameParameter);
         }
+    
+        public virtual int SP_PPROV_Elimina_Retencion(Nullable<System.Guid> retencion_Id)
+        {
+            var retencion_IdParameter = retencion_Id.HasValue ?
+                new ObjectParameter("Retencion_Id", retencion_Id) :
+                new ObjectParameter("Retencion_Id", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_PPROV_Elimina_Retencion", retencion_IdParameter);
+        }
     }
 }

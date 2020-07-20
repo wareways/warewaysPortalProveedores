@@ -87,7 +87,7 @@
                 var id = $(e.relatedTarget).data('nombre');
                 var titulo = $(e.relatedTarget).data('titulo');
 
-                $("#ContenedorPDF").html("<embed src='/Reports/Contrasenas.aspx?id=" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                $("#ContenedorPDF").html("<embed src='/Reportes/Contrasenas.aspx?id=" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
                 $("#myModalLabelTitle").html(titulo);
 
             });

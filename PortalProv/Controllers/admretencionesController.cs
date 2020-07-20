@@ -23,6 +23,15 @@ namespace Wareways.PortalProv.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Oficina")]
+        public ActionResult Eliminar(Guid Retencion_Id)
+        {
+            _Db.SP_PPROV_Elimina_Retencion(Retencion_Id);
+            return RedirectToAction("Index");
+        }
+
+
         [Authorize(Roles = "Oficina")]
         public ActionResult Nuevo(Guid? Doc_Id)
         {
@@ -36,6 +45,8 @@ namespace Wareways.PortalProv.Controllers
 
             return View(model);
         }
+
+        
 
         [HttpPost]
         [Authorize(Roles = "Oficina")]
@@ -69,6 +80,7 @@ namespace Wareways.PortalProv.Controllers
                         };
                         if (model._DocId == null)
                         {
+                            _Nuevo.Retencion_CardCode = model.Retencion_CardCode.Split(',')[0];
                             _Nuevo.Retencion_EmpresaId = model.Manual_Empresa;
                             _Nuevo.Manual_Empresa = model.Manual_Empresa;
                             _Nuevo.Manual_FacNumero = model.Manual_FacNumero;
@@ -83,10 +95,11 @@ namespace Wareways.PortalProv.Controllers
                         _Db.SaveChanges();
                         _Nuevo.PPROV_Documento.Add(_DocRef);
                         _Db.SaveChanges();
+                        MandarCorreo_Retencion(_Nuevo.Retencion_Id);
 
                         if (model._DocId != null)
                         {
-                            return RedirectToAction("");
+                            return RedirectToAction("index","admpresentados",new { FiltroEstado = "Retenciones" });
                         }
                         return RedirectToAction("index");
                     }

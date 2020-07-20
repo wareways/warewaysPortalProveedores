@@ -566,11 +566,11 @@
     <Compile Include="Infraestructura\Servicios\Enum.cs" />
     <Compile Include="Infraestructura\Servicios\Export.cs" />
     <Compile Include="Infraestructura\Servicios\ServicioSeguridad.cs" />
-    <Compile Include="Reports\Contrasenas.aspx.cs">
+    <Compile Include="Reportes\Contrasenas.aspx.cs">
       <DependentUpon>Contrasenas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Reports\Contrasenas.aspx.designer.cs">
+    <Compile Include="Reportes\Contrasenas.aspx.designer.cs">
       <DependentUpon>Contrasenas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
@@ -6975,6 +6975,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Infraestructura\Correos\ConfirmacionCorreo.html" />
+    <Content Include="Infraestructura\Correos\RecuperaContrasena.html" />
     <Content Include="Infraestructura\Correos\Retencion.html" />
     <Content Include="Infraestructura\Correos\Rechazo.html" />
     <Content Include="Infraestructura\Correos\Contrasena.html" />
@@ -6998,7 +7000,7 @@
       <DependentUpon>FlexManDb.edmx</DependentUpon>
       <LastGenOutput>FlexManDb.cs</LastGenOutput>
     </Content>
-    <Content Include="Reports\Contrasenas.aspx" />
+    <Content Include="Reportes\Contrasenas.aspx" />
     <Content Include="Views\Shared\ReportBoucher.aspx" />
     <Content Include="Views\Shared\TestPrint.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -7541,7 +7543,6 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
@@ -7589,6 +7590,8 @@
     <Content Include="Views\AdmContrasena\Edit.cshtml" />
     <Content Include="Views\admretenciones\Nuevo.cshtml" />
     <Content Include="Views\admpresentados\LinksRetencionesDocto.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordInvalid.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -7616,7 +7619,9 @@
     <TypeScriptCompile Include="admin-lte\bower_components\moment\moment.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Infraestructura\Reportes\Contrasena.rdlc" />
+    <Content Include="Infraestructura\Reportes\Contrasena.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

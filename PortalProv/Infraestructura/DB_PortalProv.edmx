@@ -63,6 +63,16 @@
           <Property Name="Sistema" Type="bit" />
           <Property Name="Nit" Type="varchar" MaxLength="50" />
           <Property Name="RazonSocial" Type="varchar" MaxLength="1024" />
+          <Property Name="EnviadoNotNuevo" Type="datetime" />
+          <Property Name="PassTemp" Type="varchar" MaxLength="32" />
+          <Property Name="Tipo" Type="varchar" MaxLength="32" />
+          <Property Name="SoloLectura" Type="bit" />
+          <Property Name="Pagos" Type="bit" />
+          <Property Name="Retenciones" Type="bit" />
+          <Property Name="Pendientes" Type="bit" />
+          <Property Name="Contrasena" Type="bit" />
+          <Property Name="Presentados" Type="bit" />
+          <Property Name="Padre_Id" Type="nvarchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="GEN_Audit">
           <Key>
@@ -922,6 +932,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
         <Function Name="SP_PPROV_DatosOrdenCompra" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Docnum" Type="int" Mode="In" />
         </Function>
+        <Function Name="SP_PPROV_Elimina_Retencion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Retencion_Id" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="SP_PPROV_Indicadores_Oficina" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserName" Type="nvarchar" Mode="In" />
         </Function>
@@ -1474,6 +1487,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
             <End Role="PPROV_Documento" EntitySet="PPROV_Documento" />
             <End Role="PPROV_Retencion" EntitySet="PPROV_Retencion" />
           </AssociationSet>
+          <FunctionImport Name="SP_PPROV_Elimina_Retencion">
+          <Parameter Name="Retencion_Id" Mode="In" Type="Guid" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="GEN_Configuracion">
           <Key>
@@ -1670,6 +1686,16 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Nit" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="RazonSocial" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="PPROV_UsuarioProveedor" Relationship="PortalProvModel.FK_PPROV_UsuarioProveedor_AspNetUsers" FromRole="AspNetUsers" ToRole="PPROV_UsuarioProveedor" />
+          <Property Name="EnviadoNotNuevo" Type="DateTime" Precision="3" />
+          <Property Name="PassTemp" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="Tipo" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="SoloLectura" Type="Boolean" />
+          <Property Name="Pagos" Type="Boolean" />
+          <Property Name="Retenciones" Type="Boolean" />
+          <Property Name="Pendientes" Type="Boolean" />
+          <Property Name="Contrasena" Type="Boolean" />
+          <Property Name="Presentados" Type="Boolean" />
+          <Property Name="Padre_Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="PortalProvModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
@@ -2539,6 +2565,16 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="AspNetUsers">
             <EntityTypeMapping TypeName="PortalProvModel.AspNetUsers">
               <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Padre_Id" ColumnName="Padre_Id" />
+                <ScalarProperty Name="Presentados" ColumnName="Presentados" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+                <ScalarProperty Name="Pendientes" ColumnName="Pendientes" />
+                <ScalarProperty Name="Retenciones" ColumnName="Retenciones" />
+                <ScalarProperty Name="Pagos" ColumnName="Pagos" />
+                <ScalarProperty Name="SoloLectura" ColumnName="SoloLectura" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="PassTemp" ColumnName="PassTemp" />
+                <ScalarProperty Name="EnviadoNotNuevo" ColumnName="EnviadoNotNuevo" />
                 <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
                 <ScalarProperty Name="Nit" ColumnName="Nit" />
                 <ScalarProperty Name="Sistema" ColumnName="Sistema" />
@@ -3115,6 +3151,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
               <ScalarProperty Name="Doc_Id" ColumnName="Doc_Id" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="SP_PPROV_Elimina_Retencion" FunctionName="PortalProvModel.Store.SP_PPROV_Elimina_Retencion" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

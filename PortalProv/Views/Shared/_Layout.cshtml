@@ -57,7 +57,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="  
+<body class="
       @if (Session["ScreenColor"] != null)
       {
           @Session["ScreenColor"].ToString();
@@ -326,13 +326,14 @@ desired effect
     @Scripts.Render("~/admin-lte/js")
     @RenderSection("scripts", required: false)
     <script src="~/admin-lte/js/adminlte.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @*<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>*@
+    <script src="https://unpkg.com/sweetalert2@7.0.9/dist/sweetalert2.all.js"></script>
     <script>
         $(function() {
             var swalMensajeExito = '@TempData["MensajeSuccess"]';
             if (swalMensajeExito != '')
                 swal("Exito", "@TempData["MensajeSuccess"]", "success");
-                
+
 
             var swalMensajeError = '@TempData["MensajeWarning"]';
             if (swalMensajeError != '')
@@ -342,7 +343,30 @@ desired effect
             if (swalMensajeError != '')
                 swal("Error", "@TempData["MensajeDanger"]", "error" );
 
-        });        
+        });
+
+        $(".confirmswal").click(function (e) {
+            e.preventDefault(); // Prevent the href from redirecting directly
+            var linkURL = $(this).attr("href");
+            var swalmensaje = $(this).attr("data-mensajeswal");
+            warnBeforeRedirect(linkURL, swalmensaje);
+        });
+
+        function warnBeforeRedirect(linkURL, swalmensaje) {
+            swal({
+                title: "Esta seguro ?",
+                text: swalmensaje,
+                type: "warning",
+                confirmButtonText: "Si",
+                cancelButtonText: "Cancelar",
+                showCancelButton: true,
+            }).then(function (result) {
+                console.log(result);
+                if (result.value) {
+                    window.location.href = linkURL;
+                }
+            });
+        }
     </script>
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
          Both of these plugins are recommended to enhance the

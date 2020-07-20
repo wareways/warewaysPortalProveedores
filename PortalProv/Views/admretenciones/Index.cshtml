@@ -24,7 +24,7 @@
 
                         <th>Empresa</th>
                         <th>Factura </th>
-
+                        <th></th>
 
                     </tr>
                 </thead>
@@ -59,7 +59,10 @@
 
 
 
+                            <td><a href="@Url.Action("Eliminar",new {Retencion_Id = item.Retencion_Id  })" title = "Eliminar"
+                                        class="btn btn-danger btn-sm" onclick = "return confirm('Esta Seguro de Eliminar este Documento');"> <span class="fa fa-remove"></span> 
 
+                                </td>
 
                         </tr>
                     }

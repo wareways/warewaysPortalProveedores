@@ -68,8 +68,8 @@ namespace Wareways.PortalProv.Models
     {
         public string Nombre { get; set; }
         public string Puesto { get; set; }
-        
-
+        public string Nit { get; set; }
+        public string RazonSocial { get; set; }
         public string Telefono { get; set; }
 
         [Required]
