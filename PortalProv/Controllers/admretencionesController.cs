@@ -17,17 +17,33 @@ namespace Wareways.PortalProv.Controllers
         [Authorize(Roles = "Oficina")]
         public ActionResult Index()
         {
-            var model = new Models.PP.RetencionesOficinaModel();
-            model.L_Retenciones = ObtenerRetencionesPorusuario();
+            
+            try
+            {
+                var model = new Models.PP.RetencionesOficinaModel();
+                model.L_Retenciones = ObtenerRetencionesPorusuario();
 
-            return View(model);
+                return View(model);
+            } catch (Exception ex)
+            {
+                TempData["MensajeDanger"] = (ex.InnerException == null) ? ex.Message : ex.InnerException.Message ;
+            }
+            return RedirectToAction("Index");
+            
         }
 
         [HttpGet]
         [Authorize(Roles = "Oficina")]
         public ActionResult Eliminar(Guid Retencion_Id)
         {
-            _Db.SP_PPROV_Elimina_Retencion(Retencion_Id);
+            try
+            {
+                _Db.SP_PPROV_Elimina_Retencion(Retencion_Id);
+                
+            } catch (Exception ex)
+            {
+                TempData["MensajeDanger"] = (ex.InnerException == null) ? ex.Message : ex.InnerException.Message ;
+            }
             return RedirectToAction("Index");
         }
 
@@ -36,13 +52,20 @@ namespace Wareways.PortalProv.Controllers
         public ActionResult Nuevo(Guid? Doc_Id)
         {
             var model = new Models.PP.RetencionesOficinaNuevo();
-            model.Retencion_Fecha = DateTime.Now.Date;
-            model._DocId = Doc_Id;
-            if (Doc_Id != null) model.Retencion_CardCode = _Db.PPROV_Documento.Find(Doc_Id).Doc_CardCorde;
-            model.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
-            model.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
-            model.Modo_Activo = "Paso1";
-
+            try
+            {
+                model.Retencion_Fecha = DateTime.Now.Date;
+                model._DocId = Doc_Id;
+                if (Doc_Id != null) model.Retencion_CardCode = _Db.PPROV_Documento.Find(Doc_Id).Doc_CardCorde;
+                model.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
+                model.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
+                model.Modo_Activo = "Paso1";
+            }
+            catch (Exception ex)
+            {
+                TempData["MensajeDanger"] = (ex.InnerException == null) ? ex.Message : ex.InnerException.Message;
+            }
+                       
             return View(model);
         }
 
@@ -109,7 +132,7 @@ namespace Wareways.PortalProv.Controllers
                 if (model.Modo_Activo == "Paso1")
                 {
                     if (model.Nuevo_Pdf_Name == null) model.Nuevo_Pdf_Name = string.Format("RET_{0}.pdf", Guid.NewGuid().ToString());
-                    if (filefac.ContentLength > 0)
+                    if (filefac.ContentLength == null)
                     {
                         // Upload Files to Server
                         var _ServerPath = Server.MapPath(@"~/Cargados/" + model.Retencion_CardCode + "/");
@@ -132,17 +155,15 @@ namespace Wareways.PortalProv.Controllers
                     }
                     else
                     {
-                        ViewBag.Message = "Debe de Cargar el PDF del la retencion";
+                        TempData["MensajeDanger"] = "Debe de Cargar el PDF del la retencion";                        
                     }
                 }
                 
             }
             catch (Exception ex)
             {
-                ViewBag.Message = "No se Pudo Cargar el Archivo Indicado";
-
+                TempData["MensajeDanger"] = "No se Pudo Cargar el Archivo Indicado";
                 ModelState.Clear();
-
                 return View(model);
             }
 

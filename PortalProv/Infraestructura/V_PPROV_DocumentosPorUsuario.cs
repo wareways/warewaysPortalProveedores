@@ -40,5 +40,7 @@ namespace Wareways.PortalProv.Infraestructura
         public string SolicitanteOC { get; set; }
         public int Msj_Total { get; set; }
         public int Msj_NoLeidos { get; set; }
+        public string Doc_PdfCotiza { get; set; }
+        public string Doc_PdfInforme { get; set; }
     }
 }

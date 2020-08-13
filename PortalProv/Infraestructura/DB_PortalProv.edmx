@@ -190,6 +190,8 @@
           <Property Name="Doc_PdfFactura" Type="varchar" MaxLength="1024" />
           <Property Name="Doc_PdfOC" Type="varchar" MaxLength="1024" />
           <Property Name="SolicitanteOC" Type="varchar" MaxLength="64" />
+          <Property Name="Doc_PdfCotiza" Type="varchar" MaxLength="1024" />
+          <Property Name="Doc_PdfInforme" Type="varchar" MaxLength="1024" />
         </EntityType>
         <EntityType Name="PPROV_Estado">
           <Key>
@@ -400,6 +402,7 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Contrasena_Oficina' does no
           <Property Name="Monto" Type="decimal" Precision="38" Scale="6" Nullable="false" />
           <Property Name="Contrasena_Moneda" Type="varchar" MaxLength="16" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Facturas" Type="nvarchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Contrasena_PorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -431,6 +434,7 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Contrasena_PorUsuario' does
           <Property Name="Monto" Type="decimal" Precision="38" Scale="6" Nullable="false" />
           <Property Name="Contrasena_CardCode" Type="varchar" MaxLength="64" />
           <Property Name="Contrasena_Moneda" Type="varchar" MaxLength="16" />
+          <Property Name="Facturas" Type="nvarchar(max)" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Documentos_Oficina' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -471,6 +475,8 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Documentos_Oficina' does no
           <Property Name="seleccionado" Type="bit" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="Contrasena_Numero" Type="int" />
+          <Property Name="Doc_PdfCotiza" Type="varchar" MaxLength="1024" />
+          <Property Name="Doc_PdfInforme" Type="varchar" MaxLength="1024" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_DocumentosPorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -509,6 +515,8 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_DocumentosPorUsuario' does 
           <Property Name="Empresa_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Msj_Total" Type="int" Nullable="false" />
           <Property Name="Msj_NoLeidos" Type="int" Nullable="false" />
+          <Property Name="Doc_PdfCotiza" Type="varchar" MaxLength="1024" />
+          <Property Name="Doc_PdfInforme" Type="varchar" MaxLength="1024" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Empresas' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1048,7 +1056,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_Contrasena_Oficina].[Cantidad] AS [Cantidad], 
     [V_PPROV_Contrasena_Oficina].[Monto] AS [Monto], 
     [V_PPROV_Contrasena_Oficina].[Contrasena_Moneda] AS [Contrasena_Moneda], 
-    [V_PPROV_Contrasena_Oficina].[UserName] AS [UserName]
+    [V_PPROV_Contrasena_Oficina].[UserName] AS [UserName], 
+    [V_PPROV_Contrasena_Oficina].[Facturas] AS [Facturas]
     FROM [dbo].[V_PPROV_Contrasena_Oficina] AS [V_PPROV_Contrasena_Oficina]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_Contrasena_PorUsuario" EntityType="Self.V_PPROV_Contrasena_PorUsuario" store:Type="Views" store:Schema="dbo">
@@ -1066,7 +1075,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_Contrasena_PorUsuario].[Cantidad] AS [Cantidad], 
     [V_PPROV_Contrasena_PorUsuario].[Monto] AS [Monto], 
     [V_PPROV_Contrasena_PorUsuario].[Contrasena_CardCode] AS [Contrasena_CardCode], 
-    [V_PPROV_Contrasena_PorUsuario].[Contrasena_Moneda] AS [Contrasena_Moneda]
+    [V_PPROV_Contrasena_PorUsuario].[Contrasena_Moneda] AS [Contrasena_Moneda], 
+    [V_PPROV_Contrasena_PorUsuario].[Facturas] AS [Facturas]
     FROM [dbo].[V_PPROV_Contrasena_PorUsuario] AS [V_PPROV_Contrasena_PorUsuario]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_Documentos_Oficina" EntityType="Self.V_PPROV_Documentos_Oficina" store:Type="Views" store:Schema="dbo">
@@ -1098,7 +1108,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_Documentos_Oficina].[Msj_NoLeidos] AS [Msj_NoLeidos], 
     [V_PPROV_Documentos_Oficina].[seleccionado] AS [seleccionado], 
     [V_PPROV_Documentos_Oficina].[UserName] AS [UserName], 
-    [V_PPROV_Documentos_Oficina].[Contrasena_Numero] AS [Contrasena_Numero]
+    [V_PPROV_Documentos_Oficina].[Contrasena_Numero] AS [Contrasena_Numero], 
+    [V_PPROV_Documentos_Oficina].[Doc_PdfCotiza] AS [Doc_PdfCotiza], 
+    [V_PPROV_Documentos_Oficina].[Doc_PdfInforme] AS [Doc_PdfInforme]
     FROM [dbo].[V_PPROV_Documentos_Oficina] AS [V_PPROV_Documentos_Oficina]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_DocumentosPorUsuario" EntityType="Self.V_PPROV_DocumentosPorUsuario" store:Type="Views" store:Schema="dbo">
@@ -1128,7 +1140,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_DocumentosPorUsuario].[SolicitanteOC] AS [SolicitanteOC], 
     [V_PPROV_DocumentosPorUsuario].[Empresa_Name] AS [Empresa_Name], 
     [V_PPROV_DocumentosPorUsuario].[Msj_Total] AS [Msj_Total], 
-    [V_PPROV_DocumentosPorUsuario].[Msj_NoLeidos] AS [Msj_NoLeidos]
+    [V_PPROV_DocumentosPorUsuario].[Msj_NoLeidos] AS [Msj_NoLeidos], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_PdfCotiza] AS [Doc_PdfCotiza], 
+    [V_PPROV_DocumentosPorUsuario].[Doc_PdfInforme] AS [Doc_PdfInforme]
     FROM [dbo].[V_PPROV_DocumentosPorUsuario] AS [V_PPROV_DocumentosPorUsuario]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_Empresas" EntityType="Self.V_PPROV_Empresas" store:Type="Views" store:Schema="dbo">
@@ -1816,6 +1830,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <NavigationProperty Name="PPROV_Nota" Relationship="PortalProvModel.FK_PPROV_Nota_PPROV_Documento" FromRole="PPROV_Documento" ToRole="PPROV_Nota" />
           <NavigationProperty Name="PPROV_Contrasena" Relationship="PortalProvModel.FK_PPROV_Documento_PPROV_Contrasena" FromRole="PPROV_Documento" ToRole="PPROV_Contrasena" />
           <NavigationProperty Name="PPROV_Retencion" Relationship="PortalProvModel.PPROV_RetencionFactura" FromRole="PPROV_Documento" ToRole="PPROV_Retencion" />
+          <Property Name="Doc_PdfCotiza" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_PdfInforme" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_PPROV_Adjuntos_PPROV_Documento">
           <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="1" />
@@ -1902,6 +1918,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Contrasena_Estado" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="Contrasena_CardCode" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="Contrasena_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="Facturas" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="V_PPROV_DocumentosPorUsuario">
           <Key>
@@ -1938,6 +1955,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="SolicitanteOC" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="Msj_Total" Type="Int32" Nullable="false" />
           <Property Name="Msj_NoLeidos" Type="Int32" Nullable="false" />
+          <Property Name="Doc_PdfCotiza" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_PdfInforme" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="V_PPROV_RetencionesPorUsuario">
           <Key>
@@ -2030,6 +2049,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Contrasena_CardCode" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="Contrasena_Moneda" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Facturas" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="V_PPROV_Documentos_Oficina">
           <Key>
@@ -2068,6 +2088,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="seleccionado" Type="Boolean" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="Contrasena_Numero" Type="Int32" />
+          <Property Name="Doc_PdfCotiza" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_PdfInforme" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="v_PPROV_FacturasIngresadas_Oficina">
           <Key>
@@ -2653,6 +2675,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="PPROV_Documento">
             <EntityTypeMapping TypeName="PortalProvModel.PPROV_Documento">
               <MappingFragment StoreEntitySet="PPROV_Documento">
+                <ScalarProperty Name="Doc_PdfInforme" ColumnName="Doc_PdfInforme" />
+                <ScalarProperty Name="Doc_PdfCotiza" ColumnName="Doc_PdfCotiza" />
                 <ScalarProperty Name="SolicitanteOC" ColumnName="SolicitanteOC" />
                 <ScalarProperty Name="Doc_PdfOC" ColumnName="Doc_PdfOC" />
                 <ScalarProperty Name="Doc_PdfFactura" ColumnName="Doc_PdfFactura" />
@@ -2709,6 +2733,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="V_PPROV_Contrasena_PorUsuario">
             <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Contrasena_PorUsuario">
               <MappingFragment StoreEntitySet="V_PPROV_Contrasena_PorUsuario">
+                <ScalarProperty Name="Facturas" ColumnName="Facturas" />
                 <ScalarProperty Name="Contrasena_Moneda" ColumnName="Contrasena_Moneda" />
                 <ScalarProperty Name="Contrasena_CardCode" ColumnName="Contrasena_CardCode" />
                 <ScalarProperty Name="Contrasena_Estado" ColumnName="Contrasena_Estado" />
@@ -2729,6 +2754,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="V_PPROV_DocumentosPorUsuario">
             <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_DocumentosPorUsuario">
               <MappingFragment StoreEntitySet="V_PPROV_DocumentosPorUsuario">
+                <ScalarProperty Name="Doc_PdfInforme" ColumnName="Doc_PdfInforme" />
+                <ScalarProperty Name="Doc_PdfCotiza" ColumnName="Doc_PdfCotiza" />
                 <ScalarProperty Name="Msj_NoLeidos" ColumnName="Msj_NoLeidos" />
                 <ScalarProperty Name="Msj_Total" ColumnName="Msj_Total" />
                 <ScalarProperty Name="SolicitanteOC" ColumnName="SolicitanteOC" />
@@ -2837,6 +2864,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="V_PPROV_Contrasena_Oficina">
             <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Contrasena_Oficina">
               <MappingFragment StoreEntitySet="V_PPROV_Contrasena_Oficina">
+                <ScalarProperty Name="Facturas" ColumnName="Facturas" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Contrasena_Moneda" ColumnName="Contrasena_Moneda" />
                 <ScalarProperty Name="Contrasena_CardCode" ColumnName="Contrasena_CardCode" />
@@ -2857,6 +2885,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="V_PPROV_Documentos_Oficina">
             <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Documentos_Oficina">
               <MappingFragment StoreEntitySet="V_PPROV_Documentos_Oficina">
+                <ScalarProperty Name="Doc_PdfInforme" ColumnName="Doc_PdfInforme" />
+                <ScalarProperty Name="Doc_PdfCotiza" ColumnName="Doc_PdfCotiza" />
                 <ScalarProperty Name="Contrasena_Numero" ColumnName="Contrasena_Numero" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="seleccionado" ColumnName="seleccionado" />

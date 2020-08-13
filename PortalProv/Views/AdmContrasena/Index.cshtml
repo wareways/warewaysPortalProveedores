@@ -20,6 +20,7 @@
 
                         <th>Estimada Pago</th>
                         <th>Documentos</th>
+                        <th>Facturas</th>
                         <th>Monto</th>
                         <th>Fecha</th>
                         <th>Creado Por</th>
@@ -30,35 +31,36 @@
                 <tbody>
                     @foreach (var item in Model.L_Documentos)
                     {
-                        <tr>
-                            <td>
-                                @if (item.Contrasena_Estado == "Activa")
-                                {
-                                    <a href="#" data-toggle="modal" data-titulo="Contraseña" data-nombre="@item.Contrasena_Id" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:darkgreen"></span></a>
-                                }
+                    <tr>
+                        <td>
+                            @if (item.Contrasena_Estado == "Activa")
+                            {
+                                <a href="#" data-toggle="modal" data-titulo="Contraseña" data-nombre="@item.Contrasena_Id" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:darkgreen"></span></a>
+                            }
 
-                            </td>
+                        </td>
 
-                            <td>@item.Empresa_Name</td>
-
-
-
-
-
-                            <td>@item.Contrasena_Numero </td>
-
-                            <td>@item.Contrasena_Fecha_Estimada.ToString("yyyy-MM-dd")</td>
-                            <td>@item.Cantidad </td>
-                            <td>@item.Monto.ToString("#,###,##0.00") </td>
-                            <td>@item.Contrasena_Fecha.ToString("yyyy-MM-dd")</td>
-                            <td>@item.Contrasena_Usuario </td>
-                            <td>@item.Contrasena_Estado </td>
-                            <td><a href="@Url.Action("Edit","admcontrasena", new { id = item.Contrasena_Id })" class="btn btn-warning" style="color:white"> <span class="fa fa-edit"></span> </a></td>
+                        <td>@item.Empresa_Name</td>
 
 
 
 
-                        </tr>
+
+                        <td>@item.Contrasena_Numero </td>
+
+                        <td>@item.Contrasena_Fecha_Estimada.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Cantidad </td>
+                        <td>@item.Facturas</td>
+                        <td>@item.Monto.ToString("#,###,##0.00") </td>
+                        <td>@item.Contrasena_Fecha.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Contrasena_Usuario </td>
+                        <td>@item.Contrasena_Estado </td>
+                        <td><a href="@Url.Action("Edit","admcontrasena", new { id = item.Contrasena_Id })" class="btn btn-warning" style="color:white"> <span class="fa fa-edit"></span> </a></td>
+
+
+
+
+                    </tr>
                     }
                 </tbody>
             </table>

@@ -24,8 +24,10 @@
                 @Html.HiddenFor(model => Model.Nuevo_Pdf_Facturas)
                 @Html.HiddenFor(Model => Model.Nuevo_Pdf_OC)
                 @Html.HiddenFor(model => Model.Nuevo_CardCode)
+                @Html.HiddenFor(model => Model.Nuevo_Pdf_Cotizacion)
+                @Html.HiddenFor(model => Model.Nuevo_Pdf_Informe)
 
-                
+
                 if (Model.ModoActivo == "Nuevo_Paso1")
                 {
 
@@ -132,7 +134,7 @@
 
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">No. Orden Compra o Servicio</label>
-                                        @Html.EditorFor(model => model.Nuevo.Doc_NumeroOC, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese OC" } })
+                                        @Html.EditorFor(model => model.Nuevo.Doc_NumeroOC, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese OC", @readonly = "readonly" } })
                                     </div>
 
                                     <div class="form-group">
@@ -176,11 +178,52 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="#" onclick="MostrarOC()">Ver Orden Compra</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" onclick="MostrarCotiza()">Ver Cotización</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#" onclick="MostrarEntrega()">Ver Informe Entrega</a>
+                                    </li>
 
                                 </ul>
 
                                 <embed src="~/Cargados/@Model.Nuevo_CardCode/@Model.Nuevo_Pdf_Facturas" type="application/pdf" style="width:90%; height:50vw;" id="uipdfembfac" />
                                 <embed src="~/Cargados/@Model.Nuevo_CardCode/@Model.Nuevo_Pdf_OC" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdfemboc" />
+                                @if (!String.IsNullOrEmpty(Model.Nuevo_Pdf_Cotizacion))
+                                {
+                                    <embed src="@Wareways.PortalProv.Infraestructura.Servicios.AdjuntosUrlFix.Url(Model.Nuevo_Pdf_Cotizacion.Contains(@"\\")?Model.Nuevo_Pdf_Cotizacion:@"/Cargados/"+Model.Nuevo_CardCode+@"/"+Model.Nuevo_Pdf_Cotizacion)" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdcotiza" />
+                                }
+                                <embed src="@Wareways.PortalProv.Infraestructura.Servicios.AdjuntosUrlFix.Url(Model.Nuevo_Pdf_Informe)" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdentrega" />
+
+
+                                @if (String.IsNullOrEmpty(Model.Nuevo_Pdf_Cotizacion))
+                                {
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="box box-default box-solid">
+                                                <div class="box-header with-border">
+                                                    <h2 class="box-title">Cotización</h2>
+                                                </div>
+                                                <div class="box-body">
+                                                    <label for="filecotiza" class="btn btn-success">Seleccionar Arhivo PDF</label>
+                                                    @Html.TextBox("filecotiza", "", new { type = "file", @title = "Seleccione PDF", @style = "visibility:hidden;" })
+                                                    <label id="filecotiza_sel"></label>
+                                                    <p class="help-block">Solo se pueden subir archivos PDF</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button class="btn btn-warning " type="submit" name="CargarCotizacion" value="CargarCotizacion">
+                                                Cargar Cotización &nbsp;
+                                                <i class="fa fa-save"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+
 
                             </div>
                         </div>
@@ -226,15 +269,36 @@
             var filename = this.files[0].name
             $("#filefac_sel").text(filename);
         });
+        $("#filecotiza").change(function () {
+            var filename = this.files[0].name
+            $("#filecotiza_sel").text(filename);
+        });
 
         function MostrarOC() {
             $("#uipdfembfac").hide();
             $("#uipdfemboc").show();
+            $("#uipdcotiza").hide();
+            $("#uipdentrega").hide();
+            uipdcotiza
+        }
+        function MostrarCotiza() {
+            $("#uipdfembfac").hide();
+            $("#uipdfemboc").hide();
+            $("#uipdcotiza").show();
+            $("#uipdentrega").hide();
+        }
+        function MostrarEntrega() {
+            $("#uipdfembfac").hide();
+            $("#uipdfemboc").hide();
+            $("#uipdcotiza").hide();
+            $("#uipdentrega").show();
         }
 
         function MostrarFactura() {
             $("#uipdfembfac").show();
             $("#uipdfemboc").hide();
+            $("#uipdcotiza").hide();
+            $("#uipdentrega").hide();
         }
 
         function Submitforma2() {

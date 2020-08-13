@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="MODULOSAPOYOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="SP_EntregasCOM_SAP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Departamento" Type="varchar" Mode="In" />
+          <Parameter Name="FechaInicio" Type="datetime" Mode="In" />
+          <Parameter Name="FechaFin" Type="datetime" Mode="In" />
+          <Parameter Name="Orden_Numero" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="MODULOSAPOYOModelStoreContainer" />
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MODULOSAPOYOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MODULOSAPOYOEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="SP_EntregasCOM_SAP" ReturnType="Collection(MODULOSAPOYOModel.SP_EntregasCOM_SAP_Result)">
+            <Parameter Name="Departamento" Mode="In" Type="String" />
+            <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
+            <Parameter Name="FechaFin" Mode="In" Type="DateTime" />
+            <Parameter Name="Orden_Numero" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="SP_EntregasCOM_SAP_Result">
+          <Property Type="Int32" Name="Sol_DocEntry" Nullable="true" />
+          <Property Type="Int32" Name="Orden_Adjuntos" Nullable="true" />
+          <Property Type="String" Name="Orden_AdjuntosUrl" Nullable="true" MaxLength="392" />
+          <Property Type="Int32" Name="Orden_DocEntry" Nullable="false" />
+          <Property Type="Int32" Name="Orden_DocNum" Nullable="false" />
+          <Property Type="String" Name="Orden_DocType" Nullable="true" MaxLength="1" />
+          <Property Type="DateTime" Name="Orden_DocDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Orden_CardCode" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Orden_CardName" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="Orden_DocTotal" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="String" Name="Orden_Doccur" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="Orden_Comments" Nullable="true" MaxLength="254" />
+          <Property Type="Int32" Name="Entrega_DocEntry" Nullable="true" />
+          <Property Type="Int32" Name="Entrega_DocNum" Nullable="true" />
+          <Property Type="DateTime" Name="Entrega_DocDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="Entrega_DocTotal" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="String" Name="Entrega_DocCur" Nullable="true" MaxLength="3" />
+          <Property Type="Int32" Name="Entrega_Adjuntos" Nullable="true" />
+          <Property Type="Decimal" Name="OrdenPendiente" Nullable="true" Precision="20" Scale="6" />
+          <Property Type="String" Name="Entrega_Usuario" Nullable="true" MaxLength="254" />
+          <Property Type="String" Name="Sucursal" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Entrega_Observaciones" Nullable="true" MaxLength="254" />
+          <Property Type="Int32" Name="BPLId" Nullable="true" />
+          <Property Type="String" Name="Entrega_AdjuntosUrl" Nullable="true" MaxLength="392" />
+          <Property Type="String" Name="docStatus" Nullable="true" MaxLength="1" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MODULOSAPOYOModelStoreContainer" CdmEntityContainer="MODULOSAPOYOEntities" >
+          <FunctionImportMapping FunctionImportName="SP_EntregasCOM_SAP" FunctionName="MODULOSAPOYOModel.Store.SP_EntregasCOM_SAP">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MODULOSAPOYOModel.SP_EntregasCOM_SAP_Result">
+                <ScalarProperty Name="Sol_DocEntry" ColumnName="Sol_DocEntry" />
+                <ScalarProperty Name="Orden_Adjuntos" ColumnName="Orden_Adjuntos" />
+                <ScalarProperty Name="Orden_AdjuntosUrl" ColumnName="Orden_AdjuntosUrl" />
+                <ScalarProperty Name="Orden_DocEntry" ColumnName="Orden_DocEntry" />
+                <ScalarProperty Name="Orden_DocNum" ColumnName="Orden_DocNum" />
+                <ScalarProperty Name="Orden_DocType" ColumnName="Orden_DocType" />
+                <ScalarProperty Name="Orden_DocDate" ColumnName="Orden_DocDate" />
+                <ScalarProperty Name="Orden_CardCode" ColumnName="Orden_CardCode" />
+                <ScalarProperty Name="Orden_CardName" ColumnName="Orden_CardName" />
+                <ScalarProperty Name="Orden_DocTotal" ColumnName="Orden_DocTotal" />
+                <ScalarProperty Name="Orden_Doccur" ColumnName="Orden_Doccur" />
+                <ScalarProperty Name="Orden_Comments" ColumnName="Orden_Comments" />
+                <ScalarProperty Name="Entrega_DocEntry" ColumnName="Entrega_DocEntry" />
+                <ScalarProperty Name="Entrega_DocNum" ColumnName="Entrega_DocNum" />
+                <ScalarProperty Name="Entrega_DocDate" ColumnName="Entrega_DocDate" />
+                <ScalarProperty Name="Entrega_DocTotal" ColumnName="Entrega_DocTotal" />
+                <ScalarProperty Name="Entrega_DocCur" ColumnName="Entrega_DocCur" />
+                <ScalarProperty Name="Entrega_Adjuntos" ColumnName="Entrega_Adjuntos" />
+                <ScalarProperty Name="OrdenPendiente" ColumnName="OrdenPendiente" />
+                <ScalarProperty Name="Entrega_Usuario" ColumnName="Entrega_Usuario" />
+                <ScalarProperty Name="Sucursal" ColumnName="Sucursal" />
+                <ScalarProperty Name="Entrega_Observaciones" ColumnName="Entrega_Observaciones" />
+                <ScalarProperty Name="BPLId" ColumnName="BPLId" />
+                <ScalarProperty Name="Entrega_AdjuntosUrl" ColumnName="Entrega_AdjuntosUrl" />
+                <ScalarProperty Name="docStatus" ColumnName="docStatus" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -42,5 +42,7 @@ namespace Wareways.PortalProv.Infraestructura
         public Nullable<bool> seleccionado { get; set; }
         public string UserName { get; set; }
         public Nullable<int> Contrasena_Numero { get; set; }
+        public string Doc_PdfCotiza { get; set; }
+        public string Doc_PdfInforme { get; set; }
     }
 }

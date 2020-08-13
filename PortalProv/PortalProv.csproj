@@ -437,6 +437,21 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\Componentes\HtmlExtensionsTextBox.cs" />
+    <Compile Include="Infraestructura\ModulosApoyo.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModulosApoyo.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\ModulosApoyo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModulosApoyo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\ModulosApoyo.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModulosApoyo.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\NotificacionesCola.cs">
       <DependentUpon>FlexManDb.tt</DependentUpon>
     </Compile>
@@ -469,6 +484,11 @@
     </Compile>
     <Compile Include="Infraestructura\PPROV_UsuarioProveedor.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\Servicios\AdjuntosUrlFix.cs" />
+    <Compile Include="Infraestructura\Servicios\UNC_AccessCredentials.cs" />
+    <Compile Include="Infraestructura\SP_EntregasCOM_SAP_Result.cs">
+      <DependentUpon>ModulosApoyo.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\SP_PPROV_ADM_EmpresasOficina_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
@@ -572,6 +592,13 @@
     </Compile>
     <Compile Include="Reportes\Contrasenas.aspx.designer.cs">
       <DependentUpon>Contrasenas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Servicios\Sap_AdjuntoDescarga.aspx.cs">
+      <DependentUpon>Sap_AdjuntoDescarga.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Servicios\Sap_AdjuntoDescarga.aspx.designer.cs">
+      <DependentUpon>Sap_AdjuntoDescarga.aspx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -7000,7 +7027,18 @@
       <DependentUpon>FlexManDb.edmx</DependentUpon>
       <LastGenOutput>FlexManDb.cs</LastGenOutput>
     </Content>
+    <Content Include="Infraestructura\ModulosApoyo.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModulosApoyo.edmx</DependentUpon>
+      <LastGenOutput>ModulosApoyo.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Infraestructura\ModulosApoyo.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ModulosApoyo.edmx</DependentUpon>
+      <LastGenOutput>ModulosApoyo.cs</LastGenOutput>
+    </Content>
     <Content Include="Reportes\Contrasenas.aspx" />
+    <Content Include="Servicios\Sap_AdjuntoDescarga.aspx" />
     <Content Include="Views\Shared\ReportBoucher.aspx" />
     <Content Include="Views\Shared\TestPrint.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -7502,6 +7540,13 @@
     </EntityDeploy>
     <Content Include="Infraestructura\FlexManDb.edmx.diagram">
       <DependentUpon>FlexManDb.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Infraestructura\ModulosApoyo.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ModulosApoyo.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Infraestructura\ModulosApoyo.edmx.diagram">
+      <DependentUpon>ModulosApoyo.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />

@@ -17,12 +17,13 @@ namespace Wareways.PortalProv.Controllers
     public class PresentadosController : Controller
     {
         PortalProvEntities _Db = new PortalProvEntities();
+        MODULOSAPOYOEntities _Db_Apoyo = new MODULOSAPOYOEntities();
 
         [Authorize]
         // GET: Presentados
         public ActionResult Index()
         {
-            var model = new Models.PP.PresentadosModel();            
+            var model = new Models.PP.PresentadosModel();
             model.L_Documentos = ObtenerDocumentosPorUsuario();
             return View(model);
         }
@@ -39,9 +40,7 @@ namespace Wareways.PortalProv.Controllers
         {
             Models.PP.PresentadosModel modelo = new Models.PP.PresentadosModel();
             modelo.ModoActivo = "Nuevo_Paso1";
-            
             modelo.Nuevo = new PPROV_Documento();
-
 
             return View(modelo);
         }
@@ -49,21 +48,47 @@ namespace Wareways.PortalProv.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult Nuevo( Models.PP.PresentadosModel modelo, HttpPostedFileBase filefac, HttpPostedFileBase fileoc, FormCollection collection)
+        public ActionResult Nuevo(Models.PP.PresentadosModel modelo, HttpPostedFileBase filefac, HttpPostedFileBase fileoc, FormCollection collection, string CargarCotizacion, HttpPostedFileBase filecotiza)
         {
-
             // Cargar Catalogos
             ViewBag.Usuario_Empresas = _Db.SP_PPROV_PermisosCodigosProv_Usuario(User.Identity.Name).Select(p => new { p.Empresa_Id, p.AliasName }).Distinct().ToList();
-            
-
-
             modelo.Usuario_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
 
-            
-            if (modelo.Nuevo_Pdf_Facturas == null) modelo.Nuevo_Pdf_Facturas = string.Format("FAC_{0}.pdf", Guid.NewGuid().ToString());
-            if( modelo.Nuevo_Pdf_OC == null)   modelo.Nuevo_Pdf_OC = string.Format("OC_{0}.pdf", Guid.NewGuid().ToString());
-            if (modelo.Nuevo == null)  modelo.Nuevo = new PPROV_Documento() {  Doc_EmpresaId = 1};
 
+            // Seccion Carga Cotizacion Proveedor
+            if (!String.IsNullOrEmpty(CargarCotizacion))
+            {
+                // No este Vacio
+                if (filecotiza.ContentLength > 0)
+                {
+                    if (modelo.Nuevo_Pdf_Cotizacion == null) modelo.Nuevo_Pdf_Cotizacion = string.Format("Cot_{0}.pdf", Guid.NewGuid().ToString());
+                    // Upload Files to Server
+                    var _ServerPath = Server.MapPath(@"~/Cargados/" + modelo.Nuevo_CardCode + "/");
+                    if (!System.IO.Directory.Exists(_ServerPath)) Directory.CreateDirectory(_ServerPath);
+
+                    String _Cotiza_Path = System.IO.Path.Combine(_ServerPath, modelo.Nuevo_Pdf_Cotizacion);
+                    filecotiza.SaveAs(_Cotiza_Path);
+
+                    TempData["MensajeSuccess"] = "Cotización Cargada con Exito";
+                    ModelState.Clear();
+                    return View(modelo);
+                }
+                else
+                {
+                    modelo.Nuevo_Pdf_Cotizacion = null;
+
+                    TempData["MensajeDanger"] = "No Existe o error con el archivo Cargado";
+                    ModelState.Clear();
+                    return View(modelo);
+                }
+
+
+            }
+
+
+            if (modelo.Nuevo_Pdf_Facturas == null) modelo.Nuevo_Pdf_Facturas = string.Format("FAC_{0}.pdf", Guid.NewGuid().ToString());
+            if (modelo.Nuevo_Pdf_OC == null) modelo.Nuevo_Pdf_OC = string.Format("OC_{0}.pdf", Guid.NewGuid().ToString());
+            if (modelo.Nuevo == null) modelo.Nuevo = new PPROV_Documento() { Doc_EmpresaId = 1 };
 
             if (modelo.ModoActivo == "Nuevo_Paso2")
             {
@@ -77,7 +102,9 @@ namespace Wareways.PortalProv.Controllers
                     modelo.Nuevo.Doc_TipoDocumento = "FACT";
                     modelo.Nuevo.Doc_UsuarioCarga = User.Identity.Name;
                     modelo.Nuevo.Doc_PdfFactura = String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_Facturas);
-                    modelo.Nuevo.Doc_PdfOC = String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_OC); ;
+                    modelo.Nuevo.Doc_PdfOC = String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_OC); 
+                    modelo.Nuevo.Doc_PdfCotiza = (modelo.Nuevo_Pdf_Cotizacion.Contains(@"\\"))? modelo.Nuevo_Pdf_Cotizacion : String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_Cotizacion);
+                    modelo.Nuevo.Doc_PdfInforme = (modelo.Nuevo_Pdf_Informe.Contains(@"\\")) ? modelo.Nuevo_Pdf_Informe : String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_Informe);
 
                     _Db.PPROV_Documento.Add(modelo.Nuevo);
                     _Db.SaveChanges();
@@ -87,7 +114,9 @@ namespace Wareways.PortalProv.Controllers
                 }
                 else
                 {
-                    ViewBag.Message_Paso2 = _ErrorValidaDatos;
+                    TempData["MensajeDanger"] = _ErrorValidaDatos;
+                    ModelState.Clear();
+                    return View(modelo);
                 }
 
 
@@ -98,58 +127,97 @@ namespace Wareways.PortalProv.Controllers
             {
                 try
                 {
-                 
+                    // valida de Haya Seleccionado Adjunto
+                    if (filefac == null || fileoc == null)
+                    {
+                        TempData["MensajeDanger"] = "Para poder registrar su factura debe de Ingresar los 2 documentos";
+                        ModelState.Clear();
+                        return View(modelo);
+                    }
+
+
                     if (filefac.ContentLength > 0 && fileoc.ContentLength > 0)
                     {
                         // Validar que sea el mismo archivo
                         if (filefac.FileName == fileoc.FileName)
                         {
-                            ViewBag.Message = "No puede cargar el mismo documento, 2 veces en el sistema";
+                            TempData["MensajeDanger"] = "No se Puede Carga el Documento 2 veces..";
                             ModelState.Clear();
                             return View(modelo);
                         }
-                        
+                        if (!System.IO.Path.GetExtension(filefac.FileName).Contains("pdf") ||
+                           !System.IO.Path.GetExtension(fileoc.FileName).Contains("pdf")
+                            )
+                        {
+                            TempData["MensajeDanger"] = "Solo se pueden cargar archivos PDF";
+                            ModelState.Clear();
+                            return View(modelo);
+                        }
 
 
 
                         // Tratar Obtener Numero de Orden Compra
                         String _NumeroOc = ObtenerOCfromDPF(ParsePdf(fileoc));
                         // Obtener Datos de OC
-                        if ( _NumeroOc == "")
+                        if (_NumeroOc == "")
                         {
-                            modelo.Nuevo_CardCode = Obtener_CardCode_Usuario_Primero();
+                            TempData["MensajeDanger"] = "Orden de Compra no Detectado, debe de subir el archivo PDF Original Enviado Por Correo, no Escaneado";
+                            ModelState.Clear();
+                            return View(modelo);
                         }
-                        
+
                         else // Si Logro Detectar la Orden
                         {
                             var _DatosOrden = _Db.SP_PPROV_DatosOrdenCompra(Int32.Parse(_NumeroOc)).ToList();
-                            if ( _DatosOrden.Count == 1)
+                            var _InfoOrden = _Db_Apoyo.SP_EntregasCOM_SAP("", DateTime.Parse("2000-01-01"), DateTime.Now.Date, Int32.Parse(_NumeroOc)).ToList();
+                            modelo.Nuevo_Pdf_Informe = _InfoOrden[0].Entrega_AdjuntosUrl;
+                            if (_DatosOrden.Count == 1)
                             {
-                                //if ( Obtener_CardCode_AutorizadasPorUsuario().Contains(_DatosOrden[0].CardCode )   )
-                                //{
+                                var _CardCodeAutorizados = Obtener_CardCode_AutorizadasPorUsuario();
+                                if (_CardCodeAutorizados.Contains(_DatosOrden[0].CardCode))
+                                {
                                     modelo.Nuevo_CardCode = _DatosOrden[0].CardCode;
-                                    modelo.Nuevo.Doc_EmpresaId = _DatosOrden[0].BPLId;
-                                    modelo.Nuevo.Doc_MontoNeto = _DatosOrden[0].DocTotal;
-                                    modelo.Nuevo.Doc_NumeroOC = _DatosOrden[0].DocNum;
-                                    modelo.Nuevo.SolicitanteOC = _DatosOrden[0].UsuarioSolicitante;
-                                    modelo.Nuevo.Doc_Moneda = _DatosOrden[0].DocCur;
-                                  
-                                //} else
+                                modelo.Nuevo.Doc_EmpresaId = _DatosOrden[0].BPLId;
+                                modelo.Nuevo.Doc_MontoNeto = _DatosOrden[0].DocTotal;
+                                modelo.Nuevo.Doc_NumeroOC = _DatosOrden[0].DocNum;
+                                modelo.Nuevo.SolicitanteOC = _DatosOrden[0].UsuarioSolicitante;
+                                modelo.Nuevo.Doc_Moneda = _DatosOrden[0].DocCur;
+                                modelo.OrdenAdjunto = _InfoOrden[0].Orden_Adjuntos;
+                                modelo.OrdenAdjuntoUrl = _InfoOrden[0].Orden_AdjuntosUrl;
+                                modelo.EntregaAdjunto = _InfoOrden[0].Entrega_Adjuntos;
+                                modelo.EntregaAdjuntoUrl = _InfoOrden[0].Entrega_AdjuntosUrl;
 
-                                //{
-                                //    ViewBag.Message = "La Orden de Compra no pertenece a su Usuario, Archivo Incorrecto";
-                                //    ModelState.Clear();
-                                //    return View(modelo);
-                                //}
+                                }
+                                else
 
-                                
-                            } else
-                            {
-                                ViewBag.Message = "Numero de Orden de Compra no Encontrada o Cancelada";
+                                {
+                                    TempData["MensajeDanger"] = "Codigo de Proveedor " + _DatosOrden[0].CardCode + "en Orden de Compra no pertenece a su usuario, Revise el Archivo y suba la Orden Correcta, o solicite los Permisos";
+                                    ModelState.Clear();
+                                    return View(modelo);
+                                }
+                                if (modelo.EntregaAdjunto == null || modelo.EntregaAdjunto == 0)
+                                {
+                                    TempData["MensajeDanger"] = "No existe Entrega de Servicio o Producto de la Orden " + _NumeroOc + " ,Comuniquese con el departamento que realizo la compra";
+                                    ModelState.Clear();
+                                    return View(modelo);
+                                }
+                                if (modelo.OrdenAdjunto == null || modelo.OrdenAdjunto == 0)
+                                {
+                                    TempData["MensajeWarning"] = "No se Encontro Cotización Adjunta, Favor Adjunte su Cotización";
+                                }
+                                else
+                                {
+                                    modelo.Nuevo_Pdf_Cotizacion = _InfoOrden[0].Orden_AdjuntosUrl;
+                                }
+
+                            }
+                            else
+                            {                                
+                                TempData["MensajeWarning"] = "Numero de Orden de Compra no Encontrada o Cancelada";
                                 ModelState.Clear();
                                 return View(modelo);
                             }
-                            
+
                         }
 
 
@@ -168,7 +236,7 @@ namespace Wareways.PortalProv.Controllers
                     }
                     else
                     {
-                        ViewBag.Message = "Debe de Cargar la Factura y la Orden de Compra";
+                        TempData["MensajeWarning"] = "Debe de Cargar la Factura y la Orden de Compra";                        
                     }
 
 
@@ -192,9 +260,9 @@ namespace Wareways.PortalProv.Controllers
         public ActionResult ObtenerMensajes(Guid id)
         {
             var model = _Db.PPROV_Nota.Where(p => p.Doc_Id == id).OrderByDescending(p => p.Nota_Fecha).ToList();
-            if( User.IsInRole("Proveedor") )
+            if (User.IsInRole("Proveedor"))
             {
-                foreach ( var _item in model)
+                foreach (var _item in model)
                 {
                     _item.Revisada = true;
                     _item.Revisada_Fecha = DateTime.Now;
@@ -209,7 +277,31 @@ namespace Wareways.PortalProv.Controllers
 
         private string ValidarDatos(PresentadosModel modelo)
         {
-            return "";
+            var _Retorna = "";
+            if (String.IsNullOrEmpty(  modelo.Nuevo_Pdf_Cotizacion) )
+            {
+                _Retorna = "No se Encontro Cotización Adjunta, Favor Adjunte su Cotización";
+            }
+            if (String.IsNullOrEmpty(modelo.Nuevo.Doc_Autorizacion))
+            {
+                _Retorna = "Debe de Llevar informacion de la Autorizacion de la Factura";
+            }
+            if (String.IsNullOrEmpty(modelo.Nuevo.Doc_Serie))
+            {
+                _Retorna = "Debe de Llevar informacion de la Serie de la Factura";
+            }
+            if (String.IsNullOrEmpty(modelo.Nuevo.Doc_Numero))
+            {
+                _Retorna = "Debe de Llevar informacion de la Numero de la Factura";
+            }
+            if (String.IsNullOrEmpty(modelo.Nuevo.Doc_Fecha.ToString()))
+            {
+                _Retorna = "Debe de Llevar informacion de la Fecha de la Factura";
+            }
+
+
+
+            return _Retorna;
         }
 
         private List<V_PPROV_DocumentosPorUsuario> ObtenerDocumentosPorUsuario()
@@ -228,7 +320,7 @@ namespace Wareways.PortalProv.Controllers
         }
         private string[] Obtener_CardCode_AutorizadasPorUsuario()
         {
-            return _Db.v_PPROV_Usuario_Proveedor.Where(p => p.UserName == User.Identity.Name).Select(p=>p.CardCode).ToArray();
+            return _Db.v_PPROV_Usuario_Proveedor.Where(p => p.UserName == User.Identity.Name).Select(p => p.CardCode).ToArray();
         }
 
 

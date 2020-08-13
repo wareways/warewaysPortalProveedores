@@ -13,11 +13,19 @@ namespace Wareways.PortalProv.Models.PP
         public string Nuevo_CardCode { get; set; }
         public string Nuevo_Pdf_Facturas { get; set; }
         public String Nuevo_Pdf_OC { get; set; }
+        public String Nuevo_Pdf_Cotizacion { get; set; }
+        public String Nuevo_Pdf_Informe { get; set; }
+
         public string ModoActivo { get; set; }
         public List<Infraestructura.V_PPROV_Empresas> Usuario_Empresas { get; set; }
         public List<Infraestructura.GEN_CatalogoDetalle> Usuario_Moneda  {get;set;}
 
         public Infraestructura.PPROV_Documento Nuevo { get; set; }
+        public int? OrdenAdjunto { get; internal set; }
+        public int? EntregaAdjunto { get; internal set; }
+        public string EntregaAdjuntoUrl { get; internal set; }
+        public string OrdenAdjuntoUrl { get; internal set; }
+
     }
 
     public class PresentadosModelOficina
