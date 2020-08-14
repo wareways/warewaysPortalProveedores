@@ -9,6 +9,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
+using Wareways.PortalProv.Filters;
 using Wareways.PortalProv.Infraestructura;
 
 namespace Wareways.PortalProv
@@ -23,6 +24,7 @@ namespace Wareways.PortalProv
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            GlobalConfiguration.Configuration.MessageHandlers.Add(new APIKeyHandler());
             GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
 
         }

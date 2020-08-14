@@ -228,6 +228,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -360,6 +361,7 @@
     <Compile Include="Controllers\admPendienteController.cs" />
     <Compile Include="Controllers\admpresentadosController.cs" />
     <Compile Include="Controllers\admretencionesController.cs" />
+    <Compile Include="Controllers\Api\EmpresasController.cs" />
     <Compile Include="Controllers\BIController.cs" />
     <Compile Include="Controllers\CatalogoController.cs" />
     <Compile Include="Controllers\ContrasenaController.cs" />
@@ -369,7 +371,9 @@
     <Compile Include="Controllers\RetencionesController.cs" />
     <Compile Include="Controllers\ScheduleController.cs" />
     <Compile Include="Controllers\Seguridad\ConfGrlController.cs" />
+    <Compile Include="Filters\APIKeyHandler.cs" />
     <Compile Include="Filters\BasicAuthenticationAttribute.cs" />
+    <Compile Include="Filters\HMACAuthenticationAttribute.cs" />
     <Compile Include="Infraestructura\AspNetRoles.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
