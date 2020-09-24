@@ -496,7 +496,10 @@ namespace Wareways.PortalProv.Controllers
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error);
+                string errorMessage = error;
+                if (error.EndsWith("is already taken."))
+                    errorMessage = "El correo ya esta registrado en el sistema";
+                ModelState.AddModelError("", errorMessage);
             }
         }
 

@@ -112,32 +112,8 @@
                                     <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
                                     |
                                     <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
-                                    @if (!String.IsNullOrEmpty(item.Doc_PdfCotiza))
-                                    {
-                                        @:|
-                                        if (item.Doc_PdfCotiza.Contains(@"\\"))
-                                        {
-                                            <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="/servicios/Sap_AdjuntosDescarga.aspx?filename=@HttpUtility.UrlEncode(item.Doc_PdfCotiza)" data-target="#myModal" target="_blank" class="btn btn-default " title="Cotizacion"><span class="fa fa-file-text-o" style="color:orange"></span></a>
-                                        }
-                                        else
-                                        {
-                                            <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfCotiza" data-target="#myModal" target="_blank" class="btn btn-default " title="Cotizacion"><span class="fa fa-file-text-o" style="color:orange"></span></a>
-                                        }
-
-                                    }
-                                    @if (!String.IsNullOrEmpty(item.Doc_PdfInforme))
-                                    {
-                                        @:|
-                                        if (item.Doc_PdfInforme.Contains(@"\\"))
-                                        {
-                                            <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="/Servicios/Sap_AdjuntoDescarga.aspx?FileName=@HttpUtility.UrlEncode(item.Doc_PdfInforme)" data-target="#myModal" target="_blank" class="btn btn-default " title="Informe"><span class="fa fa-file-text-o" style="color:saddlebrown"></span></a>
-                                        }
-                                        else
-                                        {
-                                            <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfInforme" data-target="#myModal" target="_blank" class="btn btn-default " title="Informe"><span class="fa fa-file-text-o" style="color:saddlebrown"></span></a>
-                                        }
-
-                                    }
+                                    
+                                    
                                     <br />
                                     @{
                                         Html.RenderAction("LinksRetencionesDocto", new { id = item.Doc_Id });

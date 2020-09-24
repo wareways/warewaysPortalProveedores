@@ -363,6 +363,7 @@
     <Compile Include="Controllers\admretencionesController.cs" />
     <Compile Include="Controllers\Api\EmpresasController.cs" />
     <Compile Include="Controllers\BIController.cs" />
+    <Compile Include="Controllers\TipoRetencion.cs" />
     <Compile Include="Controllers\CatalogoController.cs" />
     <Compile Include="Controllers\ContrasenaController.cs" />
     <Compile Include="Controllers\PagosController.cs" />
@@ -373,7 +374,6 @@
     <Compile Include="Controllers\Seguridad\ConfGrlController.cs" />
     <Compile Include="Filters\APIKeyHandler.cs" />
     <Compile Include="Filters\BasicAuthenticationAttribute.cs" />
-    <Compile Include="Filters\HMACAuthenticationAttribute.cs" />
     <Compile Include="Infraestructura\AspNetRoles.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
@@ -7641,6 +7641,9 @@
     <Content Include="Views\admpresentados\LinksRetencionesDocto.cshtml" />
     <Content Include="Views\Account\ForgotPasswordInvalid.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\TipoRetencion\Create.cshtml" />
+    <Content Include="Views\TipoRetencion\Edit.cshtml" />
+    <Content Include="Views\TipoRetencion\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

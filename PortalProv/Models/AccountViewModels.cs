@@ -66,10 +66,19 @@ namespace Wareways.PortalProv.Models
 
     public class RegisterViewModel
     {
+        [Required]
         public string Nombre { get; set; }
+
+        [Required]
         public string Puesto { get; set; }
+
+        [Required]
         public string Nit { get; set; }
+
+        [Required]
         public string RazonSocial { get; set; }
+
+        [Required]
         public string Telefono { get; set; }
 
         [Required]

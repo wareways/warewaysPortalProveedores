@@ -75,7 +75,7 @@ namespace Wareways.PortalProv.Controllers
         [Authorize(Roles = "Oficina")]
         public ActionResult Nuevo(Models.PP.RetencionesOficinaNuevo model, HttpPostedFileBase filefac, FormCollection collection, string submit_Step1, string submit_Step2)
         {
-            model.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
+            model.Lista_TiposRet =  _Db.PPROV_RetencionTipo.ToList();
             model.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
             ViewBag.Usuario_Empresas = _Db.SP_PPROV_ADM_EmpresasOficina(User.Identity.Name).Select(p => new { p.Empresa_Id, p.Empresa_Name }).Distinct().ToList();
 
@@ -132,7 +132,7 @@ namespace Wareways.PortalProv.Controllers
                 if (model.Modo_Activo == "Paso1")
                 {
                     if (model.Nuevo_Pdf_Name == null) model.Nuevo_Pdf_Name = string.Format("RET_{0}.pdf", Guid.NewGuid().ToString());
-                    if (filefac.ContentLength == null)
+                    if (filefac.ContentLength != null)
                     {
                         // Upload Files to Server
                         var _ServerPath = Server.MapPath(@"~/Cargados/" + model.Retencion_CardCode + "/");

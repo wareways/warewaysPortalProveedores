@@ -189,7 +189,7 @@
 
                                 <embed src="~/Cargados/@Model.Nuevo_CardCode/@Model.Nuevo_Pdf_Facturas" type="application/pdf" style="width:90%; height:50vw;" id="uipdfembfac" />
                                 <embed src="~/Cargados/@Model.Nuevo_CardCode/@Model.Nuevo_Pdf_OC" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdfemboc" />
-                                @if (!String.IsNullOrEmpty(Model.Nuevo_Pdf_Cotizacion))
+                                @*@if (!String.IsNullOrEmpty(Model.Nuevo_Pdf_Cotizacion))
                                 {
                                     <embed src="@Wareways.PortalProv.Infraestructura.Servicios.AdjuntosUrlFix.Url(Model.Nuevo_Pdf_Cotizacion.Contains(@"\\")?Model.Nuevo_Pdf_Cotizacion:@"/Cargados/"+Model.Nuevo_CardCode+@"/"+Model.Nuevo_Pdf_Cotizacion)" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdcotiza" />
                                 }
@@ -222,7 +222,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                }
+                                }*@
 
 
                             </div>

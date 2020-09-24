@@ -55,35 +55,46 @@ namespace Wareways.PortalProv.Controllers
             modelo.Usuario_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
 
 
-            // Seccion Carga Cotizacion Proveedor
-            if (!String.IsNullOrEmpty(CargarCotizacion))
-            {
-                // No este Vacio
-                if (filecotiza.ContentLength > 0)
-                {
-                    if (modelo.Nuevo_Pdf_Cotizacion == null) modelo.Nuevo_Pdf_Cotizacion = string.Format("Cot_{0}.pdf", Guid.NewGuid().ToString());
-                    // Upload Files to Server
-                    var _ServerPath = Server.MapPath(@"~/Cargados/" + modelo.Nuevo_CardCode + "/");
-                    if (!System.IO.Directory.Exists(_ServerPath)) Directory.CreateDirectory(_ServerPath);
+            //// Seccion Carga Cotizacion Proveedor
+            //if (!String.IsNullOrEmpty(CargarCotizacion))
+            //{
+            //    try
+            //    {
+            //        if (filecotiza.ContentLength > 0)
+            //        {
+            //            if (modelo.Nuevo_Pdf_Cotizacion == null) modelo.Nuevo_Pdf_Cotizacion = string.Format("Cot_{0}.pdf", Guid.NewGuid().ToString());
+            //            // Upload Files to Server
+            //            var _ServerPath = Server.MapPath(@"~/Cargados/" + modelo.Nuevo_CardCode + "/");
+            //            if (!System.IO.Directory.Exists(_ServerPath)) Directory.CreateDirectory(_ServerPath);
 
-                    String _Cotiza_Path = System.IO.Path.Combine(_ServerPath, modelo.Nuevo_Pdf_Cotizacion);
-                    filecotiza.SaveAs(_Cotiza_Path);
+            //            String _Cotiza_Path = System.IO.Path.Combine(_ServerPath, modelo.Nuevo_Pdf_Cotizacion);
+            //            filecotiza.SaveAs(_Cotiza_Path);
 
-                    TempData["MensajeSuccess"] = "Cotización Cargada con Exito";
-                    ModelState.Clear();
-                    return View(modelo);
-                }
-                else
-                {
-                    modelo.Nuevo_Pdf_Cotizacion = null;
+            //            TempData["MensajeSuccess"] = "Cotización Cargada con Exito";
+            //            ModelState.Clear();
+            //            return View(modelo);
+            //        }
+            //        else
+            //        {
+            //            modelo.Nuevo_Pdf_Cotizacion = null;
 
-                    TempData["MensajeDanger"] = "No Existe o error con el archivo Cargado";
-                    ModelState.Clear();
-                    return View(modelo);
-                }
+            //            TempData["MensajeDanger"] = "No Existe o error con el archivo Cargado";
+            //            ModelState.Clear();
+            //            return View(modelo);
+            //        }
+
+            //    }
+            //    catch 
+            //    {
+            //        modelo.Nuevo_Pdf_Cotizacion = null;
+
+            //        TempData["MensajeDanger"] = "No Existe o error con el archivo Cargado";
+            //        ModelState.Clear();
+            //        return View(modelo);
+            //    }
 
 
-            }
+            //}
 
 
             if (modelo.Nuevo_Pdf_Facturas == null) modelo.Nuevo_Pdf_Facturas = string.Format("FAC_{0}.pdf", Guid.NewGuid().ToString());
@@ -201,10 +212,10 @@ namespace Wareways.PortalProv.Controllers
                                     ModelState.Clear();
                                     return View(modelo);
                                 }
-                                if (modelo.OrdenAdjunto == null || modelo.OrdenAdjunto == 0)
-                                {
-                                    TempData["MensajeWarning"] = "No se Encontro Cotización Adjunta, Favor Adjunte su Cotización";
-                                }
+                                //if (modelo.OrdenAdjunto == null || modelo.OrdenAdjunto == 0)
+                                //{
+                                //    TempData["MensajeWarning"] = "No se Encontro Cotización Adjunta, Favor Adjunte su Cotización";
+                                //}
                                 else
                                 {
                                     modelo.Nuevo_Pdf_Cotizacion = _InfoOrden[0].Orden_AdjuntosUrl;
