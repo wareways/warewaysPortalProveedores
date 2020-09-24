@@ -41,6 +41,7 @@ namespace Wareways.PortalProv.Controllers
             Models.PP.PresentadosModel modelo = new Models.PP.PresentadosModel();
             modelo.ModoActivo = "Nuevo_Paso1";
             modelo.Nuevo = new PPROV_Documento();
+            modelo.Nuevo.Doc_TasaCambio = 1;
 
             return View(modelo);
         }
@@ -308,6 +309,10 @@ namespace Wareways.PortalProv.Controllers
             if (String.IsNullOrEmpty(modelo.Nuevo.Doc_Fecha.ToString()))
             {
                 _Retorna = "Debe de Llevar informacion de la Fecha de la Factura";
+            }
+            if (modelo.Nuevo.Doc_Moneda != "QTZ" && modelo.Nuevo.Doc_TasaCambio < 1 )
+            {
+                _Retorna = "Debe de Ingrear la tasa de Cambio para factura en Dolares";
             }
 
 

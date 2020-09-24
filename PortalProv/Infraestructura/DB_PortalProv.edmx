@@ -192,6 +192,7 @@
           <Property Name="SolicitanteOC" Type="varchar" MaxLength="64" />
           <Property Name="Doc_PdfCotiza" Type="varchar" MaxLength="1024" />
           <Property Name="Doc_PdfInforme" Type="varchar" MaxLength="1024" />
+          <Property Name="Doc_TasaCambio" Type="decimal" Precision="18" Scale="6" />
         </EntityType>
         <EntityType Name="PPROV_Estado">
           <Key>
@@ -1832,6 +1833,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <NavigationProperty Name="PPROV_Retencion" Relationship="PortalProvModel.PPROV_RetencionFactura" FromRole="PPROV_Documento" ToRole="PPROV_Retencion" />
           <Property Name="Doc_PdfCotiza" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
           <Property Name="Doc_PdfInforme" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_TasaCambio" Type="Decimal" Precision="18" Scale="6" />
         </EntityType>
         <Association Name="FK_PPROV_Adjuntos_PPROV_Documento">
           <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="1" />
@@ -2675,6 +2677,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="PPROV_Documento">
             <EntityTypeMapping TypeName="PortalProvModel.PPROV_Documento">
               <MappingFragment StoreEntitySet="PPROV_Documento">
+                <ScalarProperty Name="Doc_TasaCambio" ColumnName="Doc_TasaCambio" />
                 <ScalarProperty Name="Doc_PdfInforme" ColumnName="Doc_PdfInforme" />
                 <ScalarProperty Name="Doc_PdfCotiza" ColumnName="Doc_PdfCotiza" />
                 <ScalarProperty Name="SolicitanteOC" ColumnName="SolicitanteOC" />
