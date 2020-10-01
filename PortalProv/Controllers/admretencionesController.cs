@@ -17,19 +17,20 @@ namespace Wareways.PortalProv.Controllers
         [Authorize(Roles = "Oficina")]
         public ActionResult Index()
         {
-            
+
             try
             {
                 var model = new Models.PP.RetencionesOficinaModel();
                 model.L_Retenciones = ObtenerRetencionesPorusuario();
 
                 return View(model);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                TempData["MensajeDanger"] = (ex.InnerException == null) ? ex.Message : ex.InnerException.Message ;
+                TempData["MensajeDanger"] = (ex.InnerException == null) ? ex.Message : ex.InnerException.Message;
             }
             return RedirectToAction("Index");
-            
+
         }
 
         [HttpGet]
@@ -39,10 +40,11 @@ namespace Wareways.PortalProv.Controllers
             try
             {
                 _Db.SP_PPROV_Elimina_Retencion(Retencion_Id);
-                
-            } catch (Exception ex)
+
+            }
+            catch (Exception ex)
             {
-                TempData["MensajeDanger"] = (ex.InnerException == null) ? ex.Message : ex.InnerException.Message ;
+                TempData["MensajeDanger"] = (ex.InnerException == null) ? ex.Message : ex.InnerException.Message;
             }
             return RedirectToAction("Index");
         }
@@ -65,17 +67,17 @@ namespace Wareways.PortalProv.Controllers
             {
                 TempData["MensajeDanger"] = (ex.InnerException == null) ? ex.Message : ex.InnerException.Message;
             }
-                       
+
             return View(model);
         }
 
-        
+
 
         [HttpPost]
         [Authorize(Roles = "Oficina")]
         public ActionResult Nuevo(Models.PP.RetencionesOficinaNuevo model, HttpPostedFileBase filefac, FormCollection collection, string submit_Step1, string submit_Step2)
         {
-            model.Lista_TiposRet =  _Db.PPROV_RetencionTipo.ToList();
+            model.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
             model.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
             ViewBag.Usuario_Empresas = _Db.SP_PPROV_ADM_EmpresasOficina(User.Identity.Name).Select(p => new { p.Empresa_Id, p.Empresa_Name }).Distinct().ToList();
 
@@ -83,7 +85,7 @@ namespace Wareways.PortalProv.Controllers
             {
                 if (model.Modo_Activo == "Paso2")
                 {
-                    
+
                     if (ValidacionRetencion(model))
                     {
                         var _DocRef = _Db.PPROV_Documento.Find(model._DocId);
@@ -99,16 +101,17 @@ namespace Wareways.PortalProv.Controllers
                             Retencion_Tipo = model.Retencion_Tipo,
                             Retencion_Usuario = User.Identity.Name,
                             Retencion_CardCode = model.Retencion_CardCode,
-                            
+
                         };
                         if (model._DocId == null)
                         {
-                            _Nuevo.Retencion_CardCode = model.Retencion_CardCode.Split(',')[0];
+                            _Nuevo.Retencion_CardCode = model.Retencion_CardCode.Split(' ')[0];
                             _Nuevo.Retencion_EmpresaId = model.Manual_Empresa;
                             _Nuevo.Manual_Empresa = model.Manual_Empresa;
                             _Nuevo.Manual_FacNumero = model.Manual_FacNumero;
                             _Nuevo.Manual_Fac_Serie = model.Manual_Fac_Serie;
-                        } else
+                        }
+                        else
                         {
                             _Nuevo.Retencion_EmpresaId = _DocRef.Doc_EmpresaId;
                         }
@@ -122,7 +125,7 @@ namespace Wareways.PortalProv.Controllers
 
                         if (model._DocId != null)
                         {
-                            return RedirectToAction("index","admpresentados",new { FiltroEstado = "Retenciones" });
+                            return RedirectToAction("index", "admpresentados", new { FiltroEstado = "Retenciones" });
                         }
                         return RedirectToAction("index");
                     }
@@ -150,15 +153,15 @@ namespace Wareways.PortalProv.Controllers
                             var _DocRef = _Db.PPROV_Documento.Find(model._DocId);
                             model.Retencion_CardCode = _DocRef.Doc_CardCorde;
                         }
-                        
+
 
                     }
                     else
                     {
-                        TempData["MensajeDanger"] = "Debe de Cargar el PDF del la retencion";                        
+                        TempData["MensajeDanger"] = "Debe de Cargar el PDF del la retencion";
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -194,7 +197,13 @@ namespace Wareways.PortalProv.Controllers
             }
             var _Retencion = _Db.PPROV_Retencion.Find(id);
             var _Proveedor = _Db.V_PPROV_Proveedor.Where(p => p.CardCode == _Retencion.Retencion_CardCode).ToList();
-            var _EmpresaId = _Retencion.PPROV_Documento.ToList()[0].Doc_EmpresaId;
+            var _EmpresaId = 0;
+            if (_Retencion.PPROV_Documento.ToList()[0] == null)
+            {
+                _EmpresaId = (Int32)_Retencion.Manual_Empresa;
+            }
+            else { _EmpresaId =  (Int32)_Retencion.PPROV_Documento.ToList()[0].Doc_EmpresaId; }
+
             var _Empresa = _Db.V_PPROV_Empresas.Where(p => p.Empresa_Id == _EmpresaId).ToList();
 
             body = body.Replace("***EmpresaNombre***", _Empresa[0].AliasName);
@@ -213,30 +222,43 @@ namespace Wareways.PortalProv.Controllers
             var _FilaInfoMonto = "";
             foreach (var _Item in _Retencion.PPROV_Documento)
             {
-                _FilaInfoFac += _Contenido_Valor.Replace("***ContenidovValor***", _Item.Doc_Serie + " " + _Item.Doc_Numero);
-                _FilaInfoTipo += _Contenido_Valor.Replace("***ContenidovValor***", _Retencion.PPROV_RetencionTipo.Retencion_Nombre);
-                _FilaInfoMonto += _Contenido_Valor.Replace("***ContenidovValor***", string.Format("{0:#,###,###.00}", _Retencion.Retencion_Monto));
+                if (_Item  == null)
+                {
+                    _FilaInfoFac += _Contenido_Valor.Replace("***ContenidovValor***", _Retencion.Manual_Fac_Serie + " " + _Retencion.Manual_FacNumero);
+                    _FilaInfoTipo += _Contenido_Valor.Replace("***ContenidovValor***", _Retencion.PPROV_RetencionTipo.Retencion_Nombre);
+                    _FilaInfoMonto += _Contenido_Valor.Replace("***ContenidovValor***", string.Format("{0:#,###,###.00}", _Retencion.Retencion_Monto));
+                } else
+                {
+                    _FilaInfoFac += _Contenido_Valor.Replace("***ContenidovValor***", _Item.Doc_Serie + " " + _Item.Doc_Numero);
+                    _FilaInfoTipo += _Contenido_Valor.Replace("***ContenidovValor***", _Retencion.PPROV_RetencionTipo.Retencion_Nombre);
+                    _FilaInfoMonto += _Contenido_Valor.Replace("***ContenidovValor***", string.Format("{0:#,###,###.00}", _Retencion.Retencion_Monto));
+                }
+                    
             }
             body = body.Replace("***FilaInfoFac***", _FilaInfoFac);
             body = body.Replace("***FilaInfoTipo***", _FilaInfoTipo);
             body = body.Replace("***FilaInfoMonto***", _FilaInfoMonto);
 
-            _Db_Flex.NotificacionesCola.Add(new NotificacionesCola
+            var _CorreosDestino = _Db.SP_ObtenerCorreos_Por_CardCode(_Retencion.Retencion_CardCode).ToList();
+            foreach (var _Correo in _CorreosDestino)
             {
-                Para = "jherrera@wareways.com",
-                Copia = "julioherreraguate@gmail.com",
-                Asunto = "Retencion Generada",
-                Cuerpo = body,
-                EnviadoFecha = null,
-                EnviarHasta = DateTime.Now,
-                ProximoEnvio = null,
-                IntervaloMinutos = 0,
-                Sistema = "SS_Proveedores",
-                Parametro1 = "Retenciones",
-                Parametro2 = id.ToString(),
-                Id = Guid.NewGuid()
+                _Db_Flex.NotificacionesCola.Add(new NotificacionesCola
+                {
+                    Para = _Correo.Email,                    
+                    Asunto = "Retencion Generada",
+                    Cuerpo = body,
+                    EnviadoFecha = null,
+                    EnviarHasta = DateTime.Now,
+                    ProximoEnvio = null,
+                    IntervaloMinutos = 0,
+                    Sistema = "SS_Proveedores",
+                    Parametro1 = "Retenciones",
+                    Parametro2 = id.ToString(),
+                    Id = Guid.NewGuid()
 
-            });
+                });
+            }
+            
             _Db_Flex.SaveChanges();
 
 

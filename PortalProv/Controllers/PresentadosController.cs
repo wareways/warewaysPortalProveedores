@@ -207,7 +207,7 @@ namespace Wareways.PortalProv.Controllers
                                     ModelState.Clear();
                                     return View(modelo);
                                 }
-                                if (modelo.EntregaAdjunto == null || modelo.EntregaAdjunto == 0)
+                                if (modelo.EntregaAdjunto == null || modelo.EntregaAdjunto == 0 || Int32.Parse(_NumeroOc) == 3017496)
                                 {
                                     TempData["MensajeDanger"] = "No existe Entrega de Servicio o Producto de la Orden " + _NumeroOc + " ,Comuniquese con el departamento que realizo la compra";
                                     ModelState.Clear();

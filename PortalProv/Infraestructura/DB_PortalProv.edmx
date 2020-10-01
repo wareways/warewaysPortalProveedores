@@ -935,6 +935,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="SP_ObtenerCorreos_Por_CardCode" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CardCode" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SP_PPROV_ADM_EmpresasOficina" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Username" Type="nvarchar" Mode="In" />
         </Function>
@@ -1504,6 +1507,9 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           </AssociationSet>
           <FunctionImport Name="SP_PPROV_Elimina_Retencion">
           <Parameter Name="Retencion_Id" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="SP_ObtenerCorreos_Por_CardCode" ReturnType="Collection(PortalProvModel.SP_ObtenerCorreos_Por_CardCode_Result)">
+            <Parameter Name="CardCode" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="GEN_Configuracion">
@@ -2419,6 +2425,10 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <End Type="PortalProvModel.PPROV_Documento" Role="PPROV_Documento" Multiplicity="*" />
           <End Type="PortalProvModel.PPROV_Retencion" Role="PPROV_Retencion" Multiplicity="*" />
         </Association>
+        <ComplexType Name="SP_ObtenerCorreos_Por_CardCode_Result">
+          <Property Type="String" Name="CardCode" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3185,6 +3195,14 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
             </EndProperty>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="SP_PPROV_Elimina_Retencion" FunctionName="PortalProvModel.Store.SP_PPROV_Elimina_Retencion" />
+          <FunctionImportMapping FunctionImportName="SP_ObtenerCorreos_Por_CardCode" FunctionName="PortalProvModel.Store.SP_ObtenerCorreos_Por_CardCode">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PortalProvModel.SP_ObtenerCorreos_Por_CardCode_Result">
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

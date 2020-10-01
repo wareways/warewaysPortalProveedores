@@ -494,6 +494,9 @@
     <Compile Include="Infraestructura\SP_EntregasCOM_SAP_Result.cs">
       <DependentUpon>ModulosApoyo.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\SP_ObtenerCorreos_Por_CardCode_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\SP_PPROV_ADM_EmpresasOficina_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>

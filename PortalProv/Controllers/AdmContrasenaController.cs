@@ -69,22 +69,27 @@ namespace Wareways.PortalProv.Controllers
             body = body.Replace("***FilaInfoOrden***", _FilaInfoOrden);
             body = body.Replace("***FilaInfoMonto***", _FilaInfoMonto);
 
-            _Db_Flex.NotificacionesCola.Add(new NotificacionesCola
+            var _CorreosDestino = _Db.SP_ObtenerCorreos_Por_CardCode(_Proveedor[0].CardCode).ToList();
+            foreach (var _Correo in _CorreosDestino)
             {
-                Para = "jherrera@wareways.com",
-                Copia = "julioherreraguate@gmail.com",
-                Asunto = "Portal Proveedores - Contraseña Generada - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-                Cuerpo = body,
-                EnviadoFecha = null,
-                EnviarHasta = DateTime.Now,
-                ProximoEnvio = null,
-                IntervaloMinutos = 0,
-                Sistema = "SS_Proveedores",
-                Parametro1 = "Contraseña",
-                Parametro2 = id.ToString(),
-                Id = Guid.NewGuid()
+                _Db_Flex.NotificacionesCola.Add(new NotificacionesCola
+                {
+                    Para = _Correo.Email,
+                    Copia = "",
+                    Asunto = "Portal Proveedores - Contraseña Generada - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                    Cuerpo = body,
+                    EnviadoFecha = null,
+                    EnviarHasta = DateTime.Now,
+                    ProximoEnvio = null,
+                    IntervaloMinutos = 0,
+                    Sistema = "SS_Proveedores",
+                    Parametro1 = "Contraseña",
+                    Parametro2 = id.ToString(),
+                    Id = Guid.NewGuid()
 
-            });
+                });
+            }
+                
             _Db_Flex.SaveChanges();
             
 

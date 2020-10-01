@@ -144,5 +144,14 @@ namespace Wareways.PortalProv.Infraestructura
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_PPROV_Elimina_Retencion", retencion_IdParameter);
         }
+    
+        public virtual ObjectResult<SP_ObtenerCorreos_Por_CardCode_Result> SP_ObtenerCorreos_Por_CardCode(string cardCode)
+        {
+            var cardCodeParameter = cardCode != null ?
+                new ObjectParameter("CardCode", cardCode) :
+                new ObjectParameter("CardCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ObtenerCorreos_Por_CardCode_Result>("SP_ObtenerCorreos_Por_CardCode", cardCodeParameter);
+        }
     }
 }
