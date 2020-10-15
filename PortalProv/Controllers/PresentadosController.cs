@@ -114,9 +114,14 @@ namespace Wareways.PortalProv.Controllers
                     modelo.Nuevo.Doc_TipoDocumento = "FACT";
                     modelo.Nuevo.Doc_UsuarioCarga = User.Identity.Name;
                     modelo.Nuevo.Doc_PdfFactura = String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_Facturas);
-                    modelo.Nuevo.Doc_PdfOC = String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_OC); 
-                    modelo.Nuevo.Doc_PdfCotiza = (modelo.Nuevo_Pdf_Cotizacion.Contains(@"\\"))? modelo.Nuevo_Pdf_Cotizacion : String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_Cotizacion);
-                    modelo.Nuevo.Doc_PdfInforme = (modelo.Nuevo_Pdf_Informe.Contains(@"\\")) ? modelo.Nuevo_Pdf_Informe : String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_Informe);
+                    modelo.Nuevo.Doc_PdfOC = String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_OC);
+                    try
+                    {
+                        modelo.Nuevo.Doc_PdfCotiza = (modelo.Nuevo_Pdf_Cotizacion.Contains(@"\\")) ? modelo.Nuevo_Pdf_Cotizacion : String.Format("/cargados/{0}/{1}", modelo.Nuevo_CardCode, modelo.Nuevo_Pdf_Cotizacion);
+                    }
+                    catch { }
+                    
+                    
 
                     _Db.PPROV_Documento.Add(modelo.Nuevo);
                     _Db.SaveChanges();
@@ -290,10 +295,10 @@ namespace Wareways.PortalProv.Controllers
         private string ValidarDatos(PresentadosModel modelo)
         {
             var _Retorna = "";
-            if (String.IsNullOrEmpty(  modelo.Nuevo_Pdf_Cotizacion) )
-            {
-                _Retorna = "No se Encontro Cotización Adjunta, Favor Adjunte su Cotización";
-            }
+            //if (String.IsNullOrEmpty(  modelo.Nuevo_Pdf_Cotizacion) )
+            //{
+            //    _Retorna = "No se Encontro Cotización Adjunta, Favor Adjunte su Cotización";
+            //}
             if (String.IsNullOrEmpty(modelo.Nuevo.Doc_Autorizacion))
             {
                 _Retorna = "Debe de Llevar informacion de la Autorizacion de la Factura";

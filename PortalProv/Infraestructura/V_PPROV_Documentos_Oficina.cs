@@ -44,5 +44,6 @@ namespace Wareways.PortalProv.Infraestructura
         public Nullable<int> Contrasena_Numero { get; set; }
         public string Doc_PdfCotiza { get; set; }
         public string Doc_PdfInforme { get; set; }
+        public string CardName { get; set; }
     }
 }

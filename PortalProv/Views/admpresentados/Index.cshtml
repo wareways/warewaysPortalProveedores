@@ -66,7 +66,7 @@
                         {
                             <tr>
                                 <td>
-                                    @if (ViewBag.FiltroEstado != "Pagado" && ViewBag.FiltroEstado != "Pendiente")
+                                    @if (ViewBag.FiltroEstado != "Pagado" )
                                     {
                                         <a href="#" class="btn btn-sm btn-warning BtnOpenModalCambioEstado " data-id="@item.Doc_Id"> <span class="fa fa-share "></span>  </a>
 
@@ -87,7 +87,7 @@
                                 <td>@item.Doc_Estado</td>
 
                                 <td>@item.Doc_TipoDocumento</td>
-                                <td>@item.Doc_CardCorde</td>
+                                <td>@item.Doc_CardCorde<br /> @item.CardName</td>
 
                                 <td>@item.Doc_Serie - @item.Doc_Numero</td>
 

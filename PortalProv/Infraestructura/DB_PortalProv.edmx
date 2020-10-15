@@ -478,6 +478,7 @@ warning 6002: The table/view 'PortalProv.dbo.V_PPROV_Documentos_Oficina' does no
           <Property Name="Contrasena_Numero" Type="int" />
           <Property Name="Doc_PdfCotiza" Type="varchar" MaxLength="1024" />
           <Property Name="Doc_PdfInforme" Type="varchar" MaxLength="1024" />
+          <Property Name="CardName" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PortalProv.dbo.V_PPROV_DocumentosPorUsuario' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1114,7 +1115,8 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
     [V_PPROV_Documentos_Oficina].[UserName] AS [UserName], 
     [V_PPROV_Documentos_Oficina].[Contrasena_Numero] AS [Contrasena_Numero], 
     [V_PPROV_Documentos_Oficina].[Doc_PdfCotiza] AS [Doc_PdfCotiza], 
-    [V_PPROV_Documentos_Oficina].[Doc_PdfInforme] AS [Doc_PdfInforme]
+    [V_PPROV_Documentos_Oficina].[Doc_PdfInforme] AS [Doc_PdfInforme], 
+    [V_PPROV_Documentos_Oficina].[CardName] AS [CardName]
     FROM [dbo].[V_PPROV_Documentos_Oficina] AS [V_PPROV_Documentos_Oficina]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V_PPROV_DocumentosPorUsuario" EntityType="Self.V_PPROV_DocumentosPorUsuario" store:Type="Views" store:Schema="dbo">
@@ -1509,7 +1511,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Parameter Name="Retencion_Id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerCorreos_Por_CardCode" ReturnType="Collection(PortalProvModel.SP_ObtenerCorreos_Por_CardCode_Result)">
-            <Parameter Name="CardCode" Mode="In" Type="String" />
+          <Parameter Name="CardCode" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="GEN_Configuracion">
@@ -2098,6 +2100,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <Property Name="Contrasena_Numero" Type="Int32" />
           <Property Name="Doc_PdfCotiza" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
           <Property Name="Doc_PdfInforme" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="CardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="v_PPROV_FacturasIngresadas_Oficina">
           <Key>
@@ -2898,6 +2901,7 @@ warning 6002: The table/view 'PortalProv.dbo.v_PPROV_Usuario_Proveedor' does not
           <EntitySetMapping Name="V_PPROV_Documentos_Oficina">
             <EntityTypeMapping TypeName="PortalProvModel.V_PPROV_Documentos_Oficina">
               <MappingFragment StoreEntitySet="V_PPROV_Documentos_Oficina">
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
                 <ScalarProperty Name="Doc_PdfInforme" ColumnName="Doc_PdfInforme" />
                 <ScalarProperty Name="Doc_PdfCotiza" ColumnName="Doc_PdfCotiza" />
                 <ScalarProperty Name="Contrasena_Numero" ColumnName="Contrasena_Numero" />
