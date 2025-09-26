@@ -28,6 +28,7 @@
                             <th>Monto</th>
                             <th>Cargado el</th>
                             <th>Orden Compra</th>
+                          
                             <th>Observacion</th>
                             <th>Archivos</th>
                             <th>Mensajes</th>
@@ -51,11 +52,24 @@
 
                                 <td>@item.Doc_Moneda</td>
 
-                                <td>@item.Doc_MontoNeto.Value.ToString("#,###,##0.00")</td>
+                                <td>@item.Doc_MontoNeto.ToString("#,###,##0.00")</td>
 
                                 <td>@item.Doc_FechaCarga.Value.ToString("yyyy-MM-dd HH:mm")</td>
 
-                                <td>@item.Doc_NumeroOC</td>
+                                <td>
+                                    @if (item.Doc_OC_Multiple == "")
+                                    {
+                                        @:@item.Doc_NumeroOC
+                                    }
+                                    else
+                                    {
+                                        @:<i class="fa fa-book" style="color:darkblue"></i> &nbsp;
+                                        @item.Doc_OC_Multiple
+
+
+                                    }
+                                </td>
+                              
 
                                 <td>@item.Doc_Observaciones</td>
 
@@ -187,6 +201,7 @@
                 'showinfo': false,
                 "pageLength": 10,
                 "order": [[7, "desc"]],
+                
                 //"columnDefs": [
                 //    { "width": "60%", "targets": 0 },
                 //    { "width": "20%", "targets": 1 },

@@ -1,0 +1,339 @@
+﻿@model  Wareways.PortalProv.Models.OC.OrdenesCompraIndexModel
+@using System.Configuration;
+@{
+
+    var VisibleAutoEspecial = ConfigurationManager.AppSettings["VisibleAutoEspecial"];
+    var VisibleRevisionOc = ConfigurationManager.AppSettings["VisibleAutoEspecial"];
+    var VisibleAKIOL = ConfigurationManager.AppSettings["VisibleAKIOL"];
+    var Subsite = ConfigurationManager.AppSettings["SubSite"];
+}
+
+@using (Html.BeginForm("Index", "OrdenesCompra", FormMethod.Post, new { @id = "Forma1" }))
+{
+    <div class="box box-default box-solid">
+
+        <div class="box-header ">
+            <div class="col-md-6">
+                <h4 class="box-title "> Ordenes de Compra </h4>
+            </div>
+            <div class="col-md-6 " style="text-align:right">
+
+                @if ((Boolean)ViewBag.MostarCrear)
+                {
+                    <a href="@Url.Action("Emitir")" class="btn btn-warning btn-sm">
+                        Nuevo
+                        <span class="fa fa-plus-circle" aria-hidden="true"></span>
+                    </a>
+                }
+
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="pull-right">
+                <span>Estados: </span>
+                <div class="btn-group">
+                    <a href="@Url.Action("Index","OrdenesCompra", new { id="Cancelado" })" class="btn @((Model.EstadoSel=="Cancelado")?"btn-primary":"btn-default") ">Cancelado </a>
+                    <a href="@Url.Action("Index","OrdenesCompra", new { id="Borrador" })" class="btn @((Model.EstadoSel=="Borrador")?"btn-primary":"btn-default") ">Borrador (@Model.NoBorrador)</a>
+                    @if (VisibleRevisionOc == "S")
+                    {
+                        <a href="@Url.Action("Index","OrdenesCompra", new { id="Revision" })" class="btn @((Model.EstadoSel=="Revision")?"btn-primary":"btn-default") ">Revision (@Model.NoRevision)</a>
+                    }
+                    <a href="@Url.Action("Index","OrdenesCompra", new { id="Autorizar" })" class="btn @((Model.EstadoSel=="Autorizar")?"btn-primary":"btn-default") ">Autorizar (@Model.NoAutorizar)</a>
+
+                    @if (VisibleAutoEspecial == "S")
+                    {
+                        <a href="@Url.Action("Index","OrdenesCompra", new { id="AutoEspe" })" class="btn @((Model.EstadoSel=="AutoEspe")?"btn-primary":"btn-default") ">Auto Especial (@Model.NoAprobadoEspecial)</a>
+                    }
+                    <a href="@Url.Action("Index","OrdenesCompra", new { id="Aprobado" })" class="btn @((Model.EstadoSel=="Aprobado")?"btn-primary":"btn-default") ">Aprobado (@Model.NoAprobado)</a>
+                    <a href="@Url.Action("Index","OrdenesCompra", new { id="Generado" })" class="btn @((Model.EstadoSel=="Generado")?"btn-primary":"btn-default") ">Generado (@Model.NoGenerado)</a>
+                    @if (VisibleAKIOL == "S")
+                    {
+                        <a href="@Url.Action("Index","OrdenesCompra", new { id="AKIOL" })" class="btn @((Model.EstadoSel=="AKIOL")?"btn-primary":"btn-default") ">AKI OL (@Model.NoAKIol)</a>
+                    }
+
+                </div>
+            </div>
+            <br />
+            <br />
+            @if (Model.EstadoSel != "AKIOL")
+            {
+                <table class="table table-bordered table-condensed" id="Datos">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("#")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Tipo")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Depto")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Fecha")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Proveedor")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Total")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Moneda")
+                            </th>
+
+                            <th>
+                                @Html.DisplayName("Creado Por")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Comentario")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Entrega/Fact")
+                            </th>
+                            <th>
+
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Datos)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Correlativo
+                                </td>
+                                <td>
+                                   
+                                    @if (item.ActivoFijo)
+                                    {
+                                        @:2 | Activo Fijo
+                                    }
+                                    else
+                                    {
+                                        if (item.Tipo_Detalle == "" || item.Tipo_Detalle == "Externo")
+                                        {
+                                            @:4 | AKIOL o Externo
+                                        }
+                                        if (item.Tipo_Detalle == "Servicio")
+                                        {
+                                            @:1 | Servicio
+                                        }
+                                        if (item.Tipo_Detalle == "Bien")
+                                        {
+                                            @:2 | Bien
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @item.DepartmentName
+
+                                </td>
+                                <td>
+                                    @item.FechaEmision.ToString("dd/MM/yyyy")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CardCode)
+                                    | @Html.DisplayFor(modelItem => item.Cardname)
+                                </td>
+                                <td>
+                                    @item.Total.ToString("##,###,###.00")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Moneda)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreadoPor)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Comentario)
+                                </td>
+                                <td>
+                                    @if (item.EntregaNo != null)
+                                    {
+                                        <a href='@Url.Action("PrintEM.aspx","Reportes",new { pid = item.EntregaNo })' title="Entrega"
+                                           target="_blank" class="btn btn-sm btn-info">
+                                            @item.EntregaNo &nbsp;
+                                            <span class="fa  fa-truck"></span>
+                                        </a>
+
+                                    }
+                                    @if (item.Doc_PdfFactura != "" && item.Doc_PdfFactura != null)
+                                    {
+                                        foreach (var itmpdf in item.Doc_PdfFactura.Split(','))
+                                        {
+                                            <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@itmpdf" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
+                                        }
+
+                                    }
+
+                                </td>
+                                <td>
+                                    @Html.ActionLink(" ", "Emitir", new { id = item.FEL_Unique }, new { @class = "btn btn-sm btn-warning glyphicon glyphicon-pencil", @title = "Editar" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <table class="table table-bordered table-condensed" id="Datos">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayName("#")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Tipo")
+                            </th>
+                            <th>
+                                @Html.DisplayName("No. AKI OL")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Fecha")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Proveedor")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Total")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Moneda")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Estado")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Creado Por")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Comentario")
+                            </th>
+
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow item in Model.DatosAKIOL.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>
+                                    @item["DocNum"].ToString()
+                                </td>
+                                <td>
+                                    @item["Doctype"].ToString()
+                                </td>
+                                <td>
+                                    @item["NumAtCard"].ToString()
+                                </td>
+                                <td>
+                                    @(    item["DocDate"].ToString()   )
+                                </td>
+                                <td>
+                                    @item["CardCode"].ToString() | @item["Cardname"].ToString()
+                                </td>
+                                <td>
+                                    @item["DocTotal"].ToString()
+                                </td>
+                                <td>
+                                    @item["DocCur"].ToString()
+                                </td>
+                                <td>
+                                    @item["DocStatus"].ToString()
+                                </td>
+                                <td>
+                                    Interfaz
+                                </td>
+                                <td>
+                                    @item["Comments"].ToString()
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            }
+
+
+
+        </div>
+        <div class="box-footer">
+
+        </div>
+    </div>
+
+
+
+}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabelTitle">Modal title</h4>
+            </div>
+
+            <div class="modal-body" id="ContenedorPDF">
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<link href="~/admin-lte/bower_components/datatablesNew.net/datatables.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script src="~/admin-lte/bower_components/datatablesNew.net/datatables.min.js"></script>
+    @*<script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>*@
+    @*<script src="https://cdn.datatables.net/rowgroup/1.5.2/js/dataTables.rowGroup.min.js"></script>*@
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+    <script>
+
+        $(function () {
+            $('#Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'order': [[1, "asc"], [3, "desc"]],
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 15,
+                "language": { "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json" },
+                "scrollX": true,
+                "rowGroup": {
+                    dataSrc: 1
+                },
+                "columnDefs": [
+                    {
+                        target: 1,
+                        visible: false
+                    }
+                ]
+            })
+        })
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#myModal").on("show.bs.modal", function (e) {
+                var id = $(e.relatedTarget).data('nombre');
+                var titulo = $(e.relatedTarget).data('titulo');
+
+                $("#ContenedorPDF").html("<embed src='@Subsite" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                $("#myModalLabelTitle").html(titulo);
+
+            });
+        });
+    </script>
+}

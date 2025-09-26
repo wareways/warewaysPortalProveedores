@@ -22,7 +22,7 @@ namespace Wareways.PortalProv.Infraestructura
         public string Doc_Serie { get; set; }
         public Nullable<System.DateTime> Doc_Fecha { get; set; }
         public Nullable<int> Doc_EmpresaId { get; set; }
-        public Nullable<decimal> Doc_MontoNeto { get; set; }
+        public decimal Doc_MontoNeto { get; set; }
         public string Doc_Moneda { get; set; }
         public string Doc_Autorizacion { get; set; }
         public string Doc_Observaciones { get; set; }
@@ -45,5 +45,6 @@ namespace Wareways.PortalProv.Infraestructura
         public string Doc_PdfCotiza { get; set; }
         public string Doc_PdfInforme { get; set; }
         public string CardName { get; set; }
+        public string Doc_OC_Multiple { get; set; }
     }
 }

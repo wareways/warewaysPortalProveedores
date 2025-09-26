@@ -28,7 +28,7 @@ namespace Wareways.PortalProv.Controllers
             var _UserName = User.Identity.Name;
             var _Datos = _Db.v_PPROV_FacturasIngresadas_Oficina.Where(p=> p.TrsfrDate == null 
                                 && p.Vencimiento >= FechaInicial && p.Vencimiento <= FechaFinal
-                                && p.UserName == _UserName ).ToList();
+                                 ).ToList();
 
             return _Datos;
         }

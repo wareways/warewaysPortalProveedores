@@ -1,0 +1,318 @@
+﻿@model  Wareways.PortalProv.Models.PP.DetallePresentadosModel
+@using System.Configuration;
+@{
+    var Subsite = ConfigurationManager.AppSettings["SubSite"];
+    String NomCta(String cuentaContable)
+    {
+        try
+        {
+            return Model.CuentasTodas.Where(p => p.AcctCode == cuentaContable).ToList()[0].ActId;
+        }
+        catch
+        { return cuentaContable; }
+    }
+    String DesCta(String cuentaContable)
+    {
+        try
+        {
+            return Model.CuentasTodas.Where(p => p.AcctCode == cuentaContable).ToList()[0].AcctName;
+        }
+        catch
+        { return cuentaContable; }
+    }
+    String DesCC(String CentroCosto)
+    {
+        try
+        {
+            return Model.CentroCostos.Where(p => p.ocrCode == CentroCosto).ToList()[0].ocrName;
+        }
+        catch
+        { return CentroCosto; }
+    }
+}
+
+@section Header
+{
+    <link href="~/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <style>
+        .nav .active {
+            background-color: orange
+        }
+    </style>
+}
+
+<div class="box box-warning box-solid">
+    <div class="box-header with-border">
+        <h4 class="box-title"> <span class="fa fa-edit  fa-2x"></span>&nbsp;Edit Detalle Servicio</h4>
+
+
+        <div class="box-tools pull-right">
+            <span style="text-align:center"><a href="@Url.Action("Detalle", new { id= Model.Generado.FEL_Unique })" class="btn  btn-primary"> Regresar</a></span>
+
+
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            @if (Model.GeneradoDetalle.Count > 0)
+            {
+                <div class="col-md-6">
+                    <div class="box">
+                        <div class="box-body">
+                            <table id="detalleFact2" name="detalleFact2" class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Cantidad</th>
+                                        <th>Descripcion</th>
+                                        <th>Bodega</th>
+                                        <th>Precio  Unitario</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var oItem in Model.GeneradoDetalle)
+                                    {
+
+                                        <tr>
+
+                                            <td>@oItem.Cantidad</td>
+                                            <td>
+                                                @oItem.CodigoProducto @oItem.Descripcion
+                                                <small class="label bg-black" title="@DesCC(oItem.CentroCosto)">@oItem.CentroCosto</small>&nbsp;
+                                                <small class="label bg-green" title="@DesCta(oItem.CuentaContable)">@NomCta(oItem.CuentaContable)</small>
+                                            </td>
+                                            <td>@oItem.Bodega</td>
+                                            <td style="text-align:right">@oItem.PrecioUnitario.ToString("##,###,###.00")</td>
+                                            <td style="text-align:right">@((oItem.TotalLinea+oItem.Impuestos).ToString("##,###,###.00"))</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <form method="post" action="@Url.Action("updateAccount")">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    @Html.Hidden("FEL_Unique", Model.Generado.FEL_Unique)
+                                    @Html.Hidden("Linea", Model.GeneradoDetalle[0].Linea)
+                                    <div class="row">
+                                        @Html.Label("Cuenta Contable", htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("CuentaContable", new SelectList(Model.CuentasTodas, "AcctCode", "AcctName"), new { @class = "form-control chosen-select CalcularTotalLinea" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        @Html.Label("Centro Costo", htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("CentroCosto", new SelectList(Model.CentroCostos, "OcrCode", "OcrName"), new { @class = "form-control chosen-select2 CalcularTotalLinea" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        @Html.Label("Precio U", htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.TextBox("PrecioUnitario", Model.GeneradoDetalle[0].PrecioUnitario, new { @class = "form-control", @disabled = "disabled", @type = "number" })
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="box-footer">
+                                @if (Model.PDoc.Doc_Estado == "Ingreso SAP" || Model.PDoc.Doc_Estado == "Contraseña")
+                                {
+                                    if (Model.Generado.Tipo_Detalle == "S")
+                                    {
+                                        <button type="submit" class="btn btn-success pull-right"> Actualizar Cuenta <i class="fa fa-save"></i></button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="col-md-6">
+
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="col-md-6" style="">
+                @if ((Model.PDoc.Doc_Estado == "Ingreso SAP" || Model.PDoc.Doc_Estado == "Contraseña") && Model.Generado.Tipo_Detalle == "S" && Model.GeneradoDetalle.Where(p => p.ChkImpDetEnt == true).Count() == 0)
+                {
+                    <form method="post" action="@Url.Action("AgregarImpuestoAdic")">
+
+                        <div class="box box-primary box-solid">
+                            <div class="box-header with-border ">
+                                <h4 class="box-title"> Agregar Impuestos Adicionales </h4>
+                            </div>
+                            <div class="box-body">
+                                @Html.Hidden("FEL_Unique", Model.Generado.FEL_Unique)
+                                @Html.Hidden("Linea", Model.GeneradoDetalle[0].Linea)
+                                <div class="row">
+                                    @Html.Label("Descripción", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.TextBox("Descripcion", "Impuesto de ", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @Html.Label("Precio U", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.TextBox("PrecioUnitario", 0.00m, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @Html.Label("Impuesto", htmlAttributes: new { @class = "control-label col-md-2", })
+                                    <div class="col-md-10">
+                                        @Html.DropDownListFor(p => p.Impuesto, new SelectList(Model.lstImpuestos, "ImpCode", "ImpName"), new { @class = "form-control CalcularTotalLinea", @disabled = "disabled" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @Html.Label("Cuenta Contable", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("CuentaContable", new SelectList(Model.CuentasTodas, "AcctCode", "AcctName"), new { @class = "form-control chosen-select CalcularTotalLinea" })
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @Html.Label("Centro Costo", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("CentroCosto", new SelectList(Model.CentroCostos, "OcrCode", "OcrName"), new { @class = "form-control chosen-select2 CalcularTotalLinea" })
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="box-footer">
+                                <p style="color:red">** El monto ingresado lo tomara del Total de la Linea</p>
+                                <button type="submit" class="btn btn-primary pull-right"> Agregar Parte Monto Impuesto <i class="fa fa-save"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                }
+
+
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link " href="#" onclick="MostrarFACT('S2');" id="tabpdfembfacS2">Ver Factura</a>
+                        </li>
+                        <li>
+                            <a class="nav-link " href="#" onclick="MostrarOC('S2');" id="tabpdfembocS2">Ver OC</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active" href="#" onclick="MostrarEM('S2');" id="tabpdfembemS2">Ver Entrega</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-12">
+                    <embed src="@Subsite@Model.PDoc.Doc_PdfFactura" type="application/pdf" style="width:90%; height:50vw;display:none" id="uipdfembfacS2" frameborder="0" />
+                    <embed src="@Subsite@Model.PDoc.Doc_PdfOC" type="application/pdf" style="width:90%; height:50vw;display:none" id="uipdfembocS2" frameborder="0" />
+                    <embed src="@Subsite@String.Format(@"/Reportes/PrintEM.aspx?pid={0}",Model.PDoc.Doc_EM_Multiple)" type="application/pdf" style="width:90%; height:50vw" id="uipdfembemS2" frameborder="0" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/admin-lte/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/admin-lte/plugins/chosen/chosen.jquery.js"></script>
+    <script>
+        $('.chosen-select').chosen({
+            no_results_text: "No hay datos coincidentes de",
+        });
+        $('.chosen-select').val('@Model.GeneradoDetalle[0].CuentaContable');
+        $('.chosen-select').trigger("chosen:updated");
+
+        $('.chosen-select2').chosen({
+            no_results_text: "No hay datos coincidentes de",
+        });
+        $('.chosen-select2').val('@Model.GeneradoDetalle[0].CentroCosto');
+        $('.chosen-select2').trigger("chosen:updated");
+    </script>
+    <script>
+        $(function () {
+            $('#detalleFact').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                //"order": [[6, "desc"]],
+                //"columnDefs": [
+                //    { "width": "60%", "targets": 0 },
+                //    { "width": "20%", "targets": 1 },
+                //    { "width": "20%", "targets": 2 }
+                //],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+    </script>
+    <script>
+        function MostrarOC(col) {
+            if (col === "S1") {
+                $("#uipdfembfacS1").hide();
+                $("#tabpdfembfacS1").removeClass("active");
+                $("#uipdfembocS1").show();
+                $("#tabpdfembocS1").addClass("active");
+                $("#uipdfembemS1").hide();
+                $("#tabpdfembemS1").removeClass("active");
+            }
+            if (col === "S2") {
+                $("#uipdfembfacS2").hide();
+                $("#tabpdfembfacS2").removeClass("active");
+                $("#uipdfembocS2").show();
+                $("#tabpdfembocS2").addClass("active");
+                $("#uipdfembemS2").hide();
+                $("#tabpdfembemS2").removeClass("active");
+            }
+        };
+        function MostrarFACT(col) {
+            if (col === "S1") {
+                $("#uipdfembfacS1").show();
+                $("#tabpdfembfacS1").addClass("active");
+                $("#uipdfembocS1").hide();
+                $("#tabpdfembocS1").removeClass("active");
+                $("#uipdfembemS1").hide();
+                $("#tabpdfembemS1").removeClass("active");
+            }
+            if (col === "S2") {
+                $("#uipdfembfacS2").show();
+                $("#tabpdfembfacS2").addClass("active");
+                $("#uipdfembocS2").hide();
+                $("#tabpdfembocS2").removeClass("active");
+                $("#uipdfembemS2").hide();
+                $("#tabpdfembemS2").removeClass("active");
+            }
+        };
+        function MostrarEM(col) {
+            if (col === "S1") {
+                $("#uipdfembfacS1").hide();
+                $("#tabpdfembfacS1").removeClass("active");
+                $("#uipdfembocS1").hide();
+                $("#tabpdfembocS1").removeClass("active");
+                $("#uipdfembemS1").show();
+                $("#tabpdfembemS1").addClass("active");
+            }
+            if (col === "S2") {
+                $("#uipdfembfacS2").hide();
+                $("#tabpdfembfacS2").removeClass("active");
+                $("#uipdfembocS2").hide();
+                $("#tabpdfembocS2").removeClass("active");
+                $("#uipdfembemS2").show();
+                $("#tabpdfembemS2").addClass("active");
+            }
+        };
+    </script>
+}
+
+
+    }
+

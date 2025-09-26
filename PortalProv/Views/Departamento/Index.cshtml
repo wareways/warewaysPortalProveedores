@@ -1,0 +1,169 @@
+﻿@model IEnumerable<Wareways.PortalProv.Infraestructura.PPROV_Departamento>
+
+<div class="form-horizontal">
+
+    <div class="col-md-6">
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <div class="col-md-8">
+                    <h4 class="box-title">Listado de Departamentos</h4>
+                </div>
+                <div class="col-md-4" style="text-align:right">
+
+              </div>
+
+            </div>
+            <div class="box-body">
+                @using (Html.BeginForm("Nuevo", "Departamento", FormMethod.Post))
+                {
+                    <table class="table table-hover table-bordered" id="Datos">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DepartmentName)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DepartmentName)
+                                    </td>
+                                    <td style="text-align:center">
+                                        <a href="#" id="uiBT_EditarDepto" name="uiBT_EditarDepto" class="btn btn-sm btn-warning  uiBT_EditarDepto"
+                                           data-departamentoid="@item.DepartmentId" data-departamentoname="@item.DepartmentName">
+
+                                            Editar &nbsp;
+                                            <icon class="glyphicon glyphicon-pencil"></icon>
+                                        </a>                                        
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+
+
+                                <td>
+                                    @Html.TextBox("NuevoNombre", "", htmlAttributes: new { @class = "form-control", @style = "width:100%" })
+
+                                </td>
+                                <td>
+                                    <button class="btn btn-success " type="submit" id="saveTeststeps">
+                                        Agregar &nbsp;
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </td>
+
+                            </tr>
+                        </tfoot>
+                    </table>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+    </div>
+
+    <p>
+
+    </p>
+</div>
+
+@using (Html.BeginForm("Editar", "Departamento", FormMethod.Post))
+{
+    <div class="modal fade" id="uiModal_Editar" role="dialog">
+        <div class="modal-dialog err-pop" style="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-11">
+                        <h4 class="box-title"> Editar Departamento</h4>
+                    </div>
+                    <div>
+                        <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="text-align:center;">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Hidden("DepartamentoId","")
+                            @Html.Label("Departamento Anterior", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.Editor("DeptoAnterior", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Departamento Nuevo", htmlAttributes: new { @class = "control-label col-md-2 " })
+                            <div class="col-md-10">
+                                @Html.Editor("DeptoNuevo", new { htmlAttributes = new { @class = "form-control ExcluirSoloLectura" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+
+                        </div>
+
+                        <br />
+                        <div class="pull-right">
+                            <button class="btn btn-info pull-right " type="submit" id="uiBTEDITAR_CORREO" name="uiBTEDITAR_CORREO" value="uiBTEDITAR_CORREO">
+                                Guardar &nbsp;
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-success pull-right" type="button" id="saveTeststeps" data-dismiss="modal">
+                                Cancelar &nbsp;
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section scripts
+{
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('#Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 25,
+                //"columnDefs": [
+                //    { "width": "60%", "targets": 0 },
+                //    { "width": "20%", "targets": 1 },
+                //    { "width": "20%", "targets": 2 }
+                //],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+    <script>
+        $('.uiBT_EditarDepto').click(function () {
+            var origen = this;
+            $('#uiModal_Editar').modal('show');
+            var DeptoId = $(this).data("departamentoid")
+            var DeptoName = $(this).data("departamentoname")            
+            $("#DepartamentoId").val(DeptoId);
+            $("#DeptoAnterior").val(DeptoName);            
+            $('#DeptoNuevo').val("");
+        });
+    </script>
+}

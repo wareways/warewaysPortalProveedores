@@ -41,6 +41,19 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TypeScriptTarget>ES2017</TypeScriptTarget>
+    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,11 +71,23 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.1.3\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="itext.barcodes, Version=7.1.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\itext7.7.1.9\lib\net40\itext.barcodes.dll</HintPath>
@@ -91,8 +116,11 @@
     <Reference Include="itext.svg, Version=7.1.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\itext7.7.1.9\lib\net40\itext.svg.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
+    <Reference Include="itextsharp, Version=5.5.13.4, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.4\lib\net461\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -103,6 +131,9 @@
     </Reference>
     <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\MicrosoftReportViewerWebForms.11.0.0.0\lib\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.0\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TeamFoundation.Build.Client, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -208,6 +239,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Microsoft.TeamFoundation.WorkItemTracking.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic.Compatibility" />
     <Reference Include="Microsoft.VisualStudio.Services.Client.Interactive, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Microsoft.VisualStudio.Services.Client.Interactive.dll</HintPath>
@@ -298,12 +331,6 @@
     <Reference Include="System.Web.Http.WebHost">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -361,9 +388,17 @@
     <Compile Include="Controllers\admPendienteController.cs" />
     <Compile Include="Controllers\admpresentadosController.cs" />
     <Compile Include="Controllers\admretencionesController.cs" />
+    <Compile Include="Controllers\Api\EmisionFEController.cs" />
     <Compile Include="Controllers\Api\EmpresasController.cs" />
+    <Compile Include="Controllers\Api\EnvioOCController.cs" />
     <Compile Include="Controllers\BIController.cs" />
+    <Compile Include="Controllers\DepartamentoController.cs" />
+    <Compile Include="Controllers\EmpresaController.cs" />
     <Compile Include="Controllers\HelpVideoController.cs" />
+    <Compile Include="Controllers\FechaRecepcionFacturas.cs" />
+    <Compile Include="Controllers\OrdenesCompraController.cs" />
+    <Compile Include="Controllers\EntregasController.cs" />
+    <Compile Include="Controllers\SyncInsumosController.cs" />
     <Compile Include="Controllers\TipoRetencion.cs" />
     <Compile Include="Controllers\CatalogoController.cs" />
     <Compile Include="Controllers\ContrasenaController.cs" />
@@ -373,6 +408,7 @@
     <Compile Include="Controllers\RetencionesController.cs" />
     <Compile Include="Controllers\ScheduleController.cs" />
     <Compile Include="Controllers\Seguridad\ConfGrlController.cs" />
+    <Compile Include="Controllers\UtilidadController.cs" />
     <Compile Include="Filters\APIKeyHandler.cs" />
     <Compile Include="Filters\BasicAuthenticationAttribute.cs" />
     <Compile Include="Infraestructura\AspNetRoles.cs">
@@ -382,6 +418,9 @@
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\AspNetUserLogins.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\AspNetUserRoles.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\AspNetUsers.cs">
@@ -402,20 +441,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DB_PortalProv.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Infraestructura\FlexManDb.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FlexManDb.Context.tt</DependentUpon>
+    <Compile Include="Infraestructura\FEL_Doc.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
-    <Compile Include="Infraestructura\FlexManDb.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FlexManDb.tt</DependentUpon>
+    <Compile Include="Infraestructura\FEL_DocAdjunto.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
-    <Compile Include="Infraestructura\FlexManDb.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>FlexManDb.edmx</DependentUpon>
+    <Compile Include="Infraestructura\FEL_DocDetalle.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\FEL_DocHistorico.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\GEN_Audit.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
@@ -427,6 +463,9 @@
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\GEN_Configuracion.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\GEN_Empresa.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\GEN_Menu.cs">
@@ -442,31 +481,19 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\Componentes\HtmlExtensionsTextBox.cs" />
-    <Compile Include="Infraestructura\ModulosApoyo.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModulosApoyo.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Infraestructura\ModulosApoyo.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModulosApoyo.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Infraestructura\ModulosApoyo.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ModulosApoyo.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Infraestructura\NotificacionesCola.cs">
-      <DependentUpon>FlexManDb.tt</DependentUpon>
-    </Compile>
     <Compile Include="Infraestructura\PPROV_Adjuntos.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\PPROV_Contrasena.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\PPROV_Departamento.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\PPROV_Documento.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\PPROV_EmpresaUltiDia_Rece.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\PPROV_Estado.cs">
@@ -484,16 +511,139 @@
     <Compile Include="Infraestructura\PPROV_TipoAdjunto.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\PPROV_UsuarioDepartamento.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
     <Compile Include="Infraestructura\PPROV_UsuarioEmpresa.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\PPROV_UsuarioProveedor.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\Reportes\OrdenCompraAKI.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Infraestructura\Reportes\OrdenCompraAKI1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrdenCompraAKI.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Infraestructura\SAP_Doc.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SAP_DocDetalle.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\Servicios\CrystalR.cs" />
+    <Compile Include="Infraestructura\SP_GetDepartmentAll_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_GetUserOCEstado_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_GetUserOC_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_DeteccionFecha_PresentacionMaxServ_PorCardCode_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_DeteccionFecha_PresentacionMaxServ_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_DocumentosPorUsuario.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_Documentos_Oficina.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_Empresas.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\v_PPROV_FacturasIngresadas_Oficina.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_InsumosPendientes.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_Proveedor.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_Proveedor_CC.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PPROV_ResumenEstadoDocumento.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\WWSP_DocumentosPorUsuario_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\WWSP_Documentos_Oficina_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\WWSP_ListadoEntregasPorUsuario_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\WWSP_PPROV_EntregasCOM_SAP_ByCardCode_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\WWSP_ResumenEstadoDocumento_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OC\OrdenesCompraIndexModel.cs" />
+    <Compile Include="Models\OC\oRespDetEntregas.cs" />
+    <Compile Include="Models\PP\DetallePresentadosModel.cs" />
+    <Compile Include="Models\PP\EntregasModel.cs" />
+    <Compile Include="Models\SAP\oDatosOCEmail.cs" />
+    <Compile Include="Models\SAP\OdetalleRetencionesC.cs" />
+    <Compile Include="Models\SAP\oOcrdInactivo.cs" />
+    <Compile Include="Models\SAP\oPOR1Detalle.cs" />
+    <Compile Include="Models\SAP\OSapDetalle.cs" />
+    <Compile Include="Models\SAP\OSapDoc.cs" />
+    <Compile Include="Reportes\chkUtil22jjk3j34.aspx.cs">
+      <DependentUpon>chkUtil22jjk3j34.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\chkUtil22jjk3j34.aspx.designer.cs">
+      <DependentUpon>chkUtil22jjk3j34.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\EntregaCompaSTD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntregaCompaSTD.rpt</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\FacturaCompaSTD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FacturaCompaSTD.rpt</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\IntegradoLog.aspx.cs">
+      <DependentUpon>IntegradoLog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\IntegradoLog.aspx.designer.cs">
+      <DependentUpon>IntegradoLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\OrdenCompaSTD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrdenCompaSTD.rpt</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Infraestructura\SAP\DISERVER.cs" />
     <Compile Include="Infraestructura\Servicios\AdjuntosUrlFix.cs" />
     <Compile Include="Infraestructura\Servicios\UNC_AccessCredentials.cs" />
+    <Compile Include="Infraestructura\Servicios\VServicio.cs" />
     <Compile Include="Infraestructura\SP_EntregasCOM_SAP_Result.cs">
-      <DependentUpon>ModulosApoyo.tt</DependentUpon>
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_GetUserDepartment_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\SP_ObtenerCorreos_Por_CardCode_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
@@ -502,6 +652,12 @@
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\SP_PPROV_DatosOrdenCompra_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_DeteccionFecha_PresentacionMax_PorCardCode_Result.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\SP_PPROV_DeteccionFecha_PresentacionMax_Result.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\SP_PPROV_Indicadores_Oficina_Result.cs">
@@ -543,25 +699,7 @@
     <Compile Include="Infraestructura\V_PPROV_Contrasena_PorUsuario.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
-    <Compile Include="Infraestructura\V_PPROV_DocumentosPorUsuario.cs">
-      <DependentUpon>DB_PortalProv.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Infraestructura\V_PPROV_Documentos_Oficina.cs">
-      <DependentUpon>DB_PortalProv.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Infraestructura\V_PPROV_Empresas.cs">
-      <DependentUpon>DB_PortalProv.tt</DependentUpon>
-    </Compile>
     <Compile Include="Infraestructura\v_PPROV_FacturasIngresadasPorUsuario.cs">
-      <DependentUpon>DB_PortalProv.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Infraestructura\v_PPROV_FacturasIngresadas_Oficina.cs">
-      <DependentUpon>DB_PortalProv.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Infraestructura\V_PPROV_Proveedor.cs">
-      <DependentUpon>DB_PortalProv.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Infraestructura\V_PPROV_ResumenEstadoDocumento.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\V_PPROV_RetencionesPorUsuario.cs">
@@ -571,6 +709,9 @@
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="Infraestructura\v_PPROV_Usuario_Proveedor.cs">
+      <DependentUpon>DB_PortalProv.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Infraestructura\V_PROV_EmpresaUltiDia_Rece.cs">
       <DependentUpon>DB_PortalProv.tt</DependentUpon>
     </Compile>
     <Compile Include="MasterPages\Site1.Master.cs">
@@ -584,6 +725,17 @@
     <Compile Include="Models\CatalogoIndexModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\OC\oAlamacenSap.cs" />
+    <Compile Include="Models\OC\oCentroCosto.cs" />
+    <Compile Include="Models\OC\oCuentaContableSap.cs" />
+    <Compile Include="Models\OC\OC_DetalleModel.cs" />
+    <Compile Include="Models\OC\OC_EmitirModel.cs" />
+    <Compile Include="Models\OC\oImpuestoSap.cs" />
+    <Compile Include="Models\OC\oMonedaSap.cs" />
+    <Compile Include="Models\OC\oOPCHcheckSAP.cs" />
+    <Compile Include="Models\OC\oProductoSap.cs" />
+    <Compile Include="Models\OC\oProveedorSap.cs" />
+    <Compile Include="Models\OC\oUnidadSap.cs" />
     <Compile Include="Models\PP\ContrasenaModel.cs" />
     <Compile Include="Models\PP\PagosModel.cs" />
     <Compile Include="Models\PP\PresentadosModel.cs" />
@@ -600,6 +752,66 @@
     </Compile>
     <Compile Include="Reportes\Contrasenas.aspx.designer.cs">
       <DependentUpon>Contrasenas.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Integrado.aspx.cs">
+      <DependentUpon>Integrado.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\Integrado.aspx.designer.cs">
+      <DependentUpon>Integrado.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\PrintFactInsumo2ByDocNum.aspx.cs">
+      <DependentUpon>PrintFactInsumo2ByDocNum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\PrintFactInsumo2ByDocNum.aspx.designer.cs">
+      <DependentUpon>PrintFactInsumo2ByDocNum.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\PrintOc2ByDocNum.aspx.cs">
+      <DependentUpon>PrintOc2ByDocNum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\PrintOc2ByDocNum.aspx.designer.cs">
+      <DependentUpon>PrintOc2ByDocNum.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\PrintOc2.aspx.cs">
+      <DependentUpon>PrintOc2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\PrintOc2.aspx.designer.cs">
+      <DependentUpon>PrintOc2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\PrintOCbyIdx.aspx.cs">
+      <DependentUpon>PrintOCbyIdx.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\PrintOCbyId.aspx.cs">
+      <DependentUpon>PrintOCbyId.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\PrintOCbyId.aspx.designer.cs">
+      <DependentUpon>PrintOCbyId.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\PrintFACTP.aspx.cs">
+      <DependentUpon>PrintFACTP.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\PrintFACTP.aspx.designer.cs">
+      <DependentUpon>PrintFACTP.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\PrintEM.aspx.cs">
+      <DependentUpon>PrintEM.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\PrintEM.aspx.designer.cs">
+      <DependentUpon>PrintEM.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\PrintOC.aspx.cs">
+      <DependentUpon>PrintOC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reportes\PrintOC.aspx.designer.cs">
+      <DependentUpon>PrintOC.aspx</DependentUpon>
     </Compile>
     <Compile Include="Servicios\Sap_AdjuntoDescarga.aspx.cs">
       <DependentUpon>Sap_AdjuntoDescarga.aspx</DependentUpon>
@@ -3648,6 +3860,10 @@
     <Content Include="admin-lte\bower_components\datatables.net\js\jquery.dataTables.js" />
     <Content Include="admin-lte\bower_components\datatables.net\js\jquery.dataTables.min.js" />
     <Content Include="admin-lte\bower_components\datatables.net\License.txt" />
+    <Content Include="admin-lte\bower_components\datatablesNew.net\datatables.css" />
+    <Content Include="admin-lte\bower_components\datatablesNew.net\datatables.js" />
+    <Content Include="admin-lte\bower_components\datatablesNew.net\datatables.min.css" />
+    <Content Include="admin-lte\bower_components\datatablesNew.net\datatables.min.js" />
     <Content Include="admin-lte\bower_components\eve-raphael\e.html" />
     <Content Include="admin-lte\bower_components\eve-raphael\eve.js" />
     <Content Include="admin-lte\bower_components\fastclick\lib\fastclick.js" />
@@ -6829,6 +7045,15 @@
     <Content Include="admin-lte\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.min.js" />
     <Content Include="admin-lte\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.css" />
     <Content Include="admin-lte\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.min.css" />
+    <Content Include="admin-lte\plugins\chosen\chosen-sprite%402x.png" />
+    <Content Include="admin-lte\plugins\chosen\chosen-sprite.png" />
+    <Content Include="admin-lte\plugins\chosen\chosen.css" />
+    <Content Include="admin-lte\plugins\chosen\chosen.jquery.js" />
+    <Content Include="admin-lte\plugins\chosen\chosen.jquery.min.js" />
+    <Content Include="admin-lte\plugins\chosen\chosen.min.css" />
+    <Content Include="admin-lte\plugins\chosen\chosen.proto.js" />
+    <Content Include="admin-lte\plugins\chosen\chosen.proto.min.js" />
+    <Content Include="admin-lte\plugins\chosen\ChosenComponnent.css" />
     <Content Include="admin-lte\plugins\iCheck\all.css" />
     <Content Include="admin-lte\plugins\iCheck\flat\aero%402x.png" />
     <Content Include="admin-lte\plugins\iCheck\flat\aero.css" />
@@ -6982,9 +7207,14 @@
     <Content Include="Content\CorpoRydLog.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Empresa.ico" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\LaptopIntro.jpg" />
+    <Content Include="Content\Logos\LogoHPC.png" />
+    <Content Include="Content\Logos\LogoInicial.jpeg" />
+    <Content Include="Content\Logos\LogoOperadora.ico" />
+    <Content Include="Content\Logos\LogoOperadora.png" />
     <Content Include="Content\Logo_Lacoplast.JPG" />
     <Content Include="Content\polytec.ico" />
     <Content Include="Content\PolytecLogo - Copy.png" />
@@ -7012,6 +7242,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Infraestructura\Correos\ConfirmacionCorreo.html" />
     <Content Include="Infraestructura\Correos\RecuperaContrasena.html" />
+    <Content Include="Infraestructura\Correos\EnvioOC.html" />
     <Content Include="Infraestructura\Correos\Retencion.html" />
     <Content Include="Infraestructura\Correos\Rechazo.html" />
     <Content Include="Infraestructura\Correos\Contrasena.html" />
@@ -7025,33 +7256,23 @@
       <DependentUpon>DB_PortalProv.edmx</DependentUpon>
       <LastGenOutput>DB_PortalProv.cs</LastGenOutput>
     </Content>
-    <Content Include="Infraestructura\FlexManDb.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FlexManDb.edmx</DependentUpon>
-      <LastGenOutput>FlexManDb.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Infraestructura\FlexManDb.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>FlexManDb.edmx</DependentUpon>
-      <LastGenOutput>FlexManDb.cs</LastGenOutput>
-    </Content>
-    <Content Include="Infraestructura\helpvideo\01 Polytec - Cxp - Creacion Usuarios.mp4" />
-    <Content Include="Infraestructura\helpvideo\02 Polytec - Cxp - Opciones Generales del Sistema.mp4" />
-    <Content Include="Infraestructura\helpvideo\03 Polytec - Cxp - Proceso de Recepcion de Facturas.mp4" />
-    <Content Include="Infraestructura\helpvideo\05 Capacitacion Proveedores.mp4" />
-    <Content Include="Infraestructura\helpvideo\Polytec Proveedores Entrega de Servicios - Jefes.mp4" />
-    <Content Include="Infraestructura\ModulosApoyo.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModulosApoyo.edmx</DependentUpon>
-      <LastGenOutput>ModulosApoyo.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Infraestructura\ModulosApoyo.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModulosApoyo.edmx</DependentUpon>
-      <LastGenOutput>ModulosApoyo.cs</LastGenOutput>
-    </Content>
+    <Content Include="Infraestructura\Filer.aspx" />
+    <Content Include="Infraestructura\Reportes\FomratoCorreoSTD.html" />
+    <Content Include="Reportes\chkUtil22jjk3j34.aspx" />
     <Content Include="Reportes\Contrasenas.aspx" />
+    <Content Include="Reportes\IntegradoLog.aspx" />
+    <Content Include="Reportes\Integrado.aspx" />
+    <Content Include="Reportes\PrintFactInsumo2ByDocNum.aspx" />
+    <Content Include="Reportes\PrintOc2ByDocNum.aspx" />
+    <Content Include="Reportes\PrintOc2.aspx" />
+    <Content Include="Reportes\PrintOCbyIdx.aspx" />
+    <Content Include="Reportes\PrintOCbyId.aspx" />
+    <Content Include="Reportes\PrintFACTP.aspx" />
+    <Content Include="Reportes\PrintEM.aspx" />
+    <Content Include="Reportes\PrintOC.aspx" />
     <Content Include="Servicios\Sap_AdjuntoDescarga.aspx" />
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <Content Include="Views\Shared\ReportBoucher.aspx" />
     <Content Include="Views\Shared\TestPrint.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -7547,26 +7768,20 @@
     <Content Include="Infraestructura\DB_PortalProv.edmx.diagram">
       <DependentUpon>DB_PortalProv.edmx</DependentUpon>
     </Content>
-    <EntityDeploy Include="Infraestructura\FlexManDb.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>FlexManDb.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Infraestructura\FlexManDb.edmx.diagram">
-      <DependentUpon>FlexManDb.edmx</DependentUpon>
+    <Content Include="admin-lte\plugins\chosen\composer.json" />
+    <Content Include="Infraestructura\Reportes\FormatoCargaManualServicio.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EntityDeploy Include="Infraestructura\ModulosApoyo.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ModulosApoyo.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Infraestructura\ModulosApoyo.edmx.diagram">
-      <DependentUpon>ModulosApoyo.edmx</DependentUpon>
-    </Content>
+    <Content Include="Infraestructura\Reportes\FormatoCargaManualBien.xlsx" />
+    <Content Include="Infraestructura\web.config" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Pruebas CorpoRyD.pubxml" />
     <None Include="Properties\PublishProfiles\SitioProductivo.pubxml" />
     <None Include="Properties\PublishProfiles\SmarterAsp WebDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\Smarterasp.pubxml" />
+    <Content Include="Reportes\RegistroDiarioFactPSTD.rpt" />
+    <Content Include="Reportes\Fact_v1Insumos.rpt" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -7654,11 +7869,27 @@
     <Content Include="Views\TipoRetencion\Edit.cshtml" />
     <Content Include="Views\TipoRetencion\Index.cshtml" />
     <Content Include="Views\HelpVideo\Index.cshtml" />
+    <Content Include="Views\FechaRecepcionFacturas\Create.cshtml" />
+    <Content Include="Views\FechaRecepcionFacturas\Edit.cshtml" />
+    <Content Include="Views\FechaRecepcionFacturas\Index.cshtml" />
+    <Content Include="Views\Empresa\Seleccionar.cshtml" />
+    <Content Include="Views\OrdenesCompra\Emitir.cshtml" />
+    <Content Include="Views\OrdenesCompra\Index.cshtml" />
+    <Content Include="Views\Departamento\Index.cshtml" />
+    <Content Include="Views\Entregas\Index.cshtml" />
+    <Content Include="Views\admpresentados\Detalle.cshtml" />
+    <Content Include="Views\OrdenesCompra\SubirFacturaEsp.cshtml" />
+    <Content Include="Views\admpresentados\editDetalle.cshtml" />
+    <Content Include="Views\admpresentados\ObtenerXmlDocto.cshtml" />
+    <Content Include="Views\Account\LoginBase64.cshtml" />
+    <Content Include="Views\SyncInsumos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Cargados\" />
     <Folder Include="Content\font\" />
+    <Folder Include="Infraestructura\helpvideo\" />
+    <Folder Include="Views\Utilidad\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -7676,6 +7907,7 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="admin-lte\bower_components\moment\moment.d.ts" />
@@ -7684,6 +7916,58 @@
     <Content Include="Infraestructura\Reportes\Contrasena.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Infraestructura\Reportes\Contrasena - Copy.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reportes\OrdenCompaSTD.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>OrdenCompaSTD.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reportes\EntregaCompaSTD.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>EntregaCompaSTD.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reportes\FacturaCompaSTD.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>FacturaCompaSTD.cs</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SAPbobsCOM">
+      <Guid>{FC8030BE-F5D2-4B8E-8F92-44228FE30100}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="SBODI_Server">
+      <Guid>{D68328C8-4EDA-4427-8E76-5CE3ED1063C0}</Guid>
+      <VersionMajor>9</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Infraestructura\Reportes\OrdenCompraAKI.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>OrdenCompraAKI1.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -7704,7 +7988,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>59091</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44339/</IISUrl>
+          <IISUrl>http://localhost:44340/PortalAndaria</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

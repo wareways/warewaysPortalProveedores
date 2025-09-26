@@ -24,7 +24,9 @@ namespace Wareways.PortalProv.Controllers
         private List<V_PPROV_RetencionesPorUsuario> ObtenerRetencionesPorusuario()
         {
             var _UserName = User.Identity.Name;
-            var _Datos = _Db.V_PPROV_RetencionesPorUsuario.Where(p => p.UserName == _UserName).ToList();
+            var retencionMin = DateTime.Now.Date.AddMonths(-6);
+            _Db.Database.CommandTimeout = 300;
+            var _Datos = _Db.V_PPROV_RetencionesPorUsuario.Where(p => p.UserName == _UserName && p.Retencion_Fecha >= retencionMin).ToList();
 
             return _Datos;
         }

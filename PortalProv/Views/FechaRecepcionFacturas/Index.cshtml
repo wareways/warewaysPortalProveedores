@@ -1,0 +1,237 @@
+﻿@model List<Wareways.PortalProv.Infraestructura.V_PROV_EmpresaUltiDia_Rece>
+
+
+@section Header
+{
+    <style>
+        .ui-autocomplete {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            float: left;
+            min-width: 160px;
+            padding: 5px 0;
+            margin: 2px 0 0;
+            list-style: none;
+            font-size: 14px;
+            text-align: left;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+            background-clip: padding-box;
+        }
+
+            .ui-autocomplete > li > div {
+                display: block;
+                padding: 3px 20px;
+                clear: both;
+                font-weight: normal;
+                line-height: 1.42857143;
+                color: #333333;
+                white-space: nowrap;
+            }
+
+        .ui-state-hover,
+        .ui-state-active,
+        .ui-state-focus {
+            text-decoration: none;
+            color: #262626;
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+
+        .ui-helper-hidden-accessible {
+            border: 0;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
+    </style>
+
+}
+
+
+<div class="box box-default">
+
+    <div class="box-header">
+        <div class="col-md-6">
+            <h4 class="box-title"> Fecha Ultima Recepcion Facturas </h4>
+        </div>
+        <div class="col-md-6 " style="text-align:right">
+
+            <a href="@Url.Action("Create")" class="btn btn-default btn-sm">
+                Nuevo
+                <span class="fa fa-plus-circle" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
+    <div class="box-body">
+        <table class="table table-bordered table-condensed" id="Datos">
+            <thead>
+                <tr>
+
+                    <th>
+                        @Html.DisplayName("Año")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Mes")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Proveedor")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Dia")
+                    </th>
+                    <th>
+                        @Html.DisplayName("DiaServ")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Mensaje")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Activo")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Anio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CardCode) - @Html.DisplayFor(modelItem => item.CardName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Dia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiaServ)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mensaje)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Activo)
+                    </td>
+                    <td>
+                        @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning glyphicon glyphicon-pencil", @title = "Editar" })
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+    <div class="box-footer">
+        <div class="col-md-12">
+            <div class="col-md-3">
+                Ver mensaje Proveedor ->
+            </div>
+            <div class="col-md-4">
+                @Html.Editor("CardCode", "", new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-md-3">
+                <a href="#" class="btn btn-info btnsubmit">
+                    Mostrar
+                    <span class="fa fa-eye" aria-hidden="true"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts {
+    <script>
+        $(function () {
+            $(".data-on-change-submit")
+                .change(function () {
+                    var form = $("#Forma1");
+                    form.submit();
+                })
+        });
+    </script>
+
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('#Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'order': [[0, "desc"], [1, "desc"], [2, "asc"]],
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                "columnDefs": [
+                    { "width": "5%", "targets": 0 },
+                    { "width": "5%", "targets": 1 },
+                    { "width": "30%", "targets": 2 },
+                    { "width": "5%", "targets": 3 },
+                    { "width": "30%", "targets": 4 },
+                    { "width": "5%", "targets": 5 },
+                    { "width": "5%", "targets": 6 }
+                ],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+    <script src="~/admin-lte/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script>
+        $("#CardCode").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Usuario/ObtenerPorveedores",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Name, value: item.value };
+                        }))
+
+                    }
+                })
+            },
+            messages: {
+                noResults: "",
+                results: function (count) {
+                    return count + (count > 1 ? ' results' : ' result ') + ' found';
+                }
+            }
+        });
+       
+    </script>
+    <script>
+        $(document).on('click', '.btnsubmit', function () {
+
+            var name = $("#CardCode").val().split(" ")[0];
+            if (name != undefined && name != null) {
+                window.location = '/Home?mmp=1&xcode=' + name;
+            }
+        })
+    </script>
+}

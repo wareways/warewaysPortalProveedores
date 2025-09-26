@@ -1,10 +1,15 @@
 ﻿using iText.Forms.Xfdf;
+using Microsoft.AspNet.Identity;
 using Microsoft.TeamFoundation.Client.Reporting;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.EnterpriseServices;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Configuration;
+using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
@@ -35,7 +40,8 @@ namespace Wareways.PortalProv.Controllers
 
         private void MandarCorreo_Contrasena(Guid id)
         {
-            Infraestructura.FlexManDbEntities _Db_Flex = new FlexManDbEntities();
+            var EmpresaAsuntoCorreo = _Db.GEN_Empresa.First().EmpresaAsuntoCorreo;
+
             string body = string.Empty;
             using (StreamReader reader = new StreamReader(Server.MapPath("~/Infraestructura/Correos/Contrasena.html")))
             {
@@ -44,6 +50,24 @@ namespace Wareways.PortalProv.Controllers
             var _Contraseña = _Db.PPROV_Contrasena.Find(id);
             var _Proveedor = _Db.V_PPROV_Proveedor.Where(p => p.CardCode == _Contraseña.Contrasena_CardCode).ToList();
             var _Empresa = _Db.V_PPROV_Empresas.Where(p => p.Empresa_Id == _Contraseña.Empresa_Id).ToList();
+            
+            var _CardCode = _Contraseña.Contrasena_CardCode;
+            var _FechasMax = _Db.SP_PPROV_DeteccionFecha_PresentacionMax_PorCardCode(_CardCode).Where(p => p.Dia_Maximo > 0).ToList();
+
+           
+            if ( _FechasMax.Count() > 0 )
+            {
+                body = body.Replace("***DespligueFechaMax***", "normal");
+                body = body.Replace("***MesActualFechaMax***", _FechasMax[0].MesActual);
+                body = body.Replace("***DiaActualFechaMax***", _FechasMax[0].Dia_Maximo.ToString());
+                body = body.Replace("***DiaSemanaActualFechaMax***", _FechasMax[0].DiaMaximoSemana);
+            } else
+            {
+                body = body.Replace("***DespligueFechaMax***", "normal");                
+                body = body.Replace("***MesActualFechaMax***", "No Definida");
+                body = body.Replace("***DiaActualFechaMax***", "");
+                body = body.Replace("***DiaSemanaActualFechaMax***", "");
+            }
 
             body = body.Replace("***EmpresaNombre***", _Empresa[0].AliasName);
             body = body.Replace("***EmpresaLogo***", _Empresa[0].Logo); 
@@ -53,9 +77,11 @@ namespace Wareways.PortalProv.Controllers
             body = body.Replace("***Moneda***", _Contraseña.Contrasena_Moneda);
             body = body.Replace("***FechaEstiamda***", _Contraseña.Contrasena_Fecha_Estimada.ToString("dd/MM/yyyy"));
 
+            body = body.Replace("***UrlLink***", "https://proveedores.aki.com.gt/");
+
             body = body.Replace("***TotalDocumentos***", _Contraseña.PPROV_Documento.Count().ToString());
 
-            var _Contenido_Valor = "<tr><td style='color:#933f24; padding:10px 0px; background-color: #f7a084;'>***ContenidovValor***</td></tr>";
+            var _Contenido_Valor = "<tr><td style='color:#933f24; padding:10px 0px; background-color: white;'>***ContenidovValor***</td></tr>";
             var _FilaInfoFac = "";
             var _FilaInfoOrden = "";
             var _FilaInfoMonto = "";
@@ -72,25 +98,39 @@ namespace Wareways.PortalProv.Controllers
             var _CorreosDestino = _Db.SP_ObtenerCorreos_Por_CardCode(_Proveedor[0].CardCode).ToList();
             foreach (var _Correo in _CorreosDestino)
             {
-                _Db_Flex.NotificacionesCola.Add(new NotificacionesCola
+                using (var message = new MailMessage())
                 {
-                    Para = _Correo.Email,
-                    Copia = "",
-                    Asunto = "Portal Proveedores - Contraseña Generada - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-                    Cuerpo = body,
-                    EnviadoFecha = null,
-                    EnviarHasta = DateTime.Now,
-                    ProximoEnvio = null,
-                    IntervaloMinutos = 0,
-                    Sistema = "SS_Proveedores",
-                    Parametro1 = "Contraseña",
-                    Parametro2 = id.ToString(),
-                    Id = Guid.NewGuid()
+                    SmtpSection smtpSection = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+                    message.To.Add(new MailAddress(_Correo.Email));
+                    message.From = new MailAddress(smtpSection.From);
+                    message.Subject = EmpresaAsuntoCorreo+ " Portal Proveedores - Contraseña Generada - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                    message.Body = body;
+                    message.IsBodyHtml = true; // change to true if body msg is in html
 
-                });
+                    
+                    using (var client = new SmtpClient( smtpSection.Network.Host))
+                    {
+                        NetworkCredential networkCred = new NetworkCredential(smtpSection.Network.UserName, smtpSection.Network.Password);
+                        client.UseDefaultCredentials = smtpSection.Network.DefaultCredentials;
+                        client.Port = smtpSection.Network.Port;
+                        client.Credentials = networkCred;
+                        client.EnableSsl = smtpSection.Network.EnableSsl;
+
+                        try
+                        {
+                            client.Send(message); // Email sent
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(ex.Message);
+                        }
+                    }
+                }
+
+                
             }
                 
-            _Db_Flex.SaveChanges();
+            
             
 
         }
@@ -122,12 +162,12 @@ namespace Wareways.PortalProv.Controllers
             var _Select_Prov = collection["Selec_Prov"];
             var _Select_Empresa = collection["Selec_Empresa"];
 
-            var _Lista = new List<V_PPROV_Documentos_Oficina>();
+            var _Lista = new List<WWSP_Documentos_Oficina_Result>();
             for (int i = 0; i < _Select_Item.Split(',').Length; ++i)
             {
                 if (_Select_Item.Split(',')[i] == "true")
                 {
-                    _Lista.Add(new V_PPROV_Documentos_Oficina
+                    _Lista.Add(new WWSP_Documentos_Oficina_Result
                     {
                         Doc_Id = Guid.Parse(_Select_Code.Split(',')[i])
                                                                 ,
@@ -184,7 +224,7 @@ namespace Wareways.PortalProv.Controllers
             _Db.SaveChanges();
             foreach(var _Document in _Contraseña.PPROV_Documento)
             {
-                _Document.Doc_Estado = (_Document.Doc_Estado == "Contraseña") ? "Retenciones" : _Document.Doc_Estado;
+                _Document.Doc_Estado = (_Document.Doc_Estado == "Contraseña") ? "Aut. Contraseña" : _Document.Doc_Estado;
                 _Db.SaveChanges();
             }
             if (_AnterioEstado == "Borrador" && _Contraseña.Contrasena_Estado == "Activa") MandarCorreo_Contrasena(_Contraseña.Contrasena_Id);
@@ -192,7 +232,22 @@ namespace Wareways.PortalProv.Controllers
             return RedirectToAction("Edit", new { id = Contrasena_Id });
         }
 
-       
+
+        [Authorize(Roles = "Oficina")]
+        public ActionResult AutoContraseña(Guid Contrasena_Id)
+        {
+            var _Contraseña = _Db.PPROV_Contrasena.Find(Contrasena_Id);
+            var _AnterioEstado = _Contraseña.Contrasena_Estado;            
+            _Db.SaveChanges();
+            foreach (var _Document in _Contraseña.PPROV_Documento)
+            {
+                _Document.Doc_Estado = (_Document.Doc_Estado == "Aut. Contraseña") ? "Retenciones" : _Document.Doc_Estado;
+                _Db.SaveChanges();
+            }
+            MandarCorreo_Contrasena(_Contraseña.Contrasena_Id);
+
+            return RedirectToAction("Index","AdmContraseña");
+        }
 
 
         [Authorize(Roles = "Oficina")]
@@ -255,6 +310,8 @@ namespace Wareways.PortalProv.Controllers
             int num_days = System.DayOfWeek.Friday - _Retorna.DayOfWeek;
             if (num_days < 0) num_days += 7;
             _Retorna = _Retorna.AddDays(num_days);
+            // Correccion Pago Lunes 2021-11-15 Brenda Roca
+            _Retorna = _Retorna.AddDays(3);
 
             return _Retorna;
         }

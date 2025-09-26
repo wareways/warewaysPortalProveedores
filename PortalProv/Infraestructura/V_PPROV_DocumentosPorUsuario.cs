@@ -23,7 +23,7 @@ namespace Wareways.PortalProv.Infraestructura
         public string Doc_Serie { get; set; }
         public Nullable<System.DateTime> Doc_Fecha { get; set; }
         public Nullable<int> Doc_EmpresaId { get; set; }
-        public Nullable<decimal> Doc_MontoNeto { get; set; }
+        public decimal Doc_MontoNeto { get; set; }
         public string Doc_Moneda { get; set; }
         public string Doc_Autorizacion { get; set; }
         public string Doc_Observaciones { get; set; }
@@ -36,11 +36,12 @@ namespace Wareways.PortalProv.Infraestructura
         public Nullable<System.Guid> Contrasena_Id { get; set; }
         public string Doc_PdfFactura { get; set; }
         public string Doc_PdfOC { get; set; }
-        public string Empresa_Name { get; set; }
         public string SolicitanteOC { get; set; }
+        public string Empresa_Name { get; set; }
         public int Msj_Total { get; set; }
         public int Msj_NoLeidos { get; set; }
         public string Doc_PdfCotiza { get; set; }
         public string Doc_PdfInforme { get; set; }
+        public string Doc_OC_Multiple { get; set; }
     }
 }

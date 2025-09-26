@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +12,28 @@ namespace Wareways.PortalProv.Servicios
     public class ServicioSeguridad
     {
         static Infraestructura.PortalProvEntities _Db = new Infraestructura.PortalProvEntities();
+
+
+        public static void CheckSession(String _UserName) {
+           var session = HttpContext.Current.Session;
+            if (session["EmpresaSelId"] == null && !string.IsNullOrEmpty(_UserName)  )
+            {                
+                var oUsuario = _Db.AspNetUsers.Where(p => p.UserName == _UserName).First();
+                var arrEmppresaPermiso = _Db.PPROV_UsuarioEmpresa.Where(p => p.UserId == oUsuario.Id).Select(p => p.EmpresaId).ToArray();
+                var id = Int32.Parse(ConfigurationManager.AppSettings["WWPortal_EmpresaId"]);
+
+                if (arrEmppresaPermiso.Contains(id))
+                {
+                    var oEmpresa = _Db.V_PPROV_Empresas.Where(p => p.Empresa_Id == id).First();
+                    session.Add("EmpresaSelId", id);
+                    session.Add("EmpresaSelDB", oEmpresa.SAP_Database);
+                    session.Add("EmpresaSelLogo", oEmpresa.Logo);
+                    session.Add("EmpresaSelName", oEmpresa.Empresa_Name);
+                    session.Add("ScreenColor", oEmpresa.Tema);
+                }
+            }
+
+        }
 
         public static Boolean ValidaPermisos(RouteValueDictionary _Valores, String _UserName)
         {
@@ -24,7 +47,7 @@ namespace Wareways.PortalProv.Servicios
                 RegistraVariablesSession(_Menus, _UserName);
             }
             
-            if (_Menus.Where(p=>p.Menu_Url == @"/" + _Controller).ToList().Count > 0) _Retorna = true;
+            if (_Menus.Where(p=>p.Menu_Url.Contains( @"/" + _Controller)).ToList().Count > 0) _Retorna = true;
 
             return _Retorna;
 

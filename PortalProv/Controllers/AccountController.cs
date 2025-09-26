@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Wareways.PortalProv.Models;
+using Wareways.PortalProv.Servicios;
 
 namespace Wareways.PortalProv.Controllers
 {
@@ -22,6 +24,7 @@ namespace Wareways.PortalProv.Controllers
         private ApplicationUserManager _userManager;
 
         Wareways.PortalProv.Infraestructura.PortalProvEntities _Db = new Wareways.PortalProv.Infraestructura.PortalProvEntities();
+        Servicios.VServicio vServicio = new VServicio();
 
         public AccountController()
         {
@@ -62,8 +65,12 @@ namespace Wareways.PortalProv.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            LoginViewModel modelo = new LoginViewModel();
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+
+            return View(modelo);
         }
 
         //
@@ -87,8 +94,59 @@ namespace Wareways.PortalProv.Controllers
                     
                     var _MenusPermitidos = (from l in _Db.V_GEN_MenuDisplay.AsNoTracking()  where l.UserName == model.Email orderby l.Menu_Orden select l).ToList();
                     Servicios.ServicioSeguridad.RegistraVariablesSession(_MenusPermitidos, model.Email);
-                    
-                    return RedirectToLocal(returnUrl);
+                    vServicio.GrabarLoginTime(model.Email);
+                    ViewBag.MostrarMensajeProveedor = true;
+                    return RedirectToAction("Index","Home",new  { MMP = "1"  });                    
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Incio del Sistema Invalido, pruebe de nuevo.");
+                    return View(model);
+            }
+        }
+
+
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+
+        public async Task<ActionResult> LoginBase64(LoginViewModel model, string returnUrl)
+        {
+         
+
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+
+            
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync( model.Email,Base64Decode( model.Password), model.RememberMe, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+
+                    var _MenusPermitidos = (from l in _Db.V_GEN_MenuDisplay.AsNoTracking() where l.UserName == model.Email orderby l.Menu_Orden select l).ToList();
+                    Servicios.ServicioSeguridad.RegistraVariablesSession(_MenusPermitidos,model.Email);
+                    vServicio.GrabarLoginTime(User.Identity.GetUserId());
+                    ViewBag.MostrarMensajeProveedor = true;
+                    return RedirectToAction("Index", "Home", new { MMP = "1" });
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -263,7 +321,7 @@ namespace Wareways.PortalProv.Controllers
                     var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
 
                     body = body.Replace("***UrlLink***", callbackUrl);
-                    body = body.Replace("***EmpresaLogo***", "http://proveedores.polytec.com.gt/Content/PolytecLogo.png");
+                    body = body.Replace("***EmpresaLogo***", "https://proveedores.aki.com.gt/Content/Logos/LogoOperadora.png");
                 
                     await UserManager.SendEmailAsync(user.Id, "Portal Proveedores - Recuperacion de Correo - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
                                                      , body);

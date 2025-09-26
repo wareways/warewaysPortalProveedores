@@ -25,7 +25,10 @@ namespace Wareways.PortalProv.Controllers
         private List<v_PPROV_FacturasIngresadasPorUsuario> ObtenerPagosPorusuario()
         {
             var _UserName = User.Identity.Name;
-            var _Datos = _Db.v_PPROV_FacturasIngresadasPorUsuario.Where(p => p.UserName == _UserName && p.TrsfrDate == null).ToList();
+            var retencionMin = DateTime.Now.Date.AddMonths(-6);
+            _Db.Database.CommandTimeout = 300;
+            var _Datos = _Db.v_PPROV_FacturasIngresadasPorUsuario.Where(p => p.UserName == _UserName && p.TrsfrDate == null
+                                & p.DocDate >= retencionMin).ToList();
 
             return _Datos;
         }

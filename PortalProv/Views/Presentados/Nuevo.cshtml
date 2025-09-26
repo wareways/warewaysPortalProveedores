@@ -26,6 +26,10 @@
                 @Html.HiddenFor(model => Model.Nuevo_CardCode)
                 @Html.HiddenFor(model => Model.Nuevo_Pdf_Cotizacion)
                 @Html.HiddenFor(model => Model.Nuevo_Pdf_Informe)
+                @Html.HiddenFor(model => Model.ExcedenteMaximo)
+
+
+
 
 
                 if (Model.ModoActivo == "Nuevo_Paso1")
@@ -139,8 +143,31 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">No. Orden Compra o Servicio</label>
-                                        @Html.EditorFor(model => model.Nuevo.Doc_NumeroOC, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese OC", @readonly = "readonly" } })
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="exampleInputEmail1">No. Orden Compra</label>
+                                                @Html.EditorFor(model => model.Nuevo.Doc_NumeroOC, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Ingrese OC", @readonly = "readonly" } })
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="exampleInputEmail1">Mutiples Ordenes</label>
+                                                @Html.EditorFor(model => model.MultiplesOrdenes, new { htmlAttributes = new { @class = "form-control", @placeholder = "", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="exampleInputEmail1">Mutiples Entregas</label>
+                                                @Html.EditorFor(model => model.Nuevo.Doc_EM_Multiple, new { htmlAttributes = new { @class = "form-control", @placeholder = "", @readonly = "readonly" } })
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="exampleInputEmail1">Monto Entregas</label>
+                                                @Html.EditorFor(model => model.Nuevo.Doc_EM_MontoSum, new { htmlAttributes = new { @class = "form-control", @placeholder = "", @readonly = "readonly" } })
+
+                                            </div>
+                                        </div>
+                                        
                                     </div>
 
                                     <div class="form-group">
@@ -184,51 +211,106 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="#" onclick="MostrarOC()">Ver Orden Compra</a>
                                     </li>
-                                    @*<li class="nav-item">
-                                        <a class="nav-link" href="#" onclick="MostrarCotiza()">Ver Cotización</a>
-                                    </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#" onclick="MostrarEntrega()">Ver Informe Entrega</a>
-                                    </li>*@
+                                        <a class="nav-link" href="#" onclick="IntegrarOC()">Integracion OC</a>
+                                    </li>
+                                    @*<li class="nav-item">
+                                    <a class="nav-link" href="#" onclick="MostrarCotiza()">Ver Cotización</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" onclick="MostrarEntrega()">Ver Informe Entrega</a>
+                                </li>*@
 
                                 </ul>
 
                                 <embed src="~/Cargados/@Model.Nuevo_CardCode/@Model.Nuevo_Pdf_Facturas" type="application/pdf" style="width:90%; height:50vw;" id="uipdfembfac" />
                                 <embed src="~/Cargados/@Model.Nuevo_CardCode/@Model.Nuevo_Pdf_OC" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdfemboc" />
+                                <div id="divIntegracionOc" style="width:90%; height:50vw; display:none">
+
+                                    <div class="box box-warning">
+                                        <div class="box-body">
+                                            <table class="table table-bordered table-condensed table-hover Datos">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+
+                                                        <th>Fecha<br />Entrega</th>
+                                                        <th>No. <br /> Entrega </th>
+
+                                                        <th>Total <br />Entrega</th>
+                                                        <th>Observaciones</th>
+                                                        <th>No. <br /> Orden</th>
+                                                        <th>Fecha <br /> Orden</th>
+                                                        <th></th>
+                                                        <th>Ref AKI OL</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.DetalleEntregas)
+                                                    {
+                                                        <tr>
+                                                            <td>@Html.CheckBox("cbSelect", (item.Entrega_Usuario == "1") ? true : false, new { @class = "Chklines", PDocNum = item.Orden_DocNum, EDocNum = item.Entrega_DocNum, EDocTotal = item.Entrega_DocTotal })  </td>
+
+                                                            <td>@item.Entrega_DocDate.Value.ToString("dd/MM/yyyy")</td>
+
+                                                            <td><a href="~/Reportes/PrintEM.aspx?pid=@item.Entrega_DocNum" target="_blank"> @item.Entrega_DocNum</a></td>
+
+                                                            <td>@item.Entrega_DocTotal.Value.ToString("##,###,###.00")</td>
+
+                                                            <td>@item.Entrega_Observaciones</td>
+
+                                                            <td><a href="~/Reportes/PrintOCbyId.aspx?pid=@item.Orden_DocNum" target="_blank">  @item.Orden_DocNum</a></td>
+
+                                                            <td>@item.Orden_DocDate.Value.ToString("dd/MM/yyyy")</td>
+
+                                                            <td>@item.Orden_DocType</td>
+
+                                                            <td>@item.NumAtCard</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 control-label" style="font-size:large;font-weight:bolder">Total:</div>
+                                    <div class="col-md-2" style="font-size:large;font-weight:bolder">@Html.TextBox("integramonto", (Model.Nuevo.Doc_MontoNeto.Value.ToString("##,###,###.00")), new { @readonly = "readonly", @class = "form-control" })</div>
+
+                                </div>
                                 @*@if (!String.IsNullOrEmpty(Model.Nuevo_Pdf_Cotizacion))
-                                {
-                                    <embed src="@Wareways.PortalProv.Infraestructura.Servicios.AdjuntosUrlFix.Url(Model.Nuevo_Pdf_Cotizacion.Contains(@"\\")?Model.Nuevo_Pdf_Cotizacion:@"/Cargados/"+Model.Nuevo_CardCode+@"/"+Model.Nuevo_Pdf_Cotizacion)" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdcotiza" />
-                                }
-                                <embed src="@Wareways.PortalProv.Infraestructura.Servicios.AdjuntosUrlFix.Url(Model.Nuevo_Pdf_Informe)" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdentrega" />
+                            {
+                                <embed src="@Wareways.PortalProv.Infraestructura.Servicios.AdjuntosUrlFix.Url(Model.Nuevo_Pdf_Cotizacion.Contains(@"\\")?Model.Nuevo_Pdf_Cotizacion:@"/Cargados/"+Model.Nuevo_CardCode+@"/"+Model.Nuevo_Pdf_Cotizacion)" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdcotiza" />
+                            }
+                            <embed src="@Wareways.PortalProv.Infraestructura.Servicios.AdjuntosUrlFix.Url(Model.Nuevo_Pdf_Informe)" type="application/pdf" style="width:90%; height:50vw; display:none" id="uipdentrega" />
 
 
-                                @if (String.IsNullOrEmpty(Model.Nuevo_Pdf_Cotizacion))
-                                {
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="box box-default box-solid">
-                                                <div class="box-header with-border">
-                                                    <h2 class="box-title">Cotización</h2>
-                                                </div>
-                                                <div class="box-body">
-                                                    <label for="filecotiza" class="btn btn-success">Seleccionar Arhivo PDF</label>
-                                                    @Html.TextBox("filecotiza", "", new { type = "file", @title = "Seleccione PDF", @style = "visibility:hidden;" })
-                                                    <label id="filecotiza_sel"></label>
-                                                    <p class="help-block">Solo se pueden subir archivos PDF</p>
-                                                </div>
+                            @if (String.IsNullOrEmpty(Model.Nuevo_Pdf_Cotizacion))
+                            {
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="box box-default box-solid">
+                                            <div class="box-header with-border">
+                                                <h2 class="box-title">Cotización</h2>
+                                            </div>
+                                            <div class="box-body">
+                                                <label for="filecotiza" class="btn btn-success">Seleccionar Arhivo PDF</label>
+                                                @Html.TextBox("filecotiza", "", new { type = "file", @title = "Seleccione PDF", @style = "visibility:hidden;" })
+                                                <label id="filecotiza_sel"></label>
+                                                <p class="help-block">Solo se pueden subir archivos PDF</p>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button class="btn btn-warning " type="submit" name="CargarCotizacion" value="CargarCotizacion">
-                                                Cargar Cotización &nbsp;
-                                                <i class="fa fa-save"></i>
-                                            </button>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-warning " type="submit" name="CargarCotizacion" value="CargarCotizacion">
+                                            Cargar Cotización &nbsp;
+                                            <i class="fa fa-save"></i>
+                                        </button>
                                     </div>
-                                }*@
+                                </div>
+                            }*@
 
 
                             </div>
@@ -285,19 +367,22 @@
             $("#uipdfemboc").show();
             $("#uipdcotiza").hide();
             $("#uipdentrega").hide();
-            uipdcotiza
+            $("#divIntegracionOc").hide();
+
         }
         function MostrarCotiza() {
             $("#uipdfembfac").hide();
             $("#uipdfemboc").hide();
             $("#uipdcotiza").show();
             $("#uipdentrega").hide();
+            $("#divIntegracionOc").hide();
         }
         function MostrarEntrega() {
             $("#uipdfembfac").hide();
             $("#uipdfemboc").hide();
             $("#uipdcotiza").hide();
             $("#uipdentrega").show();
+            $("#divIntegracionOc").hide();
         }
 
         function MostrarFactura() {
@@ -305,12 +390,70 @@
             $("#uipdfemboc").hide();
             $("#uipdcotiza").hide();
             $("#uipdentrega").hide();
+            $("#divIntegracionOc").hide();
+        }
+
+        function IntegrarOC() {
+            $("#uipdfembfac").hide();
+            $("#uipdfemboc").hide();
+            $("#uipdcotiza").hide();
+            $("#uipdentrega").hide();
+            $("#divIntegracionOc").show();
         }
 
         function Submitforma2() {
             $("#formainicial").submit();
         }
-    </script>
 
+        function Submitforma3() {
+            $("#formainicial").submit();
+        }
+    </script>
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('.Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                "order": [[2, "asc"]],
+                //"columnDefs": [
+                //    { "width": "60%", "targets": 0 },
+                //    { "width": "20%", "targets": 1 },
+                //    { "width": "20%", "targets": 2 }
+                //],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+    </script>
+    <script>
+        $(document).on('change', '.Chklines', function () {
+            var ordenes = "";
+            var entregas = "";
+            var monto = 0;
+            $('input.Chklines:checkbox:checked').each(function () {
+                var edocnum = $(this).attr("edocnum");
+                var edoctotal = $(this).attr("edoctotal");
+                var pdocnum = $(this).attr("pdocnum");
+                ordenes = ordenes + pdocnum + ",";
+                entregas = entregas + edocnum + ",";
+
+                monto = monto + Number(edoctotal);
+            });
+            $("#MultiplesOrdenes").val(ordenes);
+            $("#Nuevo_Doc_EM_Multiple").val(entregas);
+            $("#integramonto").val(monto.toFixed(2));
+            $("#Nuevo_Doc_EM_MontoSum").val(monto.toFixed(2));
+
+            if (this.checked) {
+                // checkbox is checked
+            }
+        });
+    </script>
 
 }

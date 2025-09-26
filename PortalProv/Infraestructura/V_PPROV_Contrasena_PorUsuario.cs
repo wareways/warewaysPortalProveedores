@@ -16,16 +16,16 @@ namespace Wareways.PortalProv.Infraestructura
     {
         public long RowNbr { get; set; }
         public string UserName { get; set; }
+        public string Empresa_Name { get; set; }
         public System.Guid Contrasena_Id { get; set; }
         public int Contrasena_Numero { get; set; }
         public int Empresa_Id { get; set; }
         public System.DateTime Contrasena_Fecha { get; set; }
         public System.DateTime Contrasena_Fecha_Estimada { get; set; }
         public string Contrasena_Usuario { get; set; }
+        public string Contrasena_Estado { get; set; }
         public int Cantidad { get; set; }
         public decimal Monto { get; set; }
-        public string Empresa_Name { get; set; }
-        public string Contrasena_Estado { get; set; }
         public string Contrasena_CardCode { get; set; }
         public string Contrasena_Moneda { get; set; }
         public string Facturas { get; set; }

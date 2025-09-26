@@ -2,6 +2,12 @@
 
 @model LoginViewModel
 
+@using System.Configuration
+@{
+    var logoEmpresa = ConfigurationManager.AppSettings["LogoEmpresa"];
+    var logoIco = ConfigurationManager.AppSettings["LogoICO"];
+}
+
 <div class="login-box">
     <div class="login-logo">
 
@@ -10,8 +16,10 @@
     <!-- /.login-logo -->
 
     <div class="login-box-body">
-        <img src="~/Content/PolytecLogo.png" width="100%"/>
-        
+
+
+
+        <img src="@logoEmpresa" width="100%" />
         <p class="login-box-msg">Ingrese sus Credenciales para Iniciar Session</p>
         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
@@ -21,7 +29,7 @@
 
 
 
-             
+
 
             /// Este se queda
             ///
@@ -51,9 +59,10 @@
             </div>
             <br />
             <hr />
-            <div class="row" style="text-align:center">Presiona 
-                <a href="@Url.Action("ForgotPassword","account")" >Aqui  </a>
-                    par Recuperar tu contraseña.
+            <div class="row" style="text-align:center">
+                Presiona
+                <a href="@Url.Action("ForgotPassword","account")">Aqui  </a>
+                par Recuperar tu contraseña.
             </div>
             <div class="form-group" style="display:none">
                 <div class="col-md-offset-2 col-md-10">

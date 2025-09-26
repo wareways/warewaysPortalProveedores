@@ -46,6 +46,12 @@ namespace Wareways.PortalProv.Infraestructura
         public string Doc_PdfCotiza { get; set; }
         public string Doc_PdfInforme { get; set; }
         public Nullable<decimal> Doc_TasaCambio { get; set; }
+        public string Doc_CardName { get; set; }
+        public string Doc_OC_Multiple { get; set; }
+        public string Doc_EM_Multiple { get; set; }
+        public Nullable<decimal> Doc_EM_MontoSum { get; set; }
+        public Nullable<bool> Doc_ActivoFijo { get; set; }
+        public string Doc_OC_TipoDoc { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }

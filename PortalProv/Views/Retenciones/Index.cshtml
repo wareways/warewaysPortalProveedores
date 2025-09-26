@@ -1,5 +1,8 @@
 ﻿@model  Wareways.PortalProv.Models.PP.RetencionesModel
-
+@using System.Configuration;
+@{
+    var Subsite = ConfigurationManager.AppSettings["SubSite"];
+}
 <!DOCTYPE html>
 
 
@@ -31,7 +34,7 @@
                         <tr>
                             <td>
                                 <a href="#" data-toggle="modal" data-titulo="Retenciones" data-nombre="@item.Retencion_Pdf" data-target="#myModal" target="_blank" class="btn btn-default " title="Retencion"><span class="fa fa-file-pdf-o" style="color:blue"></span></a>
-                                
+
                             </td>
                             <td>@item.Retencion_Nombre</td>
 
@@ -92,7 +95,7 @@
                 var id = $(e.relatedTarget).data('nombre');
                 var titulo = $(e.relatedTarget).data('titulo');
 
-                $(".modal-body").html("<embed src='" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                $(".modal-body").html("<embed src='@Subsite" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
                 $(".modal-title").html(titulo);
 
             });

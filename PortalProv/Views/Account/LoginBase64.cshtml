@@ -1,0 +1,83 @@
+﻿@using Wareways.PortalProv.Models
+
+@model LoginViewModel
+
+<div class="login-box">
+    <div class="login-logo">
+
+
+    </div>
+    <!-- /.login-logo -->
+
+    <div class="login-box-body">
+
+        
+
+        <img src="~/Content/Logos/LogoOperadora.png" width="100%"/>
+        <p class="login-box-msg">Ingrese sus Credenciales para Iniciar Session</p>
+        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+
+
+            /// Este se queda
+            ///
+            <div class="form-group has-feedback">
+
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Usuario" })
+                <span class="fa fa-user form-control-feedback"></span>
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group has-feedback">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Contraseña" })
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button class="btn btn-success pull-right" type="submit" name="Login" value="Grabar">
+                        <i class="fa fa-sign-in"></i>
+                        &nbsp; Iniciar Sesión
+                    </button>
+                </div>
+                <!-- /.col -->
+            </div>
+            <br />
+            <hr />
+            <div class="row" style="text-align:center">
+                Presiona
+                <a href="@Url.Action("ForgotPassword","account")">Aqui  </a>
+                par Recuperar tu contraseña.
+            </div>
+            <div class="form-group" style="display:none">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                    </div>
+                </div>
+            </div>
+
+        }
+
+
+
+
+    </div>
+    <!-- /.login-box-body -->
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

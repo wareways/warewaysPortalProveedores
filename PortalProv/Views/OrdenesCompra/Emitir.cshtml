@@ -1,0 +1,1574 @@
+﻿@model Wareways.PortalProv.Models.OC.OC_EmitirModel
+@using System.Configuration
+@{ var Subsite = ConfigurationManager.AppSettings["SubSite"];
+    var VisibleRevisionOc = ConfigurationManager.AppSettings["VisibleAutoEspecial"];
+    String DesCta(String cuentaContable)
+    {
+        try
+        {
+            return ((List<Wareways.PortalProv.Models.OC.oCuentaContableSap>
+    )ViewBag.VB_CuentaServicio).Where(p => p.ActId == cuentaContable).ToList()[0].AcctName;
+        }
+        catch (Exception ex)
+        { return cuentaContable; }
+    }
+    String DesCtaTodas(String cuentaContable)
+    {
+        try
+        {
+            return ((List<Wareways.PortalProv.Models.OC.oCuentaContableSap>
+                )ViewBag.VB_CuentaServicioTodas).Where(p => p.ActId == cuentaContable).ToList()[0].AcctName;
+        }
+        catch (Exception ex)
+        { return cuentaContable; }
+    }
+    String DesCC(String CentroCosto)
+    {
+        try
+        {
+            return ((List<Wareways.PortalProv.Models.OC.oCentroCosto>
+                )ViewBag.VB_listaCentoCosto).Where(p => p.ocrCode == CentroCosto).ToList()[0].ocrName;
+        }
+        catch (Exception ex)
+        { return CentroCosto; }
+    }
+}
+
+@section Header{
+    @*choosen*@
+    <style>
+        .chosen-container {
+            width: 100% !important;
+        }
+
+        .chosen-choices {
+            max-height: 80px !important;
+        }
+    </style>
+    @* AutoComplete *@
+    <style>
+        .chosen-choices {
+            overflow: scroll !important
+        }
+
+        .ui-autocomplete {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 10000;
+            overflow-y: auto !important;
+            padding-right: 20px;
+            max-height: 200px;
+            display: none;
+            float: left;
+            min-width: 160px;
+            padding: 5px 0;
+            margin: 2px 0 0;
+            list-style: none;
+            font-size: 14px;
+            text-align: left;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+            background-clip: padding-box;
+        }
+
+            .ui-autocomplete > li > div {
+                display: block;
+                padding: 3px 20px;
+                clear: both;
+                font-weight: normal;
+                line-height: 1.42857143;
+                color: #333333;
+                white-space: nowrap;
+            }
+
+        .ui-state-hover,
+        .ui-state-active,
+        .ui-state-focus {
+            text-decoration: none;
+            color: #262626;
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+
+        .ui-helper-hidden-accessible {
+            border: 0;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 2px;
+        }
+    </style>
+}
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Emitir", "OrdenesCompra", FormMethod.Post, new { onkeydown = "return event.keyCode!=13", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(p => p.TipoDoc)
+    @Html.HiddenFor(p => p.Estado)
+    @Html.HiddenFor(p => p.SoloLectura)
+    @Html.HiddenFor(p => p.EliminarDetalle)
+    @Html.HiddenFor(p => p.EmpresaId)
+    @Html.HiddenFor(p => p.CreadoPor)
+    @Html.HiddenFor(p => p.CreadoEl)
+    @Html.Hidden("CCforzar", Model.CCobligatorio);
+
+    <div class="box box-primary box-solid">
+        <div class="box-header with-border">
+            <span class="fa fa-user-circle-o fa-2x"></span>
+            <h3 class="box-title"> Ordenes de Compra</h3>
+        </div>
+        <div class="box-body">
+            <div class="@(@Model.CollapseDatosGenerales ? "box box-primary collapsed-box" : "box box-primary")">
+                <div class="box-header with-border">
+
+                    <div class="box-tools pull-left">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-caret-right"></i>
+                        </button>
+                    </div>
+                    <h3 class="box-title">Datos Generales</h3>
+                    <div class="box-tools pull-right">
+                        @if (!String.IsNullOrEmpty(Model.Fel_Firma) && Model.Estado != "Anulado")
+                        {
+
+                            <a href='@string.Format("/servicios/ImpresionFel.aspx?id={0}&Pantalla=N",Model.Fel_Firma)' target="_blank" class="btn btn-sm btn-default">
+                                PDF
+                                <span class="fa fa-file-pdf-o" style="color:red"></span>
+                            </a>
+                            <a href='@string.Format("/servicios/ExportaXMLFel.aspx?id={0}",Model.Fel_Firma)' target="_blank" class="btn btn-sm btn-default">
+                                XML
+                                <span class="fa fa-file-code-o" style="color:blue"></span>
+                            </a>
+                            <a href='@string.Format("/FEL_Facturacion/EnviarCorreo/{0}",Model.Fel_Unique)' class="btn btn-sm btn-default">
+                                Correo
+                                <span class="fa fa-mail-forward" style="color:blue"></span>
+                            </a>
+                        }
+                        @if (Model.Estado == "Borrador" && Model.Fel_Unique != Guid.Empty)
+                        {
+                            @*<a href='@Url.Action("Cancelar","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-danger">
+
+                Cancelar Documento &nbsp;
+
+            </a>*@
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-cancelarOC">
+                                <span class="fa  fa-remove"></span>
+                                Cancelar Documento
+                            </button>
+                            @:|
+                            if (VisibleRevisionOc == "S")
+                            {
+                                <a href='@Url.Action("EnviarRevision","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-success">
+                                    Enviar Revisión &nbsp;
+                                    <span class="fa  fa-hand-o-right"></span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href='@Url.Action("EnviarAprobacion","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-success">
+                                    Enviar Aprobación &nbsp;
+                                    <span class="fa  fa-hand-o-right"></span>
+                                </a>
+                            }
+
+                        }
+
+                        @if (Model.Estado == "Revision" && User.IsInRole("Aproba Revision"))
+                        {
+                            @*<a href='@Url.Action("Cancelar","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-danger">
+
+                Cancelar Documento &nbsp;
+
+            </a>*@ <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-rechzarOC">
+                                <span class="fa  fa-remove"></span>
+                                Rechazar a Borrador
+                            </button>
+                            @:|
+                            <a href='@Url.Action("EnviarAprobacion","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-success">
+                                Enviar Aprobación &nbsp;
+                                <span class="fa  fa-hand-o-right"></span>
+                            </a>
+
+                        }
+
+                        @if (Model.Estado == "Autorizar" && ViewBag.EsAutorizador == true && Model.Fel_Unique != Guid.Empty)
+                        {
+                            @*<a href='@Url.Action("RechazarAprobacion","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-warning">
+
+                <span class="fa  fa-hand-o-left"></span> &nbsp;
+                Rechazar a Borrador &nbsp;
+            </a>*@
+                            @:
+                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-rechzarOC">
+                                <span class="fa  fa-remove"></span>
+                                Rechazar a Borrador
+                            </button>
+                            @:|
+                            <a href='@Url.Action("AprobarDocto","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-danger">
+                                Aprobar &nbsp;
+                                <span class="fa  fa-hand-o-right"></span>
+                            </a>
+                        }
+
+                        @if (Model.Estado == "AutoEspe" && ViewBag.EsAutorizador == true && Model.Fel_Unique != Guid.Empty)
+                        {
+
+                            @:
+                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-rechzarOC">
+                                <span class="fa  fa-remove"></span>
+                                Rechazar a Borrador
+                            </button>
+                            @:|
+                            <a href='@Url.Action("AprEspeDocto","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-danger">
+                                Aprobar &nbsp;
+                                <span class="fa  fa-hand-o-right"></span>
+                            </a>
+                        }
+
+
+                        @if (Model.Estado == "Aprobado" && Model.Fel_Unique != Guid.Empty)
+                        {
+                            @*<a href='@Url.Action("RechazarAprobacion","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-warning">
+
+                <span class="fa  fa-hand-o-left"></span> &nbsp;
+                Rechazar Aprobación &nbsp;
+            </a>*@
+                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modal-rechzarOC">
+                                <span class="fa  fa-remove"></span>
+                                Rechazar a Borrador
+                            </button>
+                            @:|
+                            <a href='@Url.Action("GenerarSAP","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-danger">
+                                Generar SAP &nbsp;
+                                <span class="fa  fa-hand-o-right"></span>
+                            </a>
+                        }
+                        @if (Model.Estado == "Generado" && Model.Fel_Unique != Guid.Empty)
+                        {
+                            <a href='@Url.Action("EmailOc","ordenescompra",new { id = Model.Fel_Unique})' class="btn btn-sm btn-default">
+                                Enviar Correo &nbsp;
+                                <span class="fa fa-em fa-envelope-o"></span>
+                            </a>
+
+                            <a href='@Url.Action("PrintOC.aspx","Reportes",new { pid = Model.Fel_Unique })' target="_blank" class="btn btn-sm btn-success">
+                                Imprimir OC &nbsp;
+                                <span class="fa  fa-hand-o-right"></span>
+                            </a>
+
+                            if (Model.Tipo_Detalle == "Servicio" && Model.EntregaSaldo > 0 && String.IsNullOrEmpty(Model.EntregaMultiple))
+                            {
+                                <a href='@Url.Action("EntregaC","ordenescompra",new { Fel_Unique = Model.Fel_Unique })' class="btn btn-sm btn-warning">
+                                    Realizar Entrega &nbsp;
+                                    <span class="fa fa-truck"></span>
+                                </a>
+                            }
+                            if (Model.Tipo_Detalle == "Servicio" && Model.Detalle.Count == 1 && Model.EntregaSaldo > 0)
+                            {
+                                <a href='#' class="btn btn-sm btn-danger accionEntregaParcial">
+                                    Realizar Entrega Parcial &nbsp;
+                                    <span class="fa fa-truck"></span>
+                                </a>
+                            }
+
+
+                            if (Model.Tipo_Detalle == "Servicio" && Model.EntregaNo != null)
+                            {
+                                if (Model.EntregaMultiple == null)
+                                {
+                                    <a href='@Url.Action("PrintEM.aspx", "Reportes", new { pid = @Model.EntregaNo })' title="@Model.EntregaPor - @Model.EntregaEl.Value.ToString()"
+                                       target="_blank" class="btn btn-sm btn-info">
+                                        Entrega @Model.EntregaNo &nbsp;
+                                        <span class="fa  fa-truck"></span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    foreach (var itemx in Model.EntregaMultiple.Split(','))
+                                    {
+                                        <a href='@Url.Action("PrintEM.aspx", "Reportes", new { pid =itemx })' title="@Model.EntregaPor - @Model.EntregaEl.Value.ToString()"
+                                           target="_blank" class="btn btn-sm btn-info">
+                                            Entrega @itemx &nbsp;
+                                            <span class="fa  fa-truck"></span>
+                                        </a>
+                                    }
+                                }
+
+                                if (User.IsInRole("OC_SubirArchivos"))
+                                {
+                                    <a href='@Url.Action("SubirFacturaEsp","ordenescompra",new { pid = Model.Fel_Unique })' target="_blank" class="btn btn-sm btn-primary">
+                                        Subir Factura &nbsp;
+                                        <span class="fa fa-bell-o"></span>
+                                    </a>
+                                }
+                            }
+                        }
+                    </div>
+
+
+                </div>
+                <div class="box-body">
+
+                    @Html.HiddenFor(d => d.Fel_Unique)
+
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            @Html.Label("Proveedor", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                <div class="input-group">
+                                    @Html.EditorFor(d => d.CardCode, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                    @if (Model.Estado == "Borrador")
+                                    {
+                                        <span class="input-group-addon" style="padding:unset; border: unset">
+                                            <a href="#" class="btn btn-info btn-flat" title="Buscar Cliente" id="uiBT_BuscarCliente" name="uiBT_BuscarCliente">
+                                                <span class="fa fa-search"></span>
+                                            </a>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            @Html.Label("Nit", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.Nit, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            @Html.Label("Interno", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.Fel_Correlativo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Nombre", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.EditorFor(d => d.CardName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            @Html.Label("Estado", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.Estado, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="form-group">
+                            @Html.Label("Bodega", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @if (Model.Tipo_Detalle != "Bien")
+                                {
+                                    @Html.DropDownListFor(d => d.Establecimiento_Codigo, new SelectList(ViewBag.VB_listaEstablecimiento, "WhsCode", "WhsName"), new { @class = "form-control", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(d => d.Establecimiento_Codigo, new SelectList(ViewBag.VB_listaEstablecimiento, "WhsCode", "WhsName"), new { @class = "form-control chosen-select2" })
+                                }
+
+                            </div>
+                            @Html.Label("Depto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(d => d.Departamento, new SelectList(ViewBag.VB_Deptos, "DepartmentId", "DepartmentName"), new { @class = "form-control" })
+                            </div>
+                            @Html.Label("Fecha de Emision", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.FechaEmision, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Referencia", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.Referencia, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            <div class="col-md-4" style="color:red">
+                                @if (Model.Inactivo == "Y")
+                                { 
+                                    @:<strong> Cliente @Model.InactivoMensaje </strong> 
+                                }
+                                
+                            </div>
+                            @Html.Label("Fecha de Entrega", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.FechaEntrega, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Moneda", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(d => d.Moneda, new SelectList(ViewBag.VB_listaMoneda, "CurrCode", "CurrCode"), new { @class = "form-control Moneda" })
+                            </div>
+                            @Html.Label("TasaCambio", htmlAttributes: new { @class = "control-label col-md-1" })
+                            <div class="col-md-2">
+                                @if (Model.Moneda != "QTZ")
+                                {
+                                    @Html.EditorFor(d => d.TasaCambio, new { htmlAttributes = new { @class = "form-control " } })
+                                }
+                                else
+                                {
+                                    @Html.EditorFor(d => d.TasaCambio, new { htmlAttributes = new { @class = "form-control ", @readonly = "readonly" } })
+                                }
+
+
+                            </div>
+                            <div class="col-md-2"></div>
+                            @Html.Label("Tipo de Detalle", htmlAttributes: new { @class = "control-label col-md-1" })
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(d => d.Tipo_Detalle, new[] { new SelectListItem { Text = "Servicio", Value = "Servicio" }, new SelectListItem { Text = "Bien", Value = "Bien" } }, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                        </div>
+
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Detalle</h3>
+
+                    <a class="btn btn-warning pull-right EscondeSoloLectura" id="uiBT_SubmitAgregarLinea" name="uiBT_SubmitAgregarLinea">
+                        Agregar Linea &nbsp;
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <div class="col-md-4 pull-right" p style="">
+
+
+                        @if (Model.Estado == "Borrador" && Model.Tipo_Detalle != "Bien")
+                        {
+                            <div class="col-md-3">
+                                <a class="btn btn-default  EscondeSoloLectura" title="Descargar Formato" href="~/Infraestructura/Reportes/FormatoCargaManualServicio.xlsx">
+                                    Formato &nbsp;
+                                    <i class="fa fa-file-excel-o"></i>
+                                </a>
+                            </div>
+
+                            <div class="col-md-3">
+                                @Html.TextAreaFor(p => p.importE, new { @class = "form-control", @rows = "1", @placeholder = "Pegar Aqui.." })
+                            </div>
+
+                            <div class="col-md-6">
+                                <button class="btn btn-default  EscondeSoloLectura" id="uiBT_SubmitAgregarExcel" type="submit" value="inputexcel" name="uiBT_SubmitAgregarExcel">
+                                    Import Excel &nbsp;
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                        }
+                        @if (Model.Estado == "Borrador" && Model.Tipo_Detalle == "Bien")
+                        {
+                            <div class="col-md-3">
+                                <a class="btn btn-info  EscondeSoloLectura" title="Descargar Formato" href="~/Infraestructura/Reportes/FormatoCargaManualBien.xlsx">
+                                    Formato &nbsp;
+                                    <i class="fa fa-file-excel-o"></i>
+                                </a>
+                            </div>
+
+                            <div class="col-md-3">
+                                @Html.TextAreaFor(p => p.importE, new { @class = "form-control", @rows = "1", @placeholder = "Pegar Aqui.." })
+                            </div>
+
+                            <div class="col-md-6">
+                                <button class="btn btn-info  EscondeSoloLectura" id="uiBT_SubmitAgregarExcelBien" type="submit" value="inputexcel" name="uiBT_SubmitAgregarExcelBien">
+                                    Import Excel &nbsp;
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                        }
+
+
+                    </div>
+
+                    <div class="box-tools pull-left">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-caret-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>Descripción</th>
+                                    <th>UnidadMedida</th>
+                                    <th>PrecioUnitario</th>
+
+                                    <th style="display:none">Descuento</th>
+                                    <th>TotalLinea</th>
+                                    <th>Impuestos</th>
+                                    <th>Tipo</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @for (var i = 0; i < Model.Detalle.Count(); i++)
+                                {
+
+                                    @Html.HiddenFor(x => Model.Detalle[i].UniqueId)
+                                    <tr>
+
+                                        <td>
+                                            @Model.Detalle[i].Cantidad.ToString("##,###,##0.00")
+                                            @Html.HiddenFor(x => Model.Detalle[i].Cantidad)
+                                        </td>
+                                        <td>
+                                            @Model.Detalle[i].Descripcion &nbsp;&nbsp;
+                                            <small class="label bg-black">@DesCC(Model.Detalle[i].CentoCosto)</small>&nbsp;
+                                            <small class="label bg-green">@Model.Detalle[i].CuentaContable  @DesCtaTodas(Model.Detalle[i].CuentaContable)</small>
+                                            @Html.HiddenFor(x => Model.Detalle[i].Descripcion)
+                                            @Html.HiddenFor(x => Model.Detalle[i].CentoCosto)
+                                            @Html.HiddenFor(x => Model.Detalle[i].CuentaContable)
+
+                                        </td>
+                                        <td>
+                                            @Model.Detalle[i].UnidadMedida
+                                            @Html.HiddenFor(x => Model.Detalle[i].UnidadMedida)
+                                        </td>
+                                        <td>
+                                            @Model.Detalle[i].PrecioUnitario.ToString("##,###,##0.00")
+                                            @Html.HiddenFor(x => Model.Detalle[i].PrecioUnitario)
+                                        </td>
+                                        <td style="display:none">
+                                            @Model.Detalle[i].Descuentos.ToString("##,###,##0.00")
+                                            @Html.HiddenFor(x => Model.Detalle[i].Descuentos)
+                                        </td>
+
+                                        <td>
+                                            @Model.Detalle[i].TotalLinea.ToString("##,###,##0.00")
+                                            @Html.HiddenFor(x => Model.Detalle[i].TotalLinea)
+                                        </td>
+                                        <td>
+
+                                            @Model.Detalle[i].Impuestos.ToString("##,###,##0.00")
+                                            @Html.HiddenFor(x => Model.Detalle[i].Impuestos)
+                                        </td>
+                                        <td>
+                                            @Model.Detalle[i].TipoImpuesto
+                                            @Html.HiddenFor(x => Model.Detalle[i].TipoImpuesto)
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm pull-right EscondeSoloLectura" type="submit" id="uiBT_EliminarFila" name="uiBT_EliminarFila" value="@Model.Detalle[i].UniqueId">
+                                                <i class="fa fa-remove"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                    <td>
+                                        @Html.Label("Total", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    </td>
+                                    <td>
+                                        <b>
+                                            @Model.Total.ToString("##,###,##0.00")
+                                            @Html.HiddenFor(x => Model.Total)
+                                        </b>
+                                    </td>
+                                    <td></td>
+
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            @Html.Label("Comentarios", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(d => d.Comentario, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Propietario", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.CreadoPor, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                            <div class="col-md-4">
+
+                            </div>
+                            @Html.Label("AutorizadoPor", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.AutorizadoPor, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Fecha Envio", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.EnviadoAuto, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                            <div class="col-md-4">
+
+                            </div>
+                            @Html.Label("Autorizado el", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.AutorizadoEl, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Saldo OC", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(d => d.EntregaSaldo, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                            <div class="col-md-4">
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="box-footer">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="text-left">
+                            <a class="btn btn-warning" href='@Url.Action("Index","ordenescompra")'>
+                                <span class=" fa fa-backward"></span>
+                                Regresar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-right">
+                            @if ((bool)ViewBag.MostarCrearGrabar)
+                            {
+                                <button class="btn btn-success pull-right EscondeSoloLectura" type="submit" id="uiBT_SubmitGrabar" name="uiBT_SubmitGrabar" value="Procesar">
+                                    Guardar &nbsp;
+                                    <i class="fa fa-save"></i>
+                                </button>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <div class="col-md-6">
+                <span class="fa fa-file-pdf-o fa-2x"></span>
+                <h3 class="box-title">Adjuntos</h3>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        @Html.DropDownListFor(d => d.TipoAdjuntoDoc, (SelectList)ViewBag.VB_listaTipoAdjuntoDoc, new { @class = "form-control ExcluirSoloLectura" })
+                        <div class="input-group-addon">
+                            <i class="fa fa-file-pdf-o"></i>
+                        </div>
+                        @Html.TextBox("fileoc", "", new { type = "file", @class = "form-control", @title = "Seleccione PDF" })
+                        <div class="input-group-btn">
+                            <button type="submit" value="Cargar" id="uiBT_UploadFileOC" name="uiBT_UploadFileOC" class="btn btn-info btn-flat">Cargar Archivo</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="box-body">
+            <table class="table table-bordered table-condensed" id="Datos">
+                <thead>
+                    <tr>
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Fecha
+                        </th>
+                        <th>
+                            Usuario
+                        </th>
+                        <th>
+
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Adjuntos)
+                    {
+                        <tr>
+                            <td>
+                                @item.AdjuntoTipo
+                            </td>
+                            <td>
+                                <a href="@item.AdjuntoRuta" target="_blank"> @item.NombreOriginal</a>
+                            </td>
+                            <td>
+                                @item.AdjuntoFecha.ToString("yyyy-MM-dd HH:mm:dd")
+                            </td>
+                            <td>
+                                @item.UserName
+                            </td>
+                            <td>
+                                @if (item.UserName == User.Identity.Name && Model.Estado == "Borrador")
+                                {
+                                    @Html.ActionLink(" ", "Eliminar", new { id = item.AdjuntoId, docid = item.FEL_Unique }, new { @class = "btn btn-sm btn-danger glyphicon glyphicon-remove-circle", @title = "Eliminar" })
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <div class="col-md-6">
+                <span class="fa fa-user-circle-o fa-2x"></span>
+                <h3 class="box-title">Historial</h3>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-group input-group">
+                    <input type="text" class="form-control ExcluirSoloLectura" id="nuevocomentariohist" name="nuevocomentariohist">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info btn-flat agregaComment">Agregar Observaciones</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="box-body">
+
+            <table class="table table-bordered table-condensed" id="Datos">
+                <thead>
+                    <tr>
+                        <th>
+                            Fecha
+                        </th>
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Origen
+                        </th>
+                        <th>
+                            Destino
+                        </th>
+                        <th>
+                            Observaciones
+                        </th>
+                        <th>
+                            Usuario
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Histotico)
+                    {
+                        <tr>
+                            <td>
+                                @item.FechaHora
+                            </td>
+                            <td>
+                                @item.Tipo
+                            </td>
+                            <td>
+                                @item.Estado_Original
+                            </td>
+                            <td>
+                                @item.Estado_Destino
+                            </td>
+                            <td>
+                                @item.Observaciones
+                            </td>
+                            <td>
+                                @item.Usuario
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div style="display:none">
+        @TempData["XmlDataRet"]
+    </div>
+    <div style="display:none">
+        @TempData["XmlData"]
+    </div>
+
+    <div class="modal fade" id="modal_AgregarLinea" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Agregar Linea</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("Cantidad", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(d => d.ModalNuevo.Cantidad, new { htmlAttributes = new { @class = "form-control CalcularTotalLinea", type = "number" } })
+                                @Html.ValidationMessageFor(model => model.ModalNuevo.Cantidad, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        @if (Model.Tipo_Detalle == "Bien")
+                        {
+                            <div class="form-group">
+                                @Html.Label("Bodega", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(d => d.ModalNuevo.Bodega, new SelectList(ViewBag.VB_listaEstablecimiento, "WhsCode", "WhsName"), new { @class = "form-control chosen-select3" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Producto", htmlAttributes: new { @class = "control-label col-md-2 " })
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        @Html.EditorFor(d => d.ModalNuevo.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                                        <span class="input-group-addon " style="padding:unset; border: unset">
+                                            <a href="#" class="btn btn-info btn-flat" title="Buscar Producto" id="uiBTCOD_PRODUCTO" name="uiBTCOD_PRODUCTO">
+                                                <span class="fa fa-search"></span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                @Html.Label("Descripción", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(d => d.ModalNuevo.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ModalNuevo.Descripcion, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            @Html.Label("Unidad", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @*@Html.EditorFor(d => d.ModalNuevo.UnidadMedida, new { htmlAttributes = new { @class = "form-control" } })*@
+                                @Html.DropDownListFor(d => d.ModalNuevo.UnidadMedida, new SelectList(ViewBag.VB_listaUnidades, "UomCode", "UomName"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Precio", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(d => d.ModalNuevo.PrecioUnitario, new { htmlAttributes = new { @class = "form-control CalcularTotalLinea", type = "number" } })
+                                @Html.ValidationMessageFor(model => model.ModalNuevo.PrecioUnitario, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Impuesto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(d => d.ModalNuevo.TipoImpuesto, new SelectList(ViewBag.VB_Impuesto, "ImpCode", "ImpName"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group" style="display:none">
+                            @Html.Label("Descuento", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(d => d.ModalNuevo.Descuentos, new { htmlAttributes = new { @class = "form-control CalcularTotalLinea", type = "number" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Total", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(d => d.ModalNuevo.TotalLinea, new { htmlAttributes = new { @class = "form-control", type = "number", @readonly = "readonly" } })
+                            </div>
+                        </div>
+
+                        @if (Model.Tipo_Detalle != "Bien")
+                        {
+                            <div class="form-group">
+                                @Html.Label("Concepto", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(d => d.ModalNuevo.CuentaContable, new SelectList(ViewBag.VB_CuentaServicio, "ActId", "AcctName"), new { @class = "form-control chosen-select CalcularTotalLinea" })
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            @Html.Label("Centro Costo", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @*@Html.EditorFor(d => d.ModalNuevo.UnidadMedida, new { htmlAttributes = new { @class = "form-control" } })*@
+                                @if (Model.Tipo_Detalle != "Bien")
+                                {
+                                    @Html.DropDownListFor(d => d.ModalNuevo.CentoCosto, new SelectList(ViewBag.VB_listaCentoCosto, "ocrCode", "ocrName"), new { @multiple = "multiple", @class = "form-control CalcularTotalLinea chosen-select ModalNuevoCentoCosto" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(d => d.ModalNuevo.CentoCosto, new SelectList(ViewBag.VB_listaCentoCosto, "ocrCode", "ocrName"), new { @class = "form-control CalcularTotalLinea chosen-select ModalNuevoCentoCosto" })
+                                }
+
+
+                                @Html.HiddenFor(P => P.ModalNuevo.CentoCostoArray)
+                            </div>
+                        </div>
+                        @if (Model.Tipo_Detalle != "Bien")
+                        {
+                            <button type="button" class="btn btn-warning btnTodasTiendas" id="btnTodasTiendas">@ViewBag.NombreBotonTodasTiendas</button>
+                            <button type="button" class="btn btn-danger pull-right btnlimpiarCC">Limpiar CC</button>
+                            <br />
+                            <div class="btn-group">
+                                @foreach (var xregion in Model.Regiones)
+                                {
+                                    <button type="button" class="btn btn-info btnRegiones" data-codigo="@xregion.Split('|')[0]">@xregion.Split('|')[1]</button>
+                                }
+
+
+                            </div>
+
+
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success pull-right EsconderBotonProducto" type="button" id="uiBT_SubmitAgregarLineaModal" name="uiBT_SubmitAgregarLineaModal" value="Procesar">
+                        Guardar &nbsp;
+                        <i class="fa fa-save"></i>
+                    </button>
+                    <button class="btn btn-success pull-right" type="submit" id="uiBT_SubmitAgregarLineaSubmit" name="uiBT_SubmitAgregarLineaSubmit" value="Procesar" style="visibility:hidden">
+                        Guardar &nbsp;
+                        <i class="fa fa-save"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    //Modal Buscar Cliente
+    <div class="modal fade" id="uiModal_BuscarCliente" role="dialog">
+        <div class="modal-dialog err-pop" style="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-11">
+                        <h4 class="box-title"> Buscar Cliente Interno o NIT</h4>
+                    </div>
+                    <div>
+                        <button id="DivClose2" name="DivClose2" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group" style="text-align:center;">
+                            <p style="font-weight:bolder">Base Datos Interna Clientes</p>
+                        </div>
+                        <div class="form-group">
+                            <span style="text-align:center;">
+                                @Html.Label("Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
+                            </span>
+                            <div class="col-md-10">
+
+                                <div class="input-group">
+                                    @Html.DropDownListFor(d => d.CardCodeSel, new SelectList(ViewBag.VB_listaCliente, "CardCode", "CardNameEsp").OrderBy(l => l.Value), new { @class = "form-control chosen-select", data_placeholder = "Seleccione un Cliente..." })
+                                    <span class="input-group-addon" style="padding:unset; border: unset">
+                                        <a href="#" class="btn btn-info btn-flat" title="Buscar Cliente" id="uiBT_BuscarListaCliente" name="uiBT_BuscarListaCliente">
+                                            <span class="fa fa-search"></span>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <br />
+                        <br />
+                        <div class="pull-right">
+
+
+                            <button class="btn btn-success pull-right" type="button" id="saveTeststeps" data-dismiss="modal">
+                                Salir &nbsp;
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="uiModal_EditarCorreo" role="dialog">
+        <div class="modal-dialog err-pop" style="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-11">
+                        <h4 class="box-title"> Editar Correo</h4>
+                    </div>
+                    <div>
+                        <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="text-align:center;">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.Label("Correo Anterior", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(d => d.CorreoAnterior, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Correo Nuevo", htmlAttributes: new { @class = "control-label col-md-2 " })
+                            <div class="col-md-10">
+                                @Html.EditorFor(d => d.CorreoNuevo, new { htmlAttributes = new { @class = "form-control ExcluirSoloLectura" } })
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+
+                        </div>
+
+                        <br />
+                        <div class="pull-right">
+                            <button class="btn btn-info pull-right " type="submit" id="uiBTEDITAR_CORREO" name="uiBTEDITAR_CORREO" value="uiBTEDITAR_CORREO">
+                                Guardar &nbsp;
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <button class="btn btn-success pull-right" type="button" id="saveTeststeps" data-dismiss="modal">
+                                Cancelar &nbsp;
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@using (Html.BeginForm("Cancelar", "OrdenesCompra", FormMethod.Post))
+{
+    <div class="modal modal-danger fade in" id="modal-cancelarOC" style="display: none; padding-right: 15px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">    Cancelar Documento</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Label("Agregar Comentario (min 10 caracteres)", htmlAttributes: new { @class = "control-label col-md-12 " })
+                    @Html.TextBox("comentario", "", new { @class = "form-control comentarioCancel" })
+                    @Html.Hidden("Fel_Unique", Model.Fel_Unique)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-outline" style="display:none" id="btnGrabarCancelar" name="btnGrabarCancelar">Grabar Cambios</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+
+@using (Html.BeginForm("RechazarAprobacion", "OrdenesCompra", FormMethod.Post))
+{
+    <div class="modal modal-warning fade in" id="modal-rechzarOC" style="display: none; padding-right: 15px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">    Rechazar a Borrador</h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Label("Agregar Comentario (min 10 caracteres)", htmlAttributes: new { @class = "control-label col-md-12" })
+                    @Html.TextBox("comentarioRech", "", new { @class = "form-control comentarioRechazo  ExcluirSoloLectura" })
+                    @Html.Hidden("Fel_Unique", Model.Fel_Unique)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-outline" style="display:none" id="btnGrabarRechazo" name="btnGrabarCancelar">Grabar Cambios</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+
+@using (Html.BeginForm("EntregaParcial", "OrdenesCompra", FormMethod.Post))
+{
+    <div class="modal modal-warning fade in" id="modal-accionEntregaParcial" style="display: none; padding-right: 15px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Entrega Parcial</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.HiddenFor(p => p.Fel_Unique)
+                            @Html.Label("Saldo OC", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(d => d.EntregaSaldo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Monto", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBox("EntregaMonto", Model.EntregaSaldo.ToString("########0.00"), new { @class = "form-control ExcluirSoloLectura" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Observaciones", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBox("Observaciones", "Pago Parcial ", new { @class = "form-control ExcluirSoloLectura" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-outline" id="btnGrabarEntregaParcial" name="btnGrabarCancelar">Grabar Cambios</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+}
+
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/admin-lte/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/admin-lte/plugins/chosen/chosen.jquery.js"></script>
+    <script>
+        $('.chosen-select2').chosen({
+            no_results_text: "No hay datos coincidentes de",
+        });
+    </script>
+    <script>
+        $('#uiBT_BuscarCliente').click(function () {
+            $('#uiModal_BuscarCliente').modal("show");
+            $('.chosen-select').chosen({
+                no_results_text: "No hay datos coincidentes de",
+            });
+        });
+    </script>
+    <script>
+        $('.comentarioCancel').change(function () {
+            var xComentario = $('.comentarioCancel').val();
+            if (xComentario.length > 10) {
+                $("#btnGrabarCancelar").show();
+            } else {
+                $("#btnGrabarCancelar").hide();
+            };
+
+        });
+    </script>
+    <script>
+        $('.comentarioRechazo').change(function () {
+            var xComentario = $('.comentarioRechazo').val();
+            if (xComentario.length > 10) {
+                $("#btnGrabarRechazo").show();
+            } else {
+                $("#btnGrabarRechazo").hide();
+            };
+
+        });
+    </script>
+    <script>
+        $('#Tipo_Detalle').change(function () {
+            $('#EliminarDetalle').val('true');
+            this.form.submit();
+        });
+        $('#Establecimiento_Codigo').change(function () {
+            $('#EliminarDetalle').val('true');
+            this.form.submit();
+        });
+        $('#Moneda').change(function () {
+            this.form.submit();
+        });
+        $('#Exportacion').change(function () {
+            this.form.submit();
+        });
+        $('#TipoDoc').change(function () {
+
+            this.form.submit();
+        });
+    </script>
+    <script>
+
+
+    </script>
+    <script>
+        //AutoCompletar Producto
+        var _AutocompletarProducto = function () {
+            $("#ModalNuevo_Descripcion").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "@Subsite/Utilidad/ObtenerProductoCardCode",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term, WhsCode: $('#Establecimiento_Codigo').val(), CardCode: $('#CardCode').val() },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.Name, value: item.value };
+                            }))
+
+                        }
+                    })
+                },
+                minLength: 4,
+                messages: {
+                    noResults: "",
+                    results: function (count) {
+                        return count + (count > 1 ? ' results' : ' result ') + ' found';
+                    }
+                }
+
+            });
+        };
+
+
+        //Incio Funcionabilidad Modal
+        $('#uiBT_SubmitAgregarLinea').click(function () {
+            $('#modal_AgregarLinea').modal('show');
+            if ($('#Tipo_Detalle').val() == "Bien") _AutocompletarProducto();
+            $('#ModalNuevo_Cantidad').val("1");
+            $('#ModalNuevo_Descripcion').val("");
+            $('#ModalNuevo_PrecioUnitario').val("0.00");
+            $('#ModalNuevo_Descuentos').val("0.00");
+            $('#ModalNuevo_TotalLinea').val("0.00");
+            $('.chosen-select').chosen({
+                no_results_text: "No hay datos coincidentes de",
+            }).val('').trigger("chosen:updated");
+            $('.EsconderBotonProducto').hide();
+            $("#ModalNuevo_CuentaContable").val("");
+            $("#ModalNuevo_CentoCosto").val("");
+            $("#ModalNuevo_Bodega").val($('#Establecimiento_Codigo').val());
+            $('.chosen-select3').chosen({
+                no_results_text: "No hay datos coincidentes de",
+            }).val($('#Establecimiento_Codigo').val()).trigger("chosen:updated");
+
+
+
+        });
+        //Entrega Parcial
+                $('.accionEntregaParcial').click(function () {
+                    $('#modal-accionEntregaParcial').modal('show');
+            });
+
+
+
+        //Model Editar Correo
+        $('#uiBT_EditarCorreo').click(function () {
+            $('#uiModal_EditarCorreo').modal('show');
+            $('#CorreoAnterior').val($('#Rece_Correo').val());
+            $('#CorreoNuevo').val("");
+        });
+
+        //Submit forma agregar liena fix
+        $('#uiBT_SubmitAgregarLineaModal').click(function () {
+            _CalcularTotales();
+
+            $('#uiBT_SubmitAgregarLineaSubmit').trigger('click');
+
+        });
+
+
+        //Calcular Total Linea
+        var _CalcularTotales = function () {
+
+            var Cantidad = $('#ModalNuevo_Cantidad').val();
+            if (Cantidad == "") Cantidad = 1;
+            var Precio = $('#ModalNuevo_PrecioUnitario').val();
+            if (Precio == "") Precio = 0;
+            var Descuento = $('#ModalNuevo_Descuentos').val();
+            if (Descuento == "")
+                Descuento = 0;
+            $('#ModalNuevo_TotalLinea').val((Cantidad * Precio) - Descuento);
+            var CCObligatorio = $("#CCforzar").val();
+            var CuentaContableValor = $("#ModalNuevo_CuentaContable").val();
+            var CCValor = $("#ModalNuevo_CentoCosto").val().toString();
+            $('#ModalNuevo_CentoCostoArray').val(CCValor);
+
+            if ($('#ModalNuevo_TotalLinea').val() > 0) $('.EsconderBotonProducto').show();
+            if ($('#ModalNuevo_TotalLinea').val() <= 0) $('.EsconderBotonProducto').hide();
+
+            if (CCObligatorio == "S" && CCValor == "") $('.EsconderBotonProducto').hide();
+            if ($('#Tipo_Detalle').val() == "Servicio" && CuentaContableValor == "")$('.EsconderBotonProducto').hide();
+
+        };
+
+        $('.CalcularTotalLinea').change(_CalcularTotales);
+        //Obtener Datos de Producto
+        $('#uiBTCOD_PRODUCTO').click(function () {
+
+            if ($("#ModalNuevo_Descripcion").val() != '') {
+                //Valor de Departamento selecionado
+                var _valor = $('#ModalNuevo_Descripcion').val();
+                // llamando al action result
+
+
+
+                var $select = $('#ModalNuevo_PrecioUnitario');
+                var _precio = _valor.split('|')[3].trim();
+                if (_precio == '') _precio = '0.00';
+                $select.empty();
+                var _Unidad = _valor.split('|')[2].trim();
+                $('#ModalNuevo_PrecioUnitario').val(_precio);
+                if (_Unidad != '') { $('#ModalNuevo_UnidadMedida').val(_valor.split('|')[2].trim())}
+
+                _CalcularTotales();
+
+
+            }
+
+        });
+        //Fin Funcionabilidad Modal
+        var _ObtenerReceptor = function () {
+
+            //Valor de Departamento selecionado
+            var _valor = $('#CardCodeSel').val();
+             // llamando al action result
+
+            $.post('@Url.Action("Res_ObtenerDatosProveedor", "Utilidad")', { id: _valor }, function (data) {
+
+                var $select = $('#CardCode');
+                // Vacia para Evitar duplicados o no validos
+                $select.empty();
+                // llena el Dropdonlist
+                $.each(data, function (i, item) {
+
+                    $('#CardCode').val(item.CardCode);
+                });
+
+                var $select = $('#CardName');
+                // Vacia para Evitar duplicados o no validos
+                $select.empty();
+                // llena el Dropdonlist
+                $.each(data, function (i, item) {
+
+                    $('#CardName').val(item.CardName);
+                });
+                var $select = $('#Nit');
+                // Vacia para Evitar duplicados o no validos
+                $select.empty();
+                // llena el Dropdonlist
+                $.each(data, function (i, item) {
+
+                    $('#Nit').val(item.U_NIT);
+                });
+
+
+                $('#DivClose2').click();
+            });
+        };
+
+        $('#CardCode').change(_ObtenerReceptor);
+
+
+
+        // Filtrar unidades de medida segun el caso
+        var _ObtenerTipodeDetalle = function () {
+
+            //Valor de Departamento selecionado
+             var _valor = $('#Tipo_Detalle').val();
+             // llamando al action result
+            $.post('@Url.Action("Res_ObtenerTipodeDetalle", "FEL_Facturacion")', { id: _valor }, function (data) {
+                 var $select = $('#ModalNuevo_UnidadMedida');
+                 // Vaciar Evitar duplicados o no validos
+                 $select.empty();
+                 // llenar el Dropdonlist
+                  $.each(data, function (i, item) {
+
+                       $('<option>', {
+                        value: item.UnidadMedida
+                            }).html(item.Nombre).appendTo($select);
+                        });
+
+            });
+        };
+         //$('#Tipo_Detalle').ready(_ObtenerTipodeDetalle);
+        $('#Tipo_Detalle').change(_ObtenerTipodeDetalle);
+
+        $(document).ready(function () {
+            if ($("#SoloLectura").val() == "True") {
+                $('input', 'form').not(".ExcluirSoloLectura").attr('readonly', true);
+                $('select', 'form').not(".ExcluirSoloLectura").attr('disabled', true).attr('readonly', true);
+                $('.EscondeSoloLectura').hide();
+            }
+        });
+
+
+
+        $('#uiBTNSAT_ActFAct').click(function () {
+            $('#Rece_Nit').val($('#BuscarNitSat')[0].value.toUpperCase());
+            $('#Rece_Correo').val('');
+            $('#Rece_Direccion').val('CIUDAD');
+            $('#Rece_Nombre').val($('#RazonSocialSat')[0].value);
+        });
+        $('#uiBT_BuscarListaCliente').click(_ObtenerReceptor);
+    </script>
+
+    {
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('#Datos').DataTable({
+                'paging': true,
+                'searching': true,
+                'order': [[0, "desc"]],
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 5,
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+
+    </script>
+    <script>
+        $(".agregaComment").click(function () {
+
+            $.post('@Url.Action("AgregaComentario","OrdenesCompra")',
+                { comentario: $('#nuevocomentariohist').val(), unique: '@Model.Fel_Unique', estado : '@Model.Estado'  } ,
+                function (respuesta) {
+                location.reload();
+            });
+
+
+        });
+    </script>
+    <script>
+        @*$("#uiBT_SubmitAgregarExcel").click(function () {
+
+            $.post('@Url.Action("ImportPasteExcel","OrdenesCompra")',
+                { datos: $('#importE').val(), unique: '@Model.Fel_Unique', estado : '@Model.Estado'  } ,
+                function (respuesta) {
+                    if (respuesta.error == "") {
+                        location.reload();
+                    } else {
+                        swal("Error",respuesta.error , "error" );
+                    }
+            });
+
+
+        });*@
+    </script>
+
+    <script>
+        $(".btnTodasTiendas").click(function () {
+
+            var my_val = "";
+            $.get('@Url.Action("restodastiendas", "OrdenesCompra")',
+                function (respuesta) {
+                    my_val = respuesta;
+                    $(".ModalNuevoCentoCosto").val(my_val).trigger("chosen:updated");
+            });
+
+
+
+
+
+
+        });
+    </script>
+    <script>
+        $(".btnRegiones").click(function () {
+
+            var actual = $(this);
+            var region = actual.data("codigo");
+            var my_val = '';
+            $.get('@Url.Action("resregiontiendas", "OrdenesCompra")?region='+region,
+                function (respuesta) {
+                    my_val = respuesta;
+                    $(".ModalNuevoCentoCosto").val(my_val).trigger("chosen:updated");
+            });
+
+
+
+
+
+
+        });
+    </script>
+
+    <script>
+        $(".btnlimpiarCC").click(function () {
+
+            var my_val = "";
+            var str_array = my_val.split(',');
+
+            $(".ModalNuevoCentoCosto").val(str_array).trigger("chosen:updated");
+
+
+
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#importE").val("");
+        });
+    </script>
+
+
+    }
+}

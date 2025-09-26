@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Wareways.PortalProv.Infraestructura.V_PPROV_Empresas>
+
+<div class="col-md-6">
+    <div class="box box-success">
+        <div class="box-header with-border">
+            <h3 class="box-title">Seleccionar Empresa</h3>
+
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <table class="table">
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Conexion</th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td> <img height="40" src="@item.Logo" />   </td>
+                        <td style="font-size:large">@item.Empresa_Name</td>
+                        <td>@item.SAP_Database</td>
+                        <td> <a href="~/Empresa/Seleccionado?id=@item.Empresa_Id&posturl=@ViewBag.PostUrl" class="btn btn-success">  Seleccionar</a> </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,4 +1,10 @@
 ﻿@using Microsoft.AspNet.Identity
+
+@{
+    Wareways.PortalProv.Servicios.ServicioSeguridad.CheckSession(User.Identity.Name);
+}
+
+
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -6,13 +12,20 @@
         @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li>                
-                <a href='@Url.Action("Index","UserInfo")' title="Información del Usuario"  > <span class="fa fa-user"> </span> &nbsp; @User.Identity.GetUserName()  </a>
+            <li>
+
+                <a href='#'>
+                    @*<span class="fa fa-building"> </span>*@  <img src="@HttpContext.Current.Session["EmpresaSelLogo"]" height="20" />
+                    &nbsp; @HttpContext.Current.Session["EmpresaSelName"]
+                </a>
+            </li>
+            <li>
+                <a href='@Url.Action("Index","UserInfo")' title="Información del Usuario"> <span class="fa fa-user"> </span> &nbsp; @User.Identity.GetUserName()  </a>
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">  <span class=" fa fa-sign-out"></span>&nbsp; Cerrar</a></li>
         </ul>
     }
-    
+
 
 }
 else

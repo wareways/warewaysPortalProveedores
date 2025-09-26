@@ -551,11 +551,12 @@ a:focus {
   padding: 12px 5px 12px 15px;
   display: block;
 }
-.sidebar-menu > li > a > .fa,
-.sidebar-menu > li > a > .glyphicon,
-.sidebar-menu > li > a > .ion {
-  width: 20px;
-}
+    .sidebar-menu > li > a > .fa,
+    .sidebar-menu > li > a > .glyphicon,
+    .sidebar-menu > li > a > .ion {
+        color: var(--wareways-sideicon-color-bg);
+        width: 20px;
+    }
 .sidebar-menu > li .label,
 .sidebar-menu > li .badge {
   margin-right: 5px;
@@ -1584,9 +1585,9 @@ a:focus {
   width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-.box.box-primary {
-  border-top-color: #3c8dbc;
-}
+    .box.box-primary {
+        border-top-color: var(--wareways-secondary-color-bg);
+    }
 .box.box-info {
   border-top-color: #00c0ef;
 }
@@ -1599,9 +1600,9 @@ a:focus {
 .box.box-success {
   border-top-color: #00a65a;
 }
-.box.box-default {
-  border-top-color: #d2d6de;
-}
+    .box.box-default {
+        border-top-color: var(--wareways-secondary-color-bg);
+    }
 .box.collapsed-box .box-body,
 .box.collapsed-box .box-footer {
   display: none;
@@ -1636,11 +1637,11 @@ a:focus {
 .box.box-solid.box-default {
   border: 1px solid #d2d6de;
 }
-.box.box-solid.box-default > .box-header {
-  color: #444;
-  background: #d2d6de;
-  background-color: #d2d6de;
-}
+    .box.box-solid.box-default > .box-header {
+        color: var(--wareways-secondary-color-txt);
+        background: var(--wareways-secondary-color-bg);
+        background-color: var(--wareways-secondary-color-bg);
+    }
 .box.box-solid.box-default > .box-header a,
 .box.box-solid.box-default > .box-header .btn {
   color: #444;
@@ -1648,11 +1649,11 @@ a:focus {
 .box.box-solid.box-primary {
   border: 1px solid #3c8dbc;
 }
-.box.box-solid.box-primary > .box-header {
-  color: #fff;
-  background: #3c8dbc;
-  background-color: #3c8dbc;
-}
+    .box.box-solid.box-primary > .box-header {
+        color: var(--wareways-primary-color-txt);
+        background: var(--wareways-primary-color-bg);
+        background-color: var(--wareways-primary-color-bg);
+    }
 .box.box-solid.box-primary > .box-header a,
 .box.box-solid.box-primary > .box-header .btn {
   color: #fff;

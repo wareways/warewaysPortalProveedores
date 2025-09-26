@@ -33,36 +33,50 @@ namespace Wareways.PortalProv.Infraestructura
         public virtual DbSet<GEN_Audit> GEN_Audit { get; set; }
         public virtual DbSet<GEN_Catalogo> GEN_Catalogo { get; set; }
         public virtual DbSet<GEN_CatalogoDetalle> GEN_CatalogoDetalle { get; set; }
-        public virtual DbSet<GEN_Menu> GEN_Menu { get; set; }
         public virtual DbSet<V_GEN_MenuDisplay> V_GEN_MenuDisplay { get; set; }
         public virtual DbSet<V_GEN_RolesDelMenu> V_GEN_RolesDelMenu { get; set; }
         public virtual DbSet<V_GEN_UsuarioMenuPerfil> V_GEN_UsuarioMenuPerfil { get; set; }
         public virtual DbSet<V_GEN_UsuarioRoles> V_GEN_UsuarioRoles { get; set; }
         public virtual DbSet<V_GEN_UsuarioRoles_Diponibles> V_GEN_UsuarioRoles_Diponibles { get; set; }
-        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<PPROV_Adjuntos> PPROV_Adjuntos { get; set; }
         public virtual DbSet<PPROV_Estado> PPROV_Estado { get; set; }
         public virtual DbSet<PPROV_RetencionTipo> PPROV_RetencionTipo { get; set; }
         public virtual DbSet<PPROV_TipoAdjunto> PPROV_TipoAdjunto { get; set; }
         public virtual DbSet<PPROV_Documento> PPROV_Documento { get; set; }
-        public virtual DbSet<v_PPROV_FacturasIngresadasPorUsuario> v_PPROV_FacturasIngresadasPorUsuario { get; set; }
-        public virtual DbSet<V_PPROV_Contrasena_PorUsuario> V_PPROV_Contrasena_PorUsuario { get; set; }
-        public virtual DbSet<V_PPROV_DocumentosPorUsuario> V_PPROV_DocumentosPorUsuario { get; set; }
-        public virtual DbSet<V_PPROV_RetencionesPorUsuario> V_PPROV_RetencionesPorUsuario { get; set; }
-        public virtual DbSet<V_PPROV_Contrasena_Oficina> V_PPROV_Contrasena_Oficina { get; set; }
-        public virtual DbSet<V_PPROV_Documentos_Oficina> V_PPROV_Documentos_Oficina { get; set; }
-        public virtual DbSet<v_PPROV_FacturasIngresadas_Oficina> v_PPROV_FacturasIngresadas_Oficina { get; set; }
-        public virtual DbSet<V_PPROV_Retenciones_Oficina> V_PPROV_Retenciones_Oficina { get; set; }
-        public virtual DbSet<V_PPROV_ResumenEstadoDocumento> V_PPROV_ResumenEstadoDocumento { get; set; }
         public virtual DbSet<PPROV_Nota> PPROV_Nota { get; set; }
         public virtual DbSet<PPROV_UsuarioProveedor> PPROV_UsuarioProveedor { get; set; }
         public virtual DbSet<v_PPROV_Usuario_Proveedor> v_PPROV_Usuario_Proveedor { get; set; }
-        public virtual DbSet<V_PPROV_Proveedor> V_PPROV_Proveedor { get; set; }
         public virtual DbSet<PPROV_UsuarioEmpresa> PPROV_UsuarioEmpresa { get; set; }
-        public virtual DbSet<V_PPROV_Empresas> V_PPROV_Empresas { get; set; }
         public virtual DbSet<PPROV_Contrasena> PPROV_Contrasena { get; set; }
         public virtual DbSet<PPROV_Retencion> PPROV_Retencion { get; set; }
+        public virtual DbSet<PPROV_EmpresaUltiDia_Rece> PPROV_EmpresaUltiDia_Rece { get; set; }
+        public virtual DbSet<V_PROV_EmpresaUltiDia_Rece> V_PROV_EmpresaUltiDia_Rece { get; set; }
+        public virtual DbSet<V_PPROV_Retenciones_Oficina> V_PPROV_Retenciones_Oficina { get; set; }
+        public virtual DbSet<V_PPROV_Contrasena_Oficina> V_PPROV_Contrasena_Oficina { get; set; }
+        public virtual DbSet<V_PPROV_RetencionesPorUsuario> V_PPROV_RetencionesPorUsuario { get; set; }
+        public virtual DbSet<V_PPROV_Contrasena_PorUsuario> V_PPROV_Contrasena_PorUsuario { get; set; }
+        public virtual DbSet<PPROV_Departamento> PPROV_Departamento { get; set; }
+        public virtual DbSet<PPROV_UsuarioDepartamento> PPROV_UsuarioDepartamento { get; set; }
+        public virtual DbSet<FEL_DocDetalle> FEL_DocDetalle { get; set; }
+        public virtual DbSet<FEL_DocHistorico> FEL_DocHistorico { get; set; }
+        public virtual DbSet<v_PPROV_FacturasIngresadasPorUsuario> v_PPROV_FacturasIngresadasPorUsuario { get; set; }
+        public virtual DbSet<v_PPROV_FacturasIngresadas_Oficina> v_PPROV_FacturasIngresadas_Oficina { get; set; }
+        public virtual DbSet<V_PPROV_ResumenEstadoDocumento> V_PPROV_ResumenEstadoDocumento { get; set; }
+        public virtual DbSet<FEL_DocAdjunto> FEL_DocAdjunto { get; set; }
+        public virtual DbSet<SAP_DocDetalle> SAP_DocDetalle { get; set; }
+        public virtual DbSet<V_PPROV_Documentos_Oficina> V_PPROV_Documentos_Oficina { get; set; }
+        public virtual DbSet<V_PPROV_DocumentosPorUsuario> V_PPROV_DocumentosPorUsuario { get; set; }
+        public virtual DbSet<GEN_Empresa> GEN_Empresa { get; set; }
+        public virtual DbSet<SAP_Doc> SAP_Doc { get; set; }
+        public virtual DbSet<V_PPROV_InsumosPendientes> V_PPROV_InsumosPendientes { get; set; }
+        public virtual DbSet<V_PPROV_Proveedor_CC> V_PPROV_Proveedor_CC { get; set; }
+        public virtual DbSet<V_PPROV_Empresas> V_PPROV_Empresas { get; set; }
+        public virtual DbSet<V_PPROV_Proveedor> V_PPROV_Proveedor { get; set; }
+        public virtual DbSet<FEL_Doc> FEL_Doc { get; set; }
+        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
+        public virtual DbSet<GEN_Menu> GEN_Menu { get; set; }
     
         public virtual ObjectResult<SP_PPROV_STATS_FacturacionUltimoAnio_Result> SP_PPROV_STATS_FacturacionUltimoAnio(string userName)
         {
@@ -152,6 +166,184 @@ namespace Wareways.PortalProv.Infraestructura
                 new ObjectParameter("CardCode", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ObtenerCorreos_Por_CardCode_Result>("SP_ObtenerCorreos_Por_CardCode", cardCodeParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_DeteccionFecha_PresentacionMax_Result> SP_PPROV_DeteccionFecha_PresentacionMax(Nullable<System.Guid> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_DeteccionFecha_PresentacionMax_Result>("SP_PPROV_DeteccionFecha_PresentacionMax", userIdParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_DeteccionFecha_PresentacionMax_PorCardCode_Result> SP_PPROV_DeteccionFecha_PresentacionMax_PorCardCode(string cardCode)
+        {
+            var cardCodeParameter = cardCode != null ?
+                new ObjectParameter("CardCode", cardCode) :
+                new ObjectParameter("CardCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_DeteccionFecha_PresentacionMax_PorCardCode_Result>("SP_PPROV_DeteccionFecha_PresentacionMax_PorCardCode", cardCodeParameter);
+        }
+    
+        public virtual ObjectResult<SP_EntregasCOM_SAP_Result> SP_EntregasCOM_SAP(string departamento, Nullable<System.DateTime> fechaInicio, Nullable<System.DateTime> fechaFin, Nullable<int> orden_Numero)
+        {
+            var departamentoParameter = departamento != null ?
+                new ObjectParameter("Departamento", departamento) :
+                new ObjectParameter("Departamento", typeof(string));
+    
+            var fechaInicioParameter = fechaInicio.HasValue ?
+                new ObjectParameter("FechaInicio", fechaInicio) :
+                new ObjectParameter("FechaInicio", typeof(System.DateTime));
+    
+            var fechaFinParameter = fechaFin.HasValue ?
+                new ObjectParameter("FechaFin", fechaFin) :
+                new ObjectParameter("FechaFin", typeof(System.DateTime));
+    
+            var orden_NumeroParameter = orden_Numero.HasValue ?
+                new ObjectParameter("Orden_Numero", orden_Numero) :
+                new ObjectParameter("Orden_Numero", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_EntregasCOM_SAP_Result>("SP_EntregasCOM_SAP", departamentoParameter, fechaInicioParameter, fechaFinParameter, orden_NumeroParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetUserDepartment_Result> SP_GetUserDepartment(string userId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUserDepartment_Result>("SP_GetUserDepartment", userIdParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetDepartmentAll_Result> SP_GetDepartmentAll(Nullable<int> empresa_Id)
+        {
+            var empresa_IdParameter = empresa_Id.HasValue ?
+                new ObjectParameter("Empresa_Id", empresa_Id) :
+                new ObjectParameter("Empresa_Id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetDepartmentAll_Result>("SP_GetDepartmentAll", empresa_IdParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetUserOCEstado_Result> SP_GetUserOCEstado(string userId, Nullable<int> empresaId, string estado)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var empresaIdParameter = empresaId.HasValue ?
+                new ObjectParameter("EmpresaId", empresaId) :
+                new ObjectParameter("EmpresaId", typeof(int));
+    
+            var estadoParameter = estado != null ?
+                new ObjectParameter("Estado", estado) :
+                new ObjectParameter("Estado", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUserOCEstado_Result>("SP_GetUserOCEstado", userIdParameter, empresaIdParameter, estadoParameter);
+        }
+    
+        public virtual ObjectResult<WWSP_ResumenEstadoDocumento_Result> WWSP_ResumenEstadoDocumento(Nullable<int> empresaId)
+        {
+            var empresaIdParameter = empresaId.HasValue ?
+                new ObjectParameter("EmpresaId", empresaId) :
+                new ObjectParameter("EmpresaId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<WWSP_ResumenEstadoDocumento_Result>("WWSP_ResumenEstadoDocumento", empresaIdParameter);
+        }
+    
+        public virtual ObjectResult<WWSP_PPROV_EntregasCOM_SAP_ByCardCode_Result> WWSP_PPROV_EntregasCOM_SAP_ByCardCode(Nullable<System.DateTime> fechaInicio, Nullable<System.DateTime> fechaFin, string cardCode)
+        {
+            var fechaInicioParameter = fechaInicio.HasValue ?
+                new ObjectParameter("FechaInicio", fechaInicio) :
+                new ObjectParameter("FechaInicio", typeof(System.DateTime));
+    
+            var fechaFinParameter = fechaFin.HasValue ?
+                new ObjectParameter("FechaFin", fechaFin) :
+                new ObjectParameter("FechaFin", typeof(System.DateTime));
+    
+            var cardCodeParameter = cardCode != null ?
+                new ObjectParameter("CardCode", cardCode) :
+                new ObjectParameter("CardCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<WWSP_PPROV_EntregasCOM_SAP_ByCardCode_Result>("WWSP_PPROV_EntregasCOM_SAP_ByCardCode", fechaInicioParameter, fechaFinParameter, cardCodeParameter);
+        }
+    
+        public virtual ObjectResult<WWSP_DocumentosPorUsuario_Result> WWSP_DocumentosPorUsuario(Nullable<int> empresaId, string userName)
+        {
+            var empresaIdParameter = empresaId.HasValue ?
+                new ObjectParameter("EmpresaId", empresaId) :
+                new ObjectParameter("EmpresaId", typeof(int));
+    
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<WWSP_DocumentosPorUsuario_Result>("WWSP_DocumentosPorUsuario", empresaIdParameter, userNameParameter);
+        }
+    
+        public virtual ObjectResult<WWSP_ListadoEntregasPorUsuario_Result> WWSP_ListadoEntregasPorUsuario(Nullable<int> empresaId, Nullable<System.DateTime> fechaInicial, Nullable<System.DateTime> fechaFinal, string useraName)
+        {
+            var empresaIdParameter = empresaId.HasValue ?
+                new ObjectParameter("EmpresaId", empresaId) :
+                new ObjectParameter("EmpresaId", typeof(int));
+    
+            var fechaInicialParameter = fechaInicial.HasValue ?
+                new ObjectParameter("FechaInicial", fechaInicial) :
+                new ObjectParameter("FechaInicial", typeof(System.DateTime));
+    
+            var fechaFinalParameter = fechaFinal.HasValue ?
+                new ObjectParameter("FechaFinal", fechaFinal) :
+                new ObjectParameter("FechaFinal", typeof(System.DateTime));
+    
+            var useraNameParameter = useraName != null ?
+                new ObjectParameter("UseraName", useraName) :
+                new ObjectParameter("UseraName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<WWSP_ListadoEntregasPorUsuario_Result>("WWSP_ListadoEntregasPorUsuario", empresaIdParameter, fechaInicialParameter, fechaFinalParameter, useraNameParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_DeteccionFecha_PresentacionMaxServ_Result> SP_PPROV_DeteccionFecha_PresentacionMaxServ(Nullable<System.Guid> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_DeteccionFecha_PresentacionMaxServ_Result>("SP_PPROV_DeteccionFecha_PresentacionMaxServ", userIdParameter);
+        }
+    
+        public virtual ObjectResult<SP_PPROV_DeteccionFecha_PresentacionMaxServ_PorCardCode_Result> SP_PPROV_DeteccionFecha_PresentacionMaxServ_PorCardCode(string cardCode)
+        {
+            var cardCodeParameter = cardCode != null ?
+                new ObjectParameter("CardCode", cardCode) :
+                new ObjectParameter("CardCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PPROV_DeteccionFecha_PresentacionMaxServ_PorCardCode_Result>("SP_PPROV_DeteccionFecha_PresentacionMaxServ_PorCardCode", cardCodeParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetUserOC_Result> SP_GetUserOC(string userId, Nullable<int> empresaId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var empresaIdParameter = empresaId.HasValue ?
+                new ObjectParameter("EmpresaId", empresaId) :
+                new ObjectParameter("EmpresaId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUserOC_Result>("SP_GetUserOC", userIdParameter, empresaIdParameter);
+        }
+    
+        public virtual ObjectResult<WWSP_Documentos_Oficina_Result> WWSP_Documentos_Oficina(Nullable<int> empresaId, string userName)
+        {
+            var empresaIdParameter = empresaId.HasValue ?
+                new ObjectParameter("EmpresaId", empresaId) :
+                new ObjectParameter("EmpresaId", typeof(int));
+    
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<WWSP_Documentos_Oficina_Result>("WWSP_Documentos_Oficina", empresaIdParameter, userNameParameter);
         }
     }
 }

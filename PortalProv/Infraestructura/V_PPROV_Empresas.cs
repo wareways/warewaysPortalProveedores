@@ -23,5 +23,10 @@ namespace Wareways.PortalProv.Infraestructura
         public string Correo { get; set; }
         public string Telefonos { get; set; }
         public string Direccion { get; set; }
+        public string SAP_Database { get; set; }
+        public string Tema { get; set; }
+        public string EmpresaOCCheck { get; set; }
+        public bool EntregaRequerida { get; set; }
+        public string EmpresaAsuntoCorreo { get; set; }
     }
 }

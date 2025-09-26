@@ -1,5 +1,8 @@
 ﻿@model Wareways.PortalProv.Models.PP.RetencionesOficinaNuevo
-
+@using System.Configuration;
+@{
+    var Subsite = ConfigurationManager.AppSettings["SubSite"];
+}
 <!DOCTYPE html>
 
 @section Header
@@ -67,6 +70,7 @@
     @Html.HiddenFor(p => p.Nuevo_Pdf_Name)
     @Html.HiddenFor(p => p.Retencion_Pdf)
     @Html.AntiForgeryToken()
+    @Html.Hidden("EmpresaId", (String)ViewBag.EmpresaId);
 
     if (@ViewBag.Message != null)
     {
@@ -112,7 +116,7 @@
                         <h4 class="box-title"><span class="fa fa-file fa-2x"></span> Paso 1 Archivo Cargado</h4>
                     </div>
                     <div class="box-body">
-                        <embed src="@Model.Retencion_Pdf" type="application/pdf" style="width:90%; height:50vw;" id="uipdfembfac" />
+                        <embed src="@Subsite@Model.Retencion_Pdf" type="application/pdf" style="width:90%; height:50vw;" id="uipdfembfac" />
                     </div>
                 </div>
 
@@ -130,9 +134,9 @@
                         <div class="form-horizontal">
 
                             <div class="form-group">
-                                @Html.Label("No. Retencion", htmlAttributes: new { @class = "control-label col-md-3" })
+                                @Html.Label("Numero Retencion SAT", htmlAttributes: new { @class = "control-label col-md-3" })
                                 <div class="col-md-9">
-                                    @Html.EditorFor(model => model.Retencion_Numero, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.EditorFor(model => model.Retencion_Numero, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -144,7 +148,7 @@
                             <div class="form-group">
                                 @Html.Label("Monto", htmlAttributes: new { @class = "control-label col-md-3" })
                                 <div class="col-md-5">
-                                    @Html.EditorFor(model => model.Retencion_Monto, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.EditorFor(model => model.Retencion_Monto, new { htmlAttributes = new { @class = "form-control" } }) <br /> <span style="color:red">** Debe de ser mayor a 0</span>
                                 </div>
                                 <div class="col-md-4">
                                     @Html.DropDownListFor(m => m.Retencion_Moneda,
@@ -211,7 +215,7 @@
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <button class="btn btn-success pull-right" type="submit" name="submit_Step2" value="submit_Step2">
+                            <button class="btn btn-success pull-right  submit_Step2" type="submit" name="submit_Step2" value="submit_Step2" style="display:none">
                                 Subir &nbsp;
                                 <i class="fa fa-upload"></i>
                             </button>
@@ -231,19 +235,33 @@
     <script src="~/admin-lte/bower_components/jquery-ui/jquery-ui.min.js"></script>
     <script>
 
+
+        $('#Retencion_Monto').change(function () {
+            debugger;
+            var num = $('#Retencion_Monto').val();
+            if (isNaN(num)) {
+                $('.submit_Step2').hide();
+            } else {
+                if (num > 0.00001) {
+                    $('.submit_Step2').show();
+                } else { $('.submit_Step2').hide(); }
+            }
+        });
+
         $("#filefac").change(function () {
             var filename = this.files[0].name
             $("#filefac_sel").text(filename);
         });
 
-        $(document).ready(function () {          
+        $(document).ready(function () {
             $("#Retencion_CardCode").autocomplete({
                 source: function (request, response) {
+                    var empresaId = $("#EmpresaId").val();
                     $.ajax({
                         url: "/Usuario/ObtenerPorveedores",
                         type: "POST",
                         dataType: "json",
-                        data: { Prefix: request.term },
+                        data: { Prefix: request.term, EmpresaId: empresaId },
                         success: function (data) {
                             response($.map(data, function (item) {
                                 return { label: item.Name, value: item.value };

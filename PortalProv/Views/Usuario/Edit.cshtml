@@ -1,8 +1,13 @@
 ﻿@model Wareways.PortalProv.Infraestructura.AspNetUsers
+@using System.Configuration
+@{
 
+    var Subsite = ConfigurationManager.AppSettings["SubSite"];
+}
 @{
     var l_ADM_EmpresasOficina = (List<Wareways.PortalProv.Infraestructura.SP_PPROV_ADM_EmpresasOficina_Result>)ViewBag.OficinaEmpesasPermiso;
     var l_PermisosUsuarioCodigosProv = (List<Wareways.PortalProv.Infraestructura.SP_PPROV_PermisosCodigosProv_Usuario_Result>)ViewBag.PermisosUsuarioCodigosProv;
+    var l_PermisosUsuarioCodigosDepto = (List<Wareways.PortalProv.Infraestructura.SP_GetUserDepartment_Result>)ViewBag.PermisosUsuarioCodigosDepto;
     var _RolesAsignado = (List<Wareways.PortalProv.Infraestructura.V_GEN_UsuarioRoles>)ViewBag.RolesAsignados;
 }
 
@@ -60,7 +65,6 @@
             position: absolute;
             width: 1px;
         }
-
     </style>
 
 }
@@ -165,7 +169,7 @@
                 </div>
 
 
-               
+
 
 
 
@@ -214,43 +218,42 @@
 <div class="row">
     <div class="col-md-4">
 
-        @if (_RolesAsignado.Where(p => p.Name == "Oficina").Count() == 1)
-        {
-            <div class="box box-info">
-                <div class="box-header with-border">
-                    <h4 class="box-title">Permisos Oficina</h4>
-                </div>
-                <div class="box-body">
-                    <table class="table table-condensed table-hover">
-                        <thead>
-                            <tr>
-                                <th>Empresa</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var _Item in l_ADM_EmpresasOficina)
-                            {
-                                <tr>
-                                    <td>@_Item.Empresa_Name</td>
-                                    <td>
-                                        @if (_Item.Activo == 0)
-                                        {
-                                            <a href="@Url.Action("AgregarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-success"> Asignar <span class="fa fa-plus-circle"></span></a>
-                                        }
-                                        else
-                                        {
-                                            <a href="@Url.Action("QuitarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-danger confirmswal" data-mensajeswal="De Eliminar este Permiso" > Quitar <span class="fa fa-minus-circle"></span></a>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
 
-                </div>
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h4 class="box-title">Permisos Empresa</h4>
             </div>
-        }
+            <div class="box-body">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var _Item in l_ADM_EmpresasOficina)
+                        {
+                            <tr>
+                                <td>@_Item.Empresa_Name</td>
+                                <td>
+                                    @if (_Item.Activo == 0)
+                                    {
+                                        <a href="@Url.Action("AgregarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-success"> Asignar <span class="fa fa-plus-circle"></span></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("QuitarEmpresaOficina",new { EmpresaId = _Item.Empresa_Id, UserId = Model.Id  })" class="btn btn-danger confirmswal" data-mensajeswal="De Eliminar este Permiso"> Quitar <span class="fa fa-minus-circle"></span></a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
     </div>
     <div class="col-md-8">
         @if (_RolesAsignado.Where(p => p.Name == "Proveedor").Count() == 1)
@@ -292,6 +295,70 @@
                                     </td>
                                     <td colspan="2">
                                         @Html.TextBox("CardCode", "", htmlAttributes: new { @class = "form-control" })
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-success pull-right " type="submit" id="saveTeststeps">
+                                            Insertar &nbsp;
+                                            <i class="fa fa-save"></i>
+                                        </button>
+                                    </td>
+                                }
+
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        }
+
+        @if (_RolesAsignado.Where(p => p.Name == "Ordenes Compra").Count() == 1)
+        {
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h4 class="box-title">Permisos Departamentos</h4>
+                </div>
+                <div class="box-body">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Departamento</th>
+                                <th>Crear</th>
+                                <th>Autorizar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var _Item in l_PermisosUsuarioCodigosDepto)
+                            {
+                                <tr>
+                                    <td>@Session["EmpresaSelName"].ToString()</td>
+                                    <td>@_Item.DepartmentName</td>
+                                    <td>@Html.EditorFor(Model => _Item.Crear)</td>
+                                    <td>@Html.EditorFor(Model => _Item.Autorizar)</td>
+                                    <td>
+                                        <a href="@Url.Action("QuitarCodDepto",new { EmpresaId = _Item.Empresa_Id,Id = Model.Id , DepartmentId = _Item.DepartmentId })" class="btn btn-danger confirmswal" data-mensajeswal="De Eliminar este Permiso"> Quitar <span class="fa fa-minus-circle"></span></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+
+                                @using (Html.BeginForm("AgregaCodDepto", "Usuario", FormMethod.Post))
+                                {
+                                    @Html.HiddenFor(p => p.Id);
+                                    <td>
+                                        @Html.DropDownList("EmpresaId", new SelectList(ViewBag.EmpresasFiltro, "Empresa_Id", "Empresa_Name", "1"),
+                                            new { @Class = "form-control ExcluirSoloLectura" })
+                                    </td>
+                                    <td colspan="1">
+                                        @Html.TextBox("DepartmentId", "", htmlAttributes: new { @class = "form-control" })
+                                    </td>
+                                    <td colspan="1">
+                                        @Html.CheckBox("Crear")
+                                    </td>
+                                    <td colspan="1">
+                                        @Html.CheckBox("Autorizar")
                                     </td>
                                     <td>
                                         <button class="btn btn-success pull-right " type="submit" id="saveTeststeps">
@@ -374,11 +441,12 @@
 
             $("#CardCode").autocomplete({
                 source: function (request, response) {
+                    var empresaId = $("#EmpresaId").val();
                     $.ajax({
-                        url: "/Usuario/ObtenerPorveedores",
+                        url: "@Subsite/Usuario/ObtenerPorveedores",
                         type: "POST",
                         dataType: "json",
-                        data: { Prefix: request.term },
+                        data: { Prefix: request.term, EmpresaId: empresaId },
                         success: function (data) {
                             response($.map(data, function (item) {
                                 return { label: item.Name, value: item.value };
@@ -386,7 +454,31 @@
 
                         }
                     })
-                },               
+                },
+                messages: {
+                    noResults: "",
+                    results: function (count) {
+                        return count + (count > 1 ? ' results' : ' result ') + ' found';
+                    }
+                }
+            });
+
+            $("#DepartmentId").autocomplete({
+                source: function (request, response) {
+                    var empresaId = $("#EmpresaId").val();
+                    $.ajax({
+                        url: "@Subsite/Usuario/ObtenerDeptos",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term, EmpresaId: empresaId },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.Name, value: item.value };
+                            }))
+
+                        }
+                    })
+                },
                 messages: {
                     noResults: "",
                     results: function (count) {
@@ -400,7 +492,7 @@
     </script>
 
 
-  
+
 }
 
 

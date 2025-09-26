@@ -18,5 +18,7 @@ namespace Wareways.PortalProv.Infraestructura
         public string CardName { get; set; }
         public string Nit { get; set; }
         public int DiasCredito { get; set; }
+        public string UltimoDiaRece { get; set; }
+        public string VatGroup { get; set; }
     }
 }

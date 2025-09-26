@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\Proyectos\Wareways\PortalProv\PortalProv\Infraestructura\DB_PortalProv.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\Desarrollo\wareways\PolyWareways\PortalProv_2024\PortalProv\Infraestructura\DB_PortalProv.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

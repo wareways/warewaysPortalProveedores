@@ -1,12 +1,13 @@
 ﻿@model List<Wareways.PortalProv.Infraestructura.PPROV_Retencion>
-
+@using System.Configuration;
 @{
+    var Subsite = ConfigurationManager.AppSettings["SubSite"];
     Layout = "";
 }
 
-@foreach(var item in Model)
+@foreach (var item in Model)
 {
-    <a href="#" data-toggle="modal" data-titulo="Retenciones" data-nombre="@item.Retencion_Pdf" data-target="#myModal" target="_blank" class="btn btn-default " title="Retencion"><span class="fa fa-file-pdf-o" style="color:blue"></span></a>
+    <a href="#" data-toggle="modal" data-titulo="Retenciones" data-nombre="@Subsite@item.Retencion_Pdf" data-target="#myModal" target="_blank" class="btn btn-default " title="Retencion"><span class="fa fa-file-pdf-o" style="color:blue"></span></a>
 }
 
 

@@ -11,6 +11,9 @@ using System.Net;
 using System.IO;
 using System.Web.UI;
 using System.Text;
+using Wareways.PortalProv.Infraestructura;
+using Wareways.PortalProv.Servicios;
+using System.Configuration;
 
 namespace Wareways.PortalProv.Controllers.Seguridad
 {
@@ -18,6 +21,7 @@ namespace Wareways.PortalProv.Controllers.Seguridad
     public class UsuarioController : Controller
     {
         Infraestructura.PortalProvEntities _Db = new Infraestructura.PortalProvEntities();
+        VServicio vServicio = new VServicio();
 
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -26,6 +30,12 @@ namespace Wareways.PortalProv.Controllers.Seguridad
         [Authorize(Roles = "Administradores")]
         public ActionResult Index()
         {
+            if (Session["EmpresaSelId"] == null)
+            {
+                Wareways.PortalProv.Servicios.ServicioSeguridad.CheckSession(User.Identity.Name);
+            }
+
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             // Verificacion de Permisos
             if (!Servicios.ServicioSeguridad.ValidaPermisos(this.ControllerContext.RequestContext.RouteData.Values, User.Identity.Name)) return RedirectToAction("Permisos", "Home");
 
@@ -53,6 +63,23 @@ namespace Wareways.PortalProv.Controllers.Seguridad
         }
 
         [Authorize(Roles = "Administradores")]
+        [HttpPost]
+        public ActionResult AgregaCodDepto(int EmpresaId, string Id, String DepartmentId, bool Autorizar, bool Crear)
+        {
+            try
+            {
+                Guid _DepartmentId = _Db.SP_GetDepartmentAll(EmpresaId).Where(p => p.DepartmentName == DepartmentId).First().DepartmentId;
+
+                _Db.PPROV_UsuarioDepartamento.Add(new Infraestructura.PPROV_UsuarioDepartamento { DepartmentId = _DepartmentId, Autorizar = Autorizar, Crear = Crear, Empresa_Id = EmpresaId, UserId = Id});
+                _Db.SaveChanges();
+            }
+            catch { }
+
+
+            return RedirectToAction("Edit", new { id = Id });
+        }
+
+        [Authorize(Roles = "Administradores")]
         public ActionResult QuitarCodProv(int EmpresaId, string Id, string CardCode)
         {
             try
@@ -67,10 +94,31 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             return RedirectToAction("Edit", new { id = Id });
         }
 
+        [Authorize(Roles = "Administradores")]
+        public ActionResult QuitarCodDepto(int EmpresaId, string Id, Guid DepartmentId)
+        {
+            try
+            {
+                var _borrar = _Db.PPROV_UsuarioDepartamento.Where(p => p.Empresa_Id == EmpresaId && p.DepartmentId == DepartmentId && p.UserId == Id).ToList();
+                _Db.PPROV_UsuarioDepartamento.RemoveRange(_borrar);
+                _Db.SaveChanges();
+            }
+            catch { }
+
+
+            return RedirectToAction("Edit", new { id = Id });
+        }
+
 
         [Authorize(Roles = "Administradores")]
         public ActionResult Edit(string id)
         {
+            if (Session["EmpresaSelId"] == null)
+            {
+
+                Wareways.PortalProv.Servicios.ServicioSeguridad.CheckSession(User.Identity.Name);                
+            }
+
             // Verificacion de Permisos
             if (!Servicios.ServicioSeguridad.ValidaPermisos(this.ControllerContext.RequestContext.RouteData.Values, User.Identity.Name)) return RedirectToAction("Permisos", "Home");
             
@@ -85,11 +133,11 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             ViewBag.RolesDisponibles = _Db.V_GEN_UsuarioRoles_Diponibles.AsNoTracking().Where(P => P.UserId == aspNetUsers.Id).ToList();
             ViewBag.OficinaEmpesasPermiso = _Db.SP_PPROV_ADM_EmpresasOficina(aspNetUsers.UserName).ToList();
             ViewBag.PermisosUsuarioCodigosProv = _Db.SP_PPROV_PermisosCodigosProv_Usuario(aspNetUsers.UserName).ToList();
+            ViewBag.PermisosUsuarioCodigosDepto = vServicio.GetUserDepartment(aspNetUsers.UserName).ToList();
             ViewBag.Empresas = _Db.V_PPROV_Empresas.ToList();
+            try { ViewBag.EmpresasFiltro = _Db.V_PPROV_Empresas.ToList().Where(p => p.Empresa_Id.ToString() == ConfigurationManager.AppSettings["WWPortal_EmpresaId"]  ).ToList(); }
+            catch { ViewBag.EmpresasFiltro = _Db.V_PPROV_Empresas.ToList(); }
             
-            
-
-
             if (aspNetUsers == null)
             {
                 return HttpNotFound();
@@ -98,12 +146,30 @@ namespace Wareways.PortalProv.Controllers.Seguridad
         }
 
         [HttpPost]
-        public JsonResult ObtenerPorveedores(string Prefix)
+        public JsonResult ObtenerPorveedores(string Prefix, Int32 EmpresaId)
+        {
+            var SAP_Database = "";
+            try {
+                SAP_Database = _Db.V_PPROV_Empresas.Where(p => p.Empresa_Id == EmpresaId).First().SAP_Database;                
+            } catch (Exception ex) 
+            { 
+            }
+
+            String Sql = string.Format("EXEC {0}..WW_PPROV_Proveedor '{1}'", SAP_Database, Prefix);
+            var _DatosIni = _Db.Database.SqlQuery<V_PPROV_Proveedor>(Sql);
+            var _Datos = (from c in _DatosIni select new { Name = c.CardCode + " " + c.CardName, Id = c.CardCode });
+
+            return Json(_Datos, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ObtenerDeptos(string Prefix, Int32 EmpresaId)
         {
 
-            var _Datos = (from c in _Db.V_PPROV_Proveedor
-                             where c.CardCode.Contains(Prefix) || c.CardName.Contains(Prefix)
-                             select new { Name =c.CardCode + " "+ c.CardName, Id = c.CardCode});
+
+            var _DatosIni = _Db.SP_GetDepartmentAll(EmpresaId).ToList();
+            var _Datos = (from c in _DatosIni select new { Name = c.DepartmentName , Id = c.DepartmentId });
+
             return Json(_Datos, JsonRequestBehavior.AllowGet);
         }
 
@@ -141,6 +207,13 @@ namespace Wareways.PortalProv.Controllers.Seguridad
                 _Db.SaveChanges();
 
             } catch { }
+            try
+            {
+                _Db.Database.ExecuteSqlCommand(string.Format("exec SP_AgregaPersmisoEmpresaSSO 1,'{0}'", UserId));
+            }
+            catch (Exception ex) { 
+            }
+
             return RedirectToAction("Edit", new { id = UserId });
         }
 
@@ -152,8 +225,16 @@ namespace Wareways.PortalProv.Controllers.Seguridad
                 var _Quitar = _Db.PPROV_UsuarioEmpresa.Where(p => p.UserId == UserId && p.EmpresaId == EmpresaId).ToList();
                 _Db.PPROV_UsuarioEmpresa.RemoveRange(_Quitar);
                 _Db.SaveChanges();
+
             }
             catch { }
+            try {
+                _Db.Database.ExecuteSqlCommand(string.Format("exec SP_AgregaPersmisoEmpresaSSO 0,'{0}'", UserId));
+            }
+            catch (Exception ex)
+            {
+            }
+
             return RedirectToAction("Edit", new { id = UserId });
         }
 
@@ -180,8 +261,9 @@ namespace Wareways.PortalProv.Controllers.Seguridad
 
             body = body.Replace("***EmpresaNombre***", "");
 
-            body = body.Replace("***UrlLink***", callbackUrl);
-            body = body.Replace("***EmpresaLogo***", "http://proveedores.polytec.com.gt/Content/PolytecLogo.png");
+            body = body.Replace("***UrlLink***", callbackUrl
+                );
+            body = body.Replace("***EmpresaLogo***", "https://proveedores.aki.com.gt/Content/Logos/LogoOperadora.png");
 
             await UserManager.SendEmailAsync(UserId, "Portal Proveedores - Confirmacion Correo - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")
                                              , body);
@@ -200,7 +282,11 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             Infraestructura.AspNetUsers aspNetUsers = _Db.AspNetUsers.Where(p => p.Id == _Username).ToList().First();
             Infraestructura.AspNetRoles aspRoles = _Db.AspNetRoles.Where(p => p.Id == _roleid).ToList().First();
 
-            aspNetUsers.AspNetRoles.Add(aspRoles);
+            AspNetUserRoles _nuevo = new AspNetUserRoles();
+            _nuevo.RoleId = aspRoles.Id;
+            _nuevo.UserId = aspNetUsers.Id;
+            _Db.AspNetUserRoles.Add(_nuevo);
+            //aspNetUsers.AspNetRoles.Add(aspRoles);
             _Db.SaveChanges();
 
             return RedirectToAction("Edit", new { id = _Username });
@@ -222,7 +308,7 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             if (_Usuario == null)
             {
                 return HttpNotFound();
-            }
+            }            
             _Db.AspNetUsers.Remove(_Usuario);
             _Db.SaveChanges();
 
@@ -234,7 +320,7 @@ namespace Wareways.PortalProv.Controllers.Seguridad
         {
             var _Usuarios = (from l in _Db.AspNetUsers
                              orderby l.Nombre
-                             select new { CodigoUsuario = l.UserName, Nombre = l.Nombre, Pueto = l.Puesto, Correo = l.Email, Telefono = l.PhoneNumber }).ToList();
+                             select new { CodigoUsuario = l.UserName, Nombre = l.Nombre, Pueto = l.Puesto, Correo = l.Email, Telefono = l.PhoneNumber, l.RazonSocial }).ToList();
 
             _ServExport.ToExcel(Response, _Usuarios, "ListadoUsuarios");
             return View();
@@ -250,7 +336,9 @@ namespace Wareways.PortalProv.Controllers.Seguridad
             Infraestructura.AspNetUsers aspNetUsers = _Db.AspNetUsers.Where(p => p.Id == _Username).ToList().First();
             Infraestructura.AspNetRoles aspRoles = _Db.AspNetRoles.Where(p => p.Id == _roleid).ToList().First();
 
-            aspNetUsers.AspNetRoles.Remove(aspRoles);
+            var Borrar = _Db.AspNetUserRoles.Where(p => p.UserId == _Username && p.RoleId == _roleid);
+            _Db.AspNetUserRoles.RemoveRange(Borrar);
+            //aspNetUsers.AspNetRoles.Remove(aspRoles);
             _Db.SaveChanges();
 
             return RedirectToAction("Edit", new { id = _Username });

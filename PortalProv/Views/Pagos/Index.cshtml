@@ -12,7 +12,7 @@
             <table class="table table-bordered table-condensed table-hover Datos">
                 <thead>
                     <tr>
-                        <th>Empresa</th>
+                        
                         <th>Forma de Pago</th>
                         <th>Numero</th>
                         <th>Fecha</th>
@@ -31,7 +31,7 @@
                     @foreach (var item in Model.L_Documentos)
                     {
                     <tr>
-                        <td>@item.Empresa_Name</td>
+                        
 
                         <td>@item.Tipo</td>
 
@@ -45,11 +45,11 @@
 
 
                         <td>@item.DocNum</td>
-                        <td>@item.U_FacSerie - @item.U_Facnum </td>
+                        <td>@item.U_FELSerie - @item.U_FacNum </td>
                         <td>@item.Total.Value.ToString("#,###,##0.00")</td>
                         <td>@item.DocCur</td>
                         <td>@item.Retenciones.Value.ToString("#,###,##0.00")</td>
-                        <td>@item.U_NumContrase</td>
+                        <td>@item.U_WWNumContrase</td>
 
 
 
@@ -78,7 +78,7 @@
                 'autoWidth': false,
                 'showinfo': false,
                 "pageLength": 10,
-                "order": [[3, "desc"]],
+                "order": [[5, "desc"]],
                 //"columnDefs": [
                 //    { "width": "60%", "targets": 0 },
                 //    { "width": "20%", "targets": 1 },

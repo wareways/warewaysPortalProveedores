@@ -32,5 +32,6 @@ namespace Wareways.PortalProv.Infraestructura
         public string Nit { get; set; }
         public string RazonSocial { get; set; }
         public string CardCode { get; set; }
+        public int Empresa_Id { get; set; }
     }
 }

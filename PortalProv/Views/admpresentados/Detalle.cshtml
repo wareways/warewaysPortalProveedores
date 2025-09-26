@@ -1,0 +1,407 @@
+﻿@model  Wareways.PortalProv.Models.PP.DetallePresentadosModel
+@using System.Configuration
+@{
+
+
+    var Subsite = ConfigurationManager.AppSettings["SubSite"];
+    String NomCta(String cuentaContable)
+    {
+        try
+        {
+            return Model.CuentasTodas.Where(p => p.AcctCode == cuentaContable).ToList()[0].ActId;
+        }
+        catch
+        { return cuentaContable; }
+    }
+    String DesCta(String cuentaContable)
+    {
+        try
+        {
+            return Model.CuentasTodas.Where(p => p.AcctCode == cuentaContable).ToList()[0].AcctName;
+        }
+        catch
+        { return cuentaContable; }
+    }
+    String DesCC(String CentroCosto)
+    {
+        try
+        {
+            return Model.CentroCostos.Where(p => p.ocrCode == CentroCosto).ToList()[0].ocrName;
+        }
+        catch
+        { return CentroCosto; }
+    }
+}
+
+@section Header
+{
+    <link href="~/admin-lte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <style>
+        .nav .active {
+            background-color: orange
+        }
+    </style>
+}
+
+<div class="box box-default box-solid">
+    <div class="box-header with-border">
+        <h4 class="box-title"> <span class="fa fa-check-square-o  fa-2x"></span>&nbsp;Detalle Documento</h4>
+
+
+        <div class="box-tools pull-right">
+            <span style="text-align:center"><a href="@Url.Action("Index")" class="btn  btn-primary"> Regresar</a></span>
+            @if (Model.PDoc.Doc_Estado == "Enviado" && User.IsInRole("Enviado"))
+            {
+                <a href="@Url.Action("EnviarContrasena", new { Fel_Unique = Model.PDoc.Doc_Id })" class="btn  btn-warning"> Enviar a Contraseña</a>
+            }
+
+            @if (Model.PDoc.Doc_Estado == "Aut. Contraseña" && User.IsInRole("Aut. Contraseña"))
+            {
+                <a href="@Url.Action("EnviarRetencion", new { Fel_Unique = Model.PDoc.Doc_Id })" class="btn  btn-warning"> Enviar a Retencion</a>
+                @:&nbsp;&nbsp;&nbsp;
+                <a href="@Url.Action("EnviarIngresoSap", new { Fel_Unique = Model.PDoc.Doc_Id })" class="btn  btn-info"> Enviar a Ingreso SAP</a>
+            }
+            @if (Model.PDoc.Doc_Estado == "Retenciones" && User.IsInRole("Retenciones"))
+            {
+                <a href="@Url.Action("EnviarIngresoSAP", new { Fel_Unique = Model.PDoc.Doc_Id })" class="btn  btn-warning"> Enviar a Ingreso SAP</a>
+            }
+
+            @if (Model.PDoc.Doc_Estado == "Ingreso SAP" || Model.PDoc.Doc_Estado == "Contraseña")
+            {
+                if (Model.GeneradoDetalle.Count == 0 && User.IsInRole("Generar Factura"))
+                {
+                    <a href="@Url.Action("CrearFactura", new { Fel_Unique = Model.PDoc.Doc_Id })" class="btn  btn-success"> Generar Detalle Factura</a>
+                }
+            }
+
+            @if (Model.PDoc.Doc_Estado == "Ingreso SAP" && Model.GeneradoDetalle.Count > 0 && User.IsInRole("Generar Factura"))
+            {
+                <a href="@Url.Action("EnviarVerificaFACT", new { Fel_Unique = Model.PDoc.Doc_Id })" class="btn  btn-warning"> Enviar Autorizacion</a>
+            }
+            @if (Model.PDoc.Doc_Estado == "Por Autorizar" && Model.GeneradoDetalle.Count > 0 && User.IsInRole("Aut Factura"))
+            {
+                <a href="@Url.Action("AutorizarFACT", new { Fel_Unique = Model.PDoc.Doc_Id })" class="btn  btn-warning"> Autorizar y Generar</a>
+            }
+            @if (User.IsInRole("Modifica Datos Encabezado") && (Model.PDoc.Doc_Estado == "Ingreso SAP" || Model.PDoc.Doc_Estado == "Enviado"))
+            {
+                <a href="#" class="btn  btn-info btnModificaEncabezado"> Modificar Encabezado</a>
+            }
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+    <div class="box-body">
+        <div class="row">
+            @if (Model.GeneradoDetalle.Count > 0)
+            {
+                <div class="col-md-7">
+                    <div class="box">
+                        <div class="box-body">
+                            <table id="detalleFact" name="detalleFact" class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Cantidad</th>
+                                        <th>Descripcion</th>
+                                        <th>Bodega</th>
+                                        <th>Precio  Unitario</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var oItem in Model.GeneradoDetalle)
+                                    {
+
+                                        <tr>
+
+                                            <td>@oItem.Cantidad</td>
+                                            <td>
+                                                @oItem.CodigoProducto @oItem.Descripcion
+                                                @*<small class="label bg-black" title="@DesCC(oItem.CentroCosto)">@oItem.CentroCosto</small>&nbsp;*@
+                                                <small class="label bg-black">@DesCC(oItem.CentroCosto)</small>&nbsp;
+                                                <a href="@Url.Action("editDetalle",new { id= Model.Generado.FEL_Unique, dt= oItem.Linea })">
+                                                    <small class="label bg-green">@NomCta(oItem.CuentaContable)</small>
+                                                    <small class="label bg-green" title="">@DesCta(oItem.CuentaContable)</small>
+                                                </a>
+                                            </td>
+                                            <td>@oItem.Bodega</td>
+                                            <td style="text-align:right">@oItem.PrecioUnitario.ToString("##,###,###.00")</td>
+                                            <td style="text-align:right">@((oItem.TotalLinea+oItem.Impuestos).ToString("##,###,###.00"))</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Entregas Numeros</label>
+                                @Html.EditorFor(model => model.PDoc.Doc_EM_Multiple, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Total Entregas</label>
+                                @Html.EditorFor(model => model.PDoc.Doc_EM_MontoSum, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Total Retenciones</label>
+                                @Html.EditorFor(model => model.PDoc.PPROV_Retencion.Sum(p => p.Retencion_Monto).Value, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Total Factura</label>
+                                @Html.EditorFor(model => model.PDoc.Doc_MontoNeto, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Diferencia</label>
+                                @Html.TextBox("xdif", (Model.PDoc.Doc_MontoNeto.Value - Model.PDoc.Doc_EM_MontoSum.Value).ToString("##,###,###.00"), new { @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" onclick="MostrarFACT('S1');" id="tabpdfembfacS1">Ver Factura</a>
+                        </li>
+                        <li>
+                            <a class="nav-link " href="#" onclick="MostrarOC('S1');" id="tabpdfembocS1">Ver OC</a>
+                        </li>
+                        <li>
+                            <a class="nav-link " href="#" onclick="MostrarEM('S1');" id="tabpdfembemS1">Ver Entrega</a>
+                        </li>
+                    </ul>
+                </div>
+                <embed src="@Subsite@Model.PDoc.Doc_PdfFactura" type="application/pdf" style="width:90%; height:50vw;" id="uipdfembfacS1" frameborder="0" />
+                <embed src="@Subsite@Model.PDoc.Doc_PdfOC" type="application/pdf" style="width:90%; height:50vw;display:none" id="uipdfembocS1" frameborder="0" />
+                <embed src="@Subsite@String.Format(@"/Reportes/PrintEM.aspx?pid={0}",Model.PDoc.Doc_EM_Multiple)" type="application/pdf" style="width:90%; height:50vw;display:none" id="uipdfembemS1" frameborder="0" />
+
+
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link " href="#" onclick="MostrarFACT('S2');" id="tabpdfembfacS2">Ver Factura</a>
+                        </li>
+                        <li>
+                            <a class="nav-link " href="#" onclick="MostrarOC('S2');" id="tabpdfembocS2">Ver OC</a>
+                        </li>
+                        <li>
+                            <a class="nav-link active" href="#" onclick="MostrarEM('S2');" id="tabpdfembemS2">Ver Entrega</a>
+                        </li>
+                        @if (Model.PDoc.PPROV_Retencion.Count > 0)
+                        {
+                            <li>
+                                <a class="nav-link" href="#" onclick="MostrarRet('');" id="tabpdfembRETS2">Retenciones</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-md-12">
+                    <embed src="@Subsite@Model.PDoc.Doc_PdfFactura" type="application/pdf" style="width:90%; height:50vw;display:none" id="uipdfembfacS2" frameborder="0" />
+                    <embed src="@Subsite@Model.PDoc.Doc_PdfOC" type="application/pdf" style="width:90%; height:50vw;display:none" id="uipdfembocS2" frameborder="0" />
+                    <embed src="@Subsite@String.Format(@"/Reportes/PrintEM.aspx?pid={0}",Model.PDoc.Doc_EM_Multiple)" type="application/pdf" style="width:90%; height:50vw" id="uipdfembemS2" frameborder="0" />
+                    @foreach (var item2 in Model.PDoc.PPROV_Retencion)
+                    {
+                        <embed src="@Subsite@item2.Retencion_Pdf" type="application/pdf" style="width: 90%; height: 50vw; display: none" id="@item2.Retencion_Id" frameborder="0" class="retenciones" />
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@using (Html.BeginForm("ActualizaEncabezado", "admpresentados", FormMethod.Post, new { @class = "formsubmitgroup" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(p => p.PDoc.Doc_Id)
+    <div class="modal fade" id="ActualizaEncabezado" role="dialog">
+        <div class="modal-dialog err-pop" style="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-11">
+                        <h4 class="box-title"> Cambiar Datos de Factura Encabezado </h4>
+                    </div>
+                    <div>
+                        <button id="DivClose" type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                </div>
+                <div class="modal-body" style="text-align:center;">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            @Html.Label("Serie", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(p => p.PDoc.Doc_Serie, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Numero", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(p => p.PDoc.Doc_Numero, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("Autorzacion", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(p => p.PDoc.Doc_Autorizacion, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <br />
+                        <br />
+                        <div class="pull-right">
+
+
+                            <button class="btn btn-success pull-right " type="submit" id="saveTeststeps">
+                                Grabar &nbsp;
+                                <i class="fa fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts
+{
+    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+    <script>
+        $('.btnModificaEncabezado').click(function () {
+            $('#ActualizaEncabezado').modal('show');
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#detalleFact').DataTable({
+                'paging': true,
+                'searching': true,
+                'ordering': true,
+                'autoWidth': false,
+                'showinfo': false,
+                "pageLength": 10,
+                //"order": [[6, "desc"]],
+                //"columnDefs": [
+                //    { "width": "60%", "targets": 0 },
+                //    { "width": "20%", "targets": 1 },
+                //    { "width": "20%", "targets": 2 }
+                //],
+                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+            })
+        })
+    </script>
+    <script>
+        function MostrarOC(col) {
+            if (col === "S1") {
+                $("#uipdfembfacS1").hide();
+                $("#tabpdfembfacS1").removeClass("active");
+                $("#uipdfembocS1").show();
+                $("#tabpdfembocS1").addClass("active");
+                $("#uipdfembemS1").hide();
+                $("#tabpdfembemS1").removeClass("active");
+            }
+            if (col === "S2") {
+                $("#uipdfembfacS2").hide();
+                $("#tabpdfembfacS2").removeClass("active");
+                $("#uipdfembocS2").show();
+                $("#tabpdfembocS2").addClass("active");
+                $("#uipdfembemS2").hide();
+                $("#tabpdfembemS2").removeClass("active");
+                $(".retenciones").hide();
+            }
+        };
+        function MostrarFACT(col) {
+            if (col === "S1") {
+                $("#uipdfembfacS1").show();
+                $("#tabpdfembfacS1").addClass("active");
+                $("#uipdfembocS1").hide();
+                $("#tabpdfembocS1").removeClass("active");
+                $("#uipdfembemS1").hide();
+                $("#tabpdfembemS1").removeClass("active");
+            }
+            if (col === "S2") {
+                $("#uipdfembfacS2").show();
+                $("#tabpdfembfacS2").addClass("active");
+                $("#uipdfembocS2").hide();
+                $("#tabpdfembocS2").removeClass("active");
+                $("#uipdfembemS2").hide();
+                $("#tabpdfembemS2").removeClass("active");
+                $(".retenciones").hide();
+            }
+        };
+        function MostrarEM(col) {
+            if (col === "S1") {
+                $("#uipdfembfacS1").hide();
+                $("#tabpdfembfacS1").removeClass("active");
+                $("#uipdfembocS1").hide();
+                $("#tabpdfembocS1").removeClass("active");
+                $("#uipdfembemS1").show();
+                $("#tabpdfembemS1").addClass("active");
+            }
+            if (col === "S2") {
+                $("#uipdfembfacS2").hide();
+                $("#tabpdfembfacS2").removeClass("active");
+                $("#uipdfembocS2").hide();
+                $("#tabpdfembocS2").removeClass("active");
+                $("#uipdfembemS2").show();
+                $("#tabpdfembemS2").addClass("active");
+                $(".retenciones").hide();
+            }
+        };
+        function MostrarRet(col) {
+
+            $("#uipdfembfacS2").hide();
+            $("#tabpdfembfacS2").removeClass("active");
+            $("#uipdfembocS2").hide();
+            $("#tabpdfembocS2").removeClass("active");
+            $("#uipdfembemS2").hide();
+            $("#tabpdfembemS2").removeClass("active");
+
+            $(".retenciones").show();
+
+        };
+    </script>
+}
+
+
+    }
+

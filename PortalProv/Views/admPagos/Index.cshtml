@@ -37,7 +37,7 @@
             <table class="table table-bordered table-condensed table-hover Datos">
                 <thead>
                     <tr>
-                        <th>Empresa</th>
+                        
                         <th>Forma de Pago</th>
                         <th>Numero</th>
                         <th>Proveedor</th>
@@ -57,11 +57,13 @@
                     @foreach (var item in Model.L_Documentos)
                     {
                     <tr>
-                        <td>@item.Empresa_Name</td>
+                        
                         
                         <td>@item.Tipo</td>
 
-                        <td>@item.TrsfrRef</td>
+                        <td>
+                            <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.TrsfrRef" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:green"></span></a>&nbsp;&nbsp;@item.TrsfrRef
+                        </td>
 
                         <td>@item.CardCode @item.CardName</td>
 
@@ -73,11 +75,11 @@
 
 
                         <td>@item.DocNum</td>
-                        <td>@item.U_FacSerie - @item.U_Facnum </td>
+                        <td>@item.U_FELSerie - @item.U_Facnum </td>
                         <td>@item.Total.Value.ToString("#,###,##0.00")</td>
                         <td>@item.DocCur</td>
                         <td>@item.Retenciones.Value.ToString("#,###,##0.00")</td>
-                        <td>@item.U_NumContrase</td>
+                        <td>@item.U_WWNumContrase</td>
 
 
 
@@ -90,12 +92,40 @@
     </div>
 </div>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabelTitle">Modal title</h4>
+            </div>
+
+            <div class="modal-body" id="ContenedorPDF">
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
 
 @section scripts
 {
 
     <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myModal").on("show.bs.modal", function (e) {
+                var id = $(e.relatedTarget).data('nombre');
+                var titulo = $(e.relatedTarget).data('titulo');
+
+                $("#ContenedorPDF").html("<embed src='/cargados/COMP_" + id + ".pdf' type='application/pdf' style='width:100%; height:35vw;'  />");
+                $("#myModalLabelTitle").html(titulo);
+
+            });
+        });
+    </script>
     <script>
 
         $(function () {
@@ -106,7 +136,7 @@
                 'autoWidth': false,
                 'showinfo': false,
                 "pageLength": 25,
-                "order": [[4, "desc"]],
+                "order": [[6, "desc"]],
                 //"columnDefs": [
                 //    { "width": "60%", "targets": 0 },
                 //    { "width": "20%", "targets": 1 },

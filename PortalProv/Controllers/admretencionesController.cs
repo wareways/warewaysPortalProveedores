@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Configuration;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using Wareways.PortalProv.Infraestructura;
@@ -20,6 +24,9 @@ namespace Wareways.PortalProv.Controllers
 
             try
             {
+                ViewBag.MostrarRedireccion = false;
+                if ( User.IsInRole("Retenciones") ) ViewBag.MostrarRedireccion = true;
+
                 var model = new Models.PP.RetencionesOficinaModel();
                 model.L_Retenciones = ObtenerRetencionesPorusuario();
 
@@ -62,6 +69,8 @@ namespace Wareways.PortalProv.Controllers
                 model.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
                 model.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
                 model.Modo_Activo = "Paso1";
+                ViewBag.EmpresaId = ConfigurationManager.AppSettings["WWPortal_EmpresaId"];
+
             }
             catch (Exception ex)
             {
@@ -77,6 +86,7 @@ namespace Wareways.PortalProv.Controllers
         [Authorize(Roles = "Oficina")]
         public ActionResult Nuevo(Models.PP.RetencionesOficinaNuevo model, HttpPostedFileBase filefac, FormCollection collection, string submit_Step1, string submit_Step2)
         {
+            ViewBag.EmpresaId = ConfigurationManager.AppSettings["WWPortal_EmpresaId"];
             model.Lista_TiposRet = _Db.PPROV_RetencionTipo.ToList();
             model.Lista_Moneda = _Db.GEN_CatalogoDetalle.Where(p => p.Catalogo_Id == (int)Servicios.TipoCatalogo.Moneda).OrderBy(p => p.Orden).ToList();
             ViewBag.Usuario_Empresas = _Db.SP_PPROV_ADM_EmpresasOficina(User.Identity.Name).Select(p => new { p.Empresa_Id, p.Empresa_Name }).Distinct().ToList();
@@ -107,7 +117,7 @@ namespace Wareways.PortalProv.Controllers
                         {
                             _Nuevo.Retencion_CardCode = model.Retencion_CardCode.Split(' ')[0];
                             _Nuevo.Retencion_EmpresaId = model.Manual_Empresa;
-                            _Nuevo.Manual_Empresa = model.Manual_Empresa;
+                            _Nuevo.Manual_Empresa = Int32.Parse(ConfigurationManager.AppSettings["WWPortal_EmpresaId"]);
                             _Nuevo.Manual_FacNumero = model.Manual_FacNumero;
                             _Nuevo.Manual_Fac_Serie = model.Manual_Fac_Serie;
                         }
@@ -189,7 +199,8 @@ namespace Wareways.PortalProv.Controllers
 
         private void MandarCorreo_Retencion(Guid id)
         {
-            Infraestructura.FlexManDbEntities _Db_Flex = new FlexManDbEntities();
+            var EmpresaAsuntoCorreo = _Db.GEN_Empresa.First().EmpresaAsuntoCorreo;
+
             string body = string.Empty;
             using (StreamReader reader = new StreamReader(Server.MapPath("~/Infraestructura/Correos/Retencion.html")))
             {
@@ -213,10 +224,12 @@ namespace Wareways.PortalProv.Controllers
             body = body.Replace("***CodigoRetencion***", _Retencion.Retencion_Numero);
             body = body.Replace("***Moneda***", _Retencion.Retencion_Moneda);
 
+            body = body.Replace("***UrlLink***", "https://proveedores.aki.com.gt/");
 
 
 
-            var _Contenido_Valor = "<tr><td style='color:#933f24; padding:10px 0px; background-color: #f7a084;'>***ContenidovValor***</td></tr>";
+
+            var _Contenido_Valor = "<tr><td style='color:#933f24; padding:10px 0px; background-color: white;'>***ContenidovValor***</td></tr>";
             var _FilaInfoFac = "";
             var _FilaInfoTipo = "";
             var _FilaInfoMonto = "";
@@ -242,24 +255,41 @@ namespace Wareways.PortalProv.Controllers
             var _CorreosDestino = _Db.SP_ObtenerCorreos_Por_CardCode(_Retencion.Retencion_CardCode).ToList();
             foreach (var _Correo in _CorreosDestino)
             {
-                _Db_Flex.NotificacionesCola.Add(new NotificacionesCola
+            
+                using (var message = new MailMessage())
                 {
-                    Para = _Correo.Email,                    
-                    Asunto = "Retencion Generada",
-                    Cuerpo = body,
-                    EnviadoFecha = null,
-                    EnviarHasta = DateTime.Now,
-                    ProximoEnvio = null,
-                    IntervaloMinutos = 0,
-                    Sistema = "SS_Proveedores",
-                    Parametro1 = "Retenciones",
-                    Parametro2 = id.ToString(),
-                    Id = Guid.NewGuid()
+                    SmtpSection smtpSection = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
 
-                });
+                    message.To.Add(new MailAddress(_Correo.Email));
+                    message.From = new MailAddress(smtpSection.From);
+                    message.Subject = EmpresaAsuntoCorreo + " Portal Proveedores - Retencion Generada - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                    message.Body = body;
+                    message.IsBodyHtml = true; // change to true if body msg is in html
+
+                    
+                    using (var client = new SmtpClient(smtpSection.Network.Host))
+                    {
+                        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                        NetworkCredential networkCred = new NetworkCredential(smtpSection.Network.UserName, smtpSection.Network.Password);
+                        client.UseDefaultCredentials = smtpSection.Network.DefaultCredentials;
+                        client.Port = smtpSection.Network.Port;
+                        client.Credentials = networkCred;
+                        client.EnableSsl = smtpSection.Network.EnableSsl;
+
+                        try
+                        {
+                            client.Send(message); // Email sent
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(ex.Message);
+                        }
+                    }
+                }
             }
             
-            _Db_Flex.SaveChanges();
+            
 
 
         }

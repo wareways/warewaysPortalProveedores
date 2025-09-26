@@ -17,7 +17,6 @@ namespace Wareways.PortalProv.Infraestructura
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AspNetRoles()
         {
-            this.AspNetUsers = new HashSet<AspNetUsers>();
             this.GEN_Menu = new HashSet<GEN_Menu>();
         }
     
@@ -27,8 +26,6 @@ namespace Wareways.PortalProv.Infraestructura
         public string UserNameAudit { get; set; }
         public Nullable<bool> Sistema { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AspNetUsers> AspNetUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_Menu> GEN_Menu { get; set; }
     }

@@ -1,5 +1,9 @@
-﻿@{
+﻿@using System.Configuration
+@{
     ViewBag.Title = "Home Page";
+    var _List_MaximasFechas = (List<Wareways.PortalProv.Infraestructura.SP_PPROV_DeteccionFecha_PresentacionMax_Result>)ViewBag.MMP_List;
+    var _List_MaximasFechasServ = (List<Wareways.PortalProv.Infraestructura.SP_PPROV_DeteccionFecha_PresentacionMaxServ_Result>)ViewBag.MMP_ListServ;
+    var logoEmpresa = ConfigurationManager.AppSettings["LogoEmpresa"];
 }
 
 
@@ -12,17 +16,20 @@
         </h1>
     </section>
 }
+@Html.Hidden("MPP", (String)ViewBag.MPP)
 @if (User.Identity.Name == "")
 {
-    <div class="box box-danger">
+    <div class="box box-default">
         <div class="box-body">
             <div class="row">
                 <div class="col-md-12">
                     <div class="col-md-6">
                         <div style="text-align:center">
                             <h1 style="font-weight:bolder">Portal Proveedores</h1>
-                            <img src="~/Content/PolytecLogo.png" />
+
+                            <img src="@logoEmpresa" style="max-height: 200px; max-width:90%; width: auto;" />
                             <br />
+                            Version 3.5 Ago 2025 Multi
                             <hr />
                             <img src="~/Content/LaptopIntro.jpg" width="100%" />
                         </div>
@@ -247,28 +254,28 @@
         }
     </div>
     @*<div class="row">
-        <div class="col-md-12">
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Facturas Aceptadas Ultimos 12 Meses</h3>
+            <div class="col-md-12">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Facturas Aceptadas Ultimos 12 Meses</h3>
 
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
                     </div>
-                </div>
-                <div class="box-body">
-                    <div class="chart">
-                        <canvas id="barChart" style="height: 230px; width: 787px;" height="230" width="787"></canvas>
+                    <div class="box-body">
+                        <div class="chart">
+                            <canvas id="barChart" style="height: 230px; width: 787px;" height="230" width="787"></canvas>
+                        </div>
                     </div>
+                     /.box-body
                 </div>
-                 /.box-body 
             </div>
-        </div>
 
-    </div>*@
+        </div>*@
     <div class="row">
         @foreach (var Item in (List<Wareways.PortalProv.Infraestructura.SP_PPROV_Indicadores_Oficina_Result>)ViewBag.IndicadoresBottomOficina)
         {
@@ -329,7 +336,98 @@
         }
     </div>
 
+
+
 }
+<div class="modal fade in" id="modal-MMP" name="modal-MMP" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <div class="col-md-12">
+                    <div class="col-md-3">
+                        <img src="@logoEmpresa" width="150" />
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="modal-title" style="color: #2b2e75; text-align: center"><strong>Operadora S.A. Informa las fecha límite para</strong> </h4>
+                        <h4 class="modal-title" style="text-align:center"><strong>procesamiento de facturas de provedores </strong></h4>
+                    </div>
+                    <div class="col-md-3" style="color: #2b2e75; text-align: right; font-weight: bolder; font-size: x-large">
+                        @ViewBag.MesLetras
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-condensed table-hover">
+                    @foreach (var _Item in _List_MaximasFechas)
+                    {
+
+                        <tr>
+                            <td>(@_Item.CardCode) @_Item.CardName </td>
+                            <td> Fecha Limite @ViewBag.MesLetras  </td>
+                            <td><span class="glyphicon glyphicon-arrow-right" style="color: #2b2e75"></span> </td>
+                            <td style="color: #2b2e75; font-weight: bolder">
+                                @_Item.DiaMaximoSemana @_Item.Dia_Maximo Bienes &nbsp;&nbsp;
+
+
+                                @if (_Item.Estado != "")
+                                {
+                                    <span class="badge bg-red">Plazo Vencido</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-green">En Tiempo</span>
+                                }
+                            </td>
+                        </tr>
+                        foreach (var _next in _List_MaximasFechasServ.Where(p => p.CardCode == _Item.CardCode))
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><span class="glyphicon glyphicon-arrow-right" style="color: #2b2e75"></span> </td>
+                                <td style="color: #2b2e75; font-weight: bolder">
+                                    @_next.DiaMaximoSemana @_next.Dia_Maximo Servicio &nbsp;&nbsp;
+
+
+                                    @if (_next.Estado != "")
+                                    {
+                                        <span class="badge bg-red">Plazo Vencido</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-green">En Tiempo</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="5"><span style="color: #2b2e75; font-weight: bolder"> Observaciones: &nbsp; </span> @_Item.Mensaje</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="modal-footer">
+                <p style="font:smaller; text-align:center">
+                    Para dudas o consultas sobre pagos a proveedores, comunicarte a:
+                    @*<br />
+                        <span style="color: #2b2e75; font-weight: bolder">PBX:</span> No Telefono <span style="color: #2b2e75; font-weight: bolder">
+                            EXT:
+                        </span> extensiones*@
+                    <br />
+                    <span style="color: #2b2e75; font-weight: bolder">CORREO: </span>
+                    <a href="mailto:gestiondepagos@servicioscorp.com">gestiondepagos@servicioscorp.com ,
+
+                </p>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 
 @section Scripts
 {
@@ -397,5 +495,12 @@
             barChart.Bar(barChartData, barChartOptions)
         })
 
+    </script>
+    <script>
+        $(document).ready(function () {
+            if ($('#MPP').val() == "1") {
+                $("#modal-MMP").modal('show');
+            }
+        });
     </script>
 }

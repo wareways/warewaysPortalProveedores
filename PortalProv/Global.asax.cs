@@ -24,7 +24,7 @@ namespace Wareways.PortalProv
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            GlobalConfiguration.Configuration.MessageHandlers.Add(new APIKeyHandler());
+            //GlobalConfiguration.Configuration.MessageHandlers.Add(new APIKeyHandler());
             GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
 
         }

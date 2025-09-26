@@ -26,8 +26,8 @@ namespace Wareways.PortalProv.Infraestructura
         public string Retencion_Usuario { get; set; }
         public Nullable<decimal> Retencion_Monto { get; set; }
         public string Retencion_Moneda { get; set; }
+        public string Retencion_Pdf { get; set; }
         public string Retencion_Nombre { get; set; }
         public string Empresa_Name { get; set; }
-        public string Retencion_Pdf { get; set; }
     }
 }

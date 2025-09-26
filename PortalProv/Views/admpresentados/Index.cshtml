@@ -1,4 +1,8 @@
 ﻿@model  Wareways.PortalProv.Models.PP.PresentadosModelOficina
+@using System.Configuration;
+@{
+    var Subsite = ConfigurationManager.AppSettings["SubSite"];
+}
 
 <!DOCTYPE html>
 
@@ -16,15 +20,23 @@
                 <div class="btn-group pull-right">
                     @foreach (var _Item in Model.L_Estados)
                     {
-                        @Html.ActionLink(_Item.Doc_Estado + " ( " + _Item.Cantidad.ToString() + " )", "Index", new { FiltroEstado = _Item.Doc_Estado }, new { @class = (ViewBag.FiltroEstado != _Item.Doc_Estado) ? "btn btn-default btn-sm " : "btn btn-sm btn-primary " })
+                        if (_Item.Doc_Estado == "Rechazado")
+                        {
+                            @Html.ActionLink(_Item.Doc_Estado, "Index", new { FiltroEstado = _Item.Doc_Estado }, new { @class = (ViewBag.FiltroEstado != _Item.Doc_Estado) ? "btn btn-default btn-sm " : "btn btn-sm btn-primary " })
+                        }
+                        else
+                        {
+                            @Html.ActionLink(_Item.Doc_Estado + " ( " + _Item.Cantidad.ToString() + " )", "Index", new { FiltroEstado = _Item.Doc_Estado }, new { @class = (ViewBag.FiltroEstado != _Item.Doc_Estado) ? "btn btn-default btn-sm " : "btn btn-sm btn-primary " })
+                        }
+
                     }
                 </div>
             </div>
 
-            @using (@Html.BeginForm("CreaContrasena", "admcontrasena", FormMethod.Post))
+            @using (@Html.BeginForm("CreaContrasena", "admcontrasena", FormMethod.Post, new { @id = "multiformsub" }))
             {
 
-                if (ViewBag.FiltroEstado == "Contraseña")
+                if (ViewBag.FiltroEstado == "Contraseña" && (Boolean)ViewBag.MostrarRedireccion)
                 {
                     <div class="col-md-12 " style="text-align:right">
                         <br />
@@ -38,22 +50,64 @@
                     </div>
                 }
 
-                <table class="table table-bordered table-condensed table-hover Datos">
+                // Boton
+                {
+
+                    if (Model.Nuevo_Estado_Seleccionado == "Aut. Contraseña" && User.IsInRole("Aut. Contraseña")) //&& User.IsInRole("Aut. Contrseña"))
+                    {
+                        <br /> <br />
+
+
+                        <a href="#" class="btn btn-info btn-sm pull-right envIngresoSap"> Enviar Ingreso SAP &nbsp; <i class="glyphicon glyphicon-arrow-right"></i></a>
+                        <span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
+                        <a href="#" class="btn btn-success btn-sm pull-right envReten"> Enviar Retenciones &nbsp; <i class="glyphicon glyphicon-arrow-right"></i></a>
+                        <span class="pull-right">&nbsp;&nbsp;&nbsp;</span>
+                        <a href="#" class="btn btn-warning btn-sm pull-right rechContrase"> <i class="glyphicon glyphicon-circle-arrow-left"></i>  &nbsp; Rechazar Contraseña </a>
+                        <br /> <br />
+                    }
+
+                    if (Model.Nuevo_Estado_Seleccionado == "Ingreso SAP" && User.IsInRole("Generar Factura"))
+                    {
+                        <br /> <br />
+                        <a href="#" class="btn btn-success btn-sm pull-right envFactAut"> Enviar Autorizacion &nbsp; <i class="glyphicon glyphicon-arrow-right"></i></a>
+                        <br /> <br />
+                    }
+                    if (Model.Nuevo_Estado_Seleccionado == "Por Autorizar" && User.IsInRole("Aut Factura"))
+                    {
+                        <br /> <br />
+
+                        <a href="#" class="btn btn-success btn-sm pull-right envRegistrada"> Enviar Registrada &nbsp; <i class="glyphicon glyphicon-circle-arrow-right"></i></a>
+                        <span class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <a href="#" class="btn btn-warning btn-sm pull-right rechIngSap "> <i class="glyphicon glyphicon-circle-arrow-left"></i>  &nbsp; Rechazar Ingreso </a>
+                        <br /> <br />
+                    }
+
+                }
+                <br />
+                <br />
+                <br />
+                <br />
+
+                <table class="table table-bordered table-condensed table-hover Datos" style="width:1800px !important">
                     <thead>
                         <tr>
+                            <th>Tipo OC</th>
                             <th></th>
                             <th></th>
-                            <th>Estado</th>                            
                             <th>Tipo</th>
                             <th>Proveedor</th>
                             <th>Serie - Numero </th>
 
-                            <th>Fecha Emision</th>
-                            <th>Empresa</th>
-                            <th>Moneda</th>
+                            <th>Fecha Emision<br />/Carga</th>
+
+
                             <th>Monto</th>
                             <th>Cargado el</th>
                             <th>Orden Compra</th>
+                            <th>Entrega</th>
+                            <th>SAP</th>
+                            <th>Usuario <br />Contraseña</th>
+                            <th>Retencion</th>
                             <th>Observacion</th>
                             <th>Contraseña</th>
                             <th>Archivos</th>
@@ -66,7 +120,32 @@
                         {
                             <tr>
                                 <td>
-                                    @if (ViewBag.FiltroEstado != "Pagado" )
+                                    @if (item.Doc_ActivoFijo == true)
+                                    {
+                                        @:2 | Activo Fijo
+                                    }
+                                    else
+                                    {
+                                        if (item.Doc_OC_TipoDoc == "" || item.Doc_OC_TipoDoc == "Externo")
+                                        {
+                                            @:4 | AKIOL o Externo
+                                        }
+                                        if (item.Doc_OC_TipoDoc == "Servicio")
+                                        {
+                                            @:1 | Servicio
+                                        }
+                                        if (item.Doc_OC_TipoDoc == "Bien")
+                                        {
+                                            @:2 | Bien
+                                        }
+                                    }
+
+                                </td>
+                                <td>
+                                    @if ((ViewBag.FiltroEstado != "Pagado"
+                                            //&& ViewBag.FiltroEstado != "Ingreso SAP" && ViewBag.FiltroEstado != "Por Autorizar"
+                                            )
+                                            && (Boolean)ViewBag.MostrarRedireccion)
                                     {
                                         <a href="#" class="btn btn-sm btn-warning BtnOpenModalCambioEstado " data-id="@item.Doc_Id"> <span class="fa fa-share "></span>  </a>
 
@@ -76,44 +155,89 @@
                                 <td>
                                     @if (ViewBag.FiltroEstado == "Retenciones")
                                     {
-                                        <a href="@Url.Action("Nuevo","admretenciones",new { Doc_id = item.Doc_Id } )" class="btn btn-sm btn-primary BtnOpenModalAgregaRetencion "  title="Agregar Retenciones"> <span class="fa fa-plus-square-o "></span>  </a>
+                                        <a href="@Url.Action("Nuevo","admretenciones",new { Doc_id = item.Doc_Id } )" class="btn btn-sm btn-primary BtnOpenModalAgregaRetencion " title="Agregar Retenciones"> <span class="fa fa-plus-square-o "></span>  </a>
                                     }
                                     @if (ViewBag.FiltroEstado == "Contraseña" && item.Contrasena_Numero == null)
                                     {
                                         @Html.CheckBox("Selec_Item") @Html.Hidden("Selec_Code", item.Doc_Id) @Html.Hidden("Selec_Prov", item.Doc_CardCorde) @Html.Hidden("Selec_Empresa", item.Doc_EmpresaId)
                                     }
+                                    @if (ViewBag.FiltroEstado == "Aut. Contraseña" && item.Contrasena_Numero != null)
+                                    {
+                                        @Html.CheckBox("Selec_Item") @Html.Hidden("Selec_Code", item.Doc_Id) @Html.Hidden("Selec_Prov", item.Doc_CardCorde) @Html.Hidden("Selec_Empresa", item.Doc_EmpresaId)
+                                    }
+
+                                    @if (ViewBag.FiltroEstado == "Ingreso SAP" || ViewBag.FiltroEstado == "Por Autorizar")
+                                    {
+                                        @Html.CheckBox("Selec_Item") @Html.Hidden("Selec_Code", item.Doc_Id) @Html.Hidden("Selec_Prov", item.Doc_CardCorde) @Html.Hidden("Selec_Empresa", item.Doc_EmpresaId)
+                                    }
+
+
 
                                 </td>
-                                <td>@item.Doc_Estado</td>
+
 
                                 <td>@item.Doc_TipoDocumento</td>
                                 <td>@item.Doc_CardCorde<br /> @item.CardName</td>
 
-                                <td>@item.Doc_Serie - @item.Doc_Numero</td>
+                                <td>
+                                    <a href="@Url.Action("Detalle", new { id = item.Doc_Id })">
+                                        @item.Doc_Serie - @item.Doc_Numero
+                                    </a>
+                                </td>
 
 
 
-                                <td>@item.Doc_Fecha.Value.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @item.Doc_Fecha.Value.ToString("yyyy-MM-dd")<br />
+                                    <small class="label bg-yellow">Cargado: @item.Doc_FechaCarga.Value.ToString("yyyy-MM-dd")</small>
 
-                                <td>@item.Empresa_Name</td>
+                                </td>
 
-                                <td>@item.Doc_Moneda</td>
 
-                                <td>@item.Doc_MontoNeto.Value.ToString("#,###,##0.00")</td>
+
+
+
+                                <td>@item.Doc_MontoNeto.ToString("#,###,##0.00") @item.Doc_Moneda</td>
 
                                 <td>@item.Doc_FechaCarga.Value.ToString("yyyy-MM-dd HH:mm")</td>
 
-                                <td>@item.Doc_NumeroOC</td>
+                                <td>
+                                    @item.Doc_OC_Multiple
+                                </td>
+
+                                <td>
+                                    <span title="Monto: @item.Doc_EM_MontoSum">
+                                        <a href="#" data-toggle="modal" data-titulo="Entrega" data-nombre="@Url.Action("PrintEM.aspx","Reportes",new { pid = item.Doc_EM_Multiple })" data-target="#myModal" target="_blank" class="btn btn-default " title="Entrega"><span class="fa fa-file-pdf-o" style="color:orange"></span></a>
+                                        @item.Doc_EM_Multiple
+
+                                    </span>
+                                </td>
+                                <td><a href="" data-toggle="modal" data-titulo="Factura SAP" data-nombre="@Subsite/Reportes/PrintFactp.aspx?pid=@item.Doc_NumeroFactProv" data-target="#myModal" target="_blank" class="btn btn-default btn-sm " title="Factura SAP">@item.Doc_NumeroFactProv</a>  </td>
+                                <td>@item.Contrasena_Usuario</td>
+                                <td>@String.Format("{0:n2}", item.RetencionMonto)</td>
 
                                 <td>@item.Doc_Observaciones</td>
-                                <td>@item.Contrasena_Numero</td>
                                 <td>
+                                    @if (item.Contrasena_Numero != null)
+                                    {
+                                        <a href="#" data-toggle="modal" data-titulo="Contraseña" data-nombre="@item.Contrasena_Id" data-target="#myModal" target="_blank" class="btn btn-default " title="Contraseña">@item.Contrasena_Numero</a>
+                                    }
 
-                                    <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
-                                    |
-                                    <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
-                                    
-                                    
+
+                                </td>
+                                <td>
+                                    @if (ViewBag.FiltroEstado == "Registrada" || ViewBag.FiltroEstado == "Pendiente" || ViewBag.FiltroEstado == "Pagado")
+                                    {
+                                        <a href="@Url.Action("Integrado.aspx", "Reportes", new { pid = item.Doc_Id.ToString() })" title="Intregrado" target="_blank" class="btn btn-default "><span class="fa fa-file-pdf-o" style="color:goldenrod"></span></a>
+
+                                    }
+                                    else
+                                    {
+                                        <a href="#" data-toggle="modal" data-titulo="Factura Cargada" data-nombre="@Subsite@item.Doc_PdfFactura" data-target="#myModal" target="_blank" class="btn btn-default " title="Factura"><span class="fa fa-file-pdf-o" style="color:red"></span></a>
+                                        @:|
+                                        <a href="#" data-toggle="modal" data-titulo="Orden Compra Cargada" data-nombre="@Subsite@item.Doc_PdfOC" data-target="#myModal" target="_blank" class="btn btn-default " title="Orden de Compra"><span class="fa fa-file-text-o" style="color:purple"></span></a>
+                                    }
+
                                     <br />
                                     @{
                                         Html.RenderAction("LinksRetencionesDocto", new { id = item.Doc_Id });
@@ -160,7 +284,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm("CambioEstado", "admpresentados", FormMethod.Post))
+@using (Html.BeginForm("CambioEstado", "admpresentados", FormMethod.Post, new { @class = "formsubmitgroup" }))
 {
     @Html.AntiForgeryToken()
 
@@ -235,18 +359,29 @@
     </div>
 </div>
 
+<link href="~/admin-lte/bower_components/datatablesNew.net/datatables.css" rel="stylesheet" />
+
 @section scripts
 {
-
-    <script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="~/admin-lte/bower_components/datatablesNew.net/datatables.min.js"></script>
+    @*<script src="~/admin-lte/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>*@
     <script src="~/admin-lte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
     <script>
         $(document).ready(function () {
             $("#myModal").on("show.bs.modal", function (e) {
                 var id = $(e.relatedTarget).data('nombre');
                 var titulo = $(e.relatedTarget).data('titulo');
 
-                $("#ContenedorPDF").html("<embed src='" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                if (titulo == "Contraseña") {
+                    $("#ContenedorPDF").html("<embed src='@Subsite/Reportes/Contrasenas.aspx?id=" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                } else {
+                    $("#ContenedorPDF").html("<embed src='" + id + "' type='application/pdf' style='width:100%; height:35vw;'  />");
+                }
+
+
+
                 $("#myModalLabelTitle").html(titulo);
 
             });
@@ -263,7 +398,7 @@
             var _id = this.getAttribute("data-id");
 
             $.ajax({
-                url: "/presentados/ObtenerMensajes/" + _id,
+                url: "@Subsite/presentados/ObtenerMensajes/" + _id,
                 cache: false,
                 type: "GET",
                 success: function (data) {
@@ -286,16 +421,60 @@
                 'ordering': true,
                 'autoWidth': false,
                 'showinfo': false,
-                "pageLength": 10,
-                "order": [[7, "desc"]],
+                "pageLength": 15,
+                "scrollX": true,
+                "order": [[0, "asc"], [6, "desc"]],
+                "columnDefs": [
+                    {
+                        target: 0,
+                        visible: false
+                    }
+                ],
                 //"columnDefs": [
                 //    { "width": "60%", "targets": 0 },
                 //    { "width": "20%", "targets": 1 },
                 //    { "width": "20%", "targets": 2 }
                 //],
-                "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" }
+                "language": { "url": "https://cdn.datatables.net/plug-ins/2.3.2/i18n/es-ES.json" },
+                "rowGroup": {
+                    dataSrc: 0
+                },
             })
         })
+
+    </script>
+    <script>
+        $(".envFactAut").click(function () {
+            document.getElementById("multiformsub").action = "@Url.Action("ms_envFactAut")";
+            document.getElementById("multiformsub").submit();
+            document.getElementById("multiformsub").action = "/admcontrasena/CreaContrasena";
+        });
+          $(".envRegistrada").click(function () {
+            document.getElementById("multiformsub").action = "@Url.Action("ms_envRegisFact")";
+            document.getElementById("multiformsub").submit();
+            document.getElementById("multiformsub").action = "/admcontrasena/CreaContrasena";
+          });
+         $(".rechIngSap").click(function () {
+            document.getElementById("multiformsub").action = "@Url.Action("ms_rechIngSap")";
+            document.getElementById("multiformsub").submit();
+            document.getElementById("multiformsub").action = "/admcontrasena/CreaContrasena";
+         });
+
+          $(".envIngresoSap").click(function () {
+            document.getElementById("multiformsub").action = "@Url.Action("ms_envIngSAP")";
+            document.getElementById("multiformsub").submit();
+            document.getElementById("multiformsub").action = "/admcontrasena/CreaContrasena";
+          });
+        $(".envReten").click(function () {
+            document.getElementById("multiformsub").action = "@Url.Action("ms_envRetenciones")";
+            document.getElementById("multiformsub").submit();
+            document.getElementById("multiformsub").action = "/admcontrasena/CreaContrasena";
+        });
+        $(".rechContrase").click(function () {
+            document.getElementById("multiformsub").action = "@Url.Action("ms_rechContras")";
+            document.getElementById("multiformsub").submit();
+            document.getElementById("multiformsub").action = "/admcontrasena/CreaContrasena";
+        });
 
     </script>
 
