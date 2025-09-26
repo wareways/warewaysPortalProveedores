@@ -1562,8 +1562,7 @@ namespace Wareways.PortalProv.Controllers
             if (oDoc.Count == 1)
             {
                 var _EstadoAnterio = oDoc[0].Estado;
-                if (oDoc[0].Estado == "Autorizar" || oDoc[0].Estado == "Aprobado" || 
-                    oDoc[0].Estado == "Revision" || oDoc[0].Estado == "Revision")
+                if (oDoc[0].Estado == "Autorizar" || oDoc[0].Estado == "Aprobado" ||   oDoc[0].Estado == "Revision" || oDoc[0].Estado == "Revision")
                 {
                     oDoc[0].Estado = "Borrador";
                     oDoc[0].ActualizadoPor = User.Identity.Name;
